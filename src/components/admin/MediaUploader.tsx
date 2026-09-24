@@ -53,7 +53,7 @@ export function MediaUploader() {
   }
 
   return (
-    <div className="rounded-xl border border-dashed border-white/20 bg-card p-6 text-center">
+    <div className="rounded-xl border border-dashed border-border bg-card p-6 text-center">
       <p className="text-sm text-foreground/70">Upload an image or video to the media bucket.</p>
       <input
         ref={inputRef}
@@ -67,7 +67,7 @@ export function MediaUploader() {
           {uploading ? "Uploading..." : "Choose file"}
         </Button>
       </div>
-      {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
+      {error && <p className="mt-3 text-sm text-red-500">{error}</p>}
     </div>
   );
 }

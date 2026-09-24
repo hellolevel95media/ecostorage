@@ -4,7 +4,7 @@ import type { Service } from "@/types/database";
 
 export function ServiceCard({ service }: { service: Service }) {
   return (
-    <div className="flex flex-col overflow-hidden rounded-xl border border-white/10 bg-card">
+    <div className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card transition-all duration-200 hover:-translate-y-1 hover:border-brand/30 hover:shadow-card-hover">
       <MediaPlaceholder ratio="video" kind={service.video_url ? "video" : "image"} label={service.title} />
       <div className="flex flex-1 flex-col p-5">
         <h3 className="font-semibold">{service.title}</h3>

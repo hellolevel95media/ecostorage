@@ -55,7 +55,7 @@ export function ServiceForm({ service }: { service?: Service }) {
           <select
             name="category"
             defaultValue={service?.category ?? "personal"}
-            className="w-full rounded-lg border border-white/10 bg-background px-3 py-2 text-sm outline-none focus:border-brand"
+            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand"
           >
             <option value="personal">Personal</option>
             <option value="corporate">Corporate</option>
@@ -83,11 +83,11 @@ export function ServiceForm({ service }: { service?: Service }) {
           name="description"
           rows={3}
           defaultValue={service?.description ?? ""}
-          className="w-full rounded-lg border border-white/10 bg-background px-3 py-2 text-sm outline-none focus:border-brand"
+          className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand"
         />
       </div>
 
-      {error && <p className="text-sm text-red-400">{error}</p>}
+      {error && <p className="text-sm text-red-500">{error}</p>}
 
       <Button type="submit" disabled={saving}>
         {saving ? "Saving..." : service ? "Save changes" : "Create service"}
@@ -117,7 +117,7 @@ function TextField({
         type={type}
         defaultValue={defaultValue}
         required={required}
-        className="w-full rounded-lg border border-white/10 bg-background px-3 py-2 text-sm outline-none focus:border-brand"
+        className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand"
       />
     </div>
   );

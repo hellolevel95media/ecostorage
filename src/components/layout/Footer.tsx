@@ -5,8 +5,12 @@ import { COMPANY, NAV_LINKS } from "@/lib/nav";
 
 export function Footer() {
   return (
-    <footer className="mt-24 border-t border-white/5 bg-surface">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-3 lg:px-8">
+    <footer className="relative mt-24 border-t border-border bg-background">
+      <div
+        aria-hidden
+        className="h-px w-full bg-gradient-to-r from-transparent via-brand/60 to-transparent"
+      />
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.1fr_0.7fr_1.2fr] lg:gap-16 lg:px-8">
         <div>
           <Logo />
           <p className="mt-4 max-w-xs text-sm text-foreground/60">
@@ -42,7 +46,7 @@ export function Footer() {
         <ContactForm type="contact" title="Quick contact" compact />
       </div>
 
-      <div className="border-t border-white/5">
+      <div className="border-t border-border">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-6 text-xs text-foreground/40 sm:flex-row sm:px-6 lg:px-8">
           <p>
             © {new Date().getFullYear()} {COMPANY.name}. All rights reserved.

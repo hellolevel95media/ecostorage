@@ -26,7 +26,7 @@ export default async function AdminMediaPage() {
         {(media ?? []).map((asset) => {
           const { data: publicUrl } = supabase.storage.from("media").getPublicUrl(asset.file_path);
           return (
-            <div key={asset.id} className="overflow-hidden rounded-xl border border-white/10 bg-card">
+            <div key={asset.id} className="overflow-hidden rounded-xl border border-border bg-card">
               {asset.file_type.startsWith("image/") ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img

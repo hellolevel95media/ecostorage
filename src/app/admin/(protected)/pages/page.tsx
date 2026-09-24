@@ -14,7 +14,7 @@ export default function AdminPagesPage() {
           <Link
             key={page.slug}
             href={`/admin/pages/${page.slug}`}
-            className="rounded-xl border border-white/10 bg-card p-4 hover:border-brand/40"
+            className="rounded-xl border border-border bg-card p-4 hover:border-brand/40"
           >
             <p className="font-medium">{page.title}</p>
             <p className="mt-1 text-xs text-foreground/50">/{page.slug === "home" ? "" : page.slug}</p>

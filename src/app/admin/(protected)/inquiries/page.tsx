@@ -20,7 +20,7 @@ export default async function AdminInquiriesPage() {
         <ExportCsvButton inquiries={rows} />
       </div>
 
-      <div className="mt-4 overflow-x-auto rounded-xl border border-white/10">
+      <div className="mt-4 overflow-x-auto rounded-xl border border-border">
         <table className="w-full text-left text-sm">
           <thead className="bg-card text-xs text-foreground/50 uppercase">
             <tr>
@@ -32,7 +32,7 @@ export default async function AdminInquiriesPage() {
               <th className="px-4 py-3" />
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/5">
+          <tbody className="divide-y divide-border">
             {rows.map((inquiry) => (
               <tr key={inquiry.id}>
                 <td className="px-4 py-3 whitespace-nowrap text-foreground/60">

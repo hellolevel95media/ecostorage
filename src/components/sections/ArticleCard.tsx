@@ -6,7 +6,7 @@ export function ArticleCard({ article }: { article: Article }) {
   return (
     <Link
       href={`/resources/${article.slug}`}
-      className="group flex flex-col overflow-hidden rounded-xl border border-white/10 bg-card transition-colors hover:border-brand/40"
+      className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card transition-all duration-200 hover:-translate-y-1 hover:border-brand/40 hover:shadow-card-hover"
     >
       <MediaPlaceholder ratio="video" label={article.title} />
       <div className="flex flex-1 flex-col p-5">

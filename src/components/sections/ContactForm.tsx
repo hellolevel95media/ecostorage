@@ -60,7 +60,7 @@ export function ContactForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className={`rounded-xl border border-white/10 bg-card ${compact ? "p-4" : "p-6"}`}>
+    <form onSubmit={handleSubmit} className={`rounded-xl border border-border bg-card ${compact ? "p-4" : "p-6"}`}>
       {title && <h3 className={compact ? "text-base font-semibold" : "text-xl font-semibold"}>{title}</h3>}
       {description && <p className="mt-1 text-sm text-foreground/70">{description}</p>}
 
@@ -84,7 +84,7 @@ export function ContactForm({
             name="message"
             rows={compact ? 2 : 4}
             maxLength={500}
-            className="w-full rounded-lg border border-white/10 bg-background px-3 py-2 text-sm outline-none focus:border-brand"
+            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand"
           />
         </div>
       </div>
@@ -94,7 +94,7 @@ export function ContactForm({
       </Button>
 
       {status === "error" && (
-        <p className="mt-2 text-sm text-red-400">Something went wrong — please try again.</p>
+        <p className="mt-2 text-sm text-red-500">Something went wrong — please try again.</p>
       )}
     </form>
   );
@@ -118,7 +118,7 @@ function Field({
         name={name}
         type={type}
         required={required}
-        className="w-full rounded-lg border border-white/10 bg-background px-3 py-2 text-sm outline-none focus:border-brand"
+        className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand"
       />
     </div>
   );

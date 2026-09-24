@@ -16,7 +16,7 @@ export function AdminSidebar() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex gap-1 overflow-x-auto border-b border-white/10 pb-2 lg:w-56 lg:flex-col lg:border-b-0 lg:border-r lg:pb-0 lg:pr-4">
+    <nav className="flex gap-1 overflow-x-auto border-b border-border pb-2 lg:w-56 lg:flex-col lg:border-b-0 lg:border-r lg:pb-0 lg:pr-4">
       {LINKS.map((link) => {
         const active = link.href === "/admin" ? pathname === "/admin" : pathname.startsWith(link.href);
         return (

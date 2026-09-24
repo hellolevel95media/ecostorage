@@ -74,7 +74,7 @@ export function ArticleForm({ article }: { article?: Article }) {
           <select
             name="status"
             defaultValue={article?.status ?? "draft"}
-            className="w-full rounded-lg border border-white/10 bg-background px-3 py-2 text-sm outline-none focus:border-brand"
+            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand"
           >
             <option value="draft">Draft</option>
             <option value="published">Published</option>
@@ -88,7 +88,7 @@ export function ArticleForm({ article }: { article?: Article }) {
           name="excerpt"
           rows={2}
           defaultValue={article?.excerpt ?? ""}
-          className="w-full rounded-lg border border-white/10 bg-background px-3 py-2 text-sm outline-none focus:border-brand"
+          className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand"
         />
       </div>
 
@@ -98,11 +98,11 @@ export function ArticleForm({ article }: { article?: Article }) {
           name="body"
           rows={10}
           defaultValue={article?.body ?? ""}
-          className="w-full rounded-lg border border-white/10 bg-background px-3 py-2 text-sm outline-none focus:border-brand"
+          className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand"
         />
       </div>
 
-      {error && <p className="text-sm text-red-400">{error}</p>}
+      {error && <p className="text-sm text-red-500">{error}</p>}
 
       <Button type="submit" disabled={saving}>
         {saving ? "Saving..." : article ? "Save changes" : "Create article"}
@@ -129,7 +129,7 @@ function TextField({
         name={name}
         defaultValue={defaultValue}
         required={required}
-        className="w-full rounded-lg border border-white/10 bg-background px-3 py-2 text-sm outline-none focus:border-brand"
+        className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand"
       />
     </div>
   );

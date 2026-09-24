@@ -27,11 +27,11 @@ export function MediaPlaceholder({
 }: MediaPlaceholderProps) {
   return (
     <div
-      className={`skeleton relative flex w-full items-center justify-center overflow-hidden rounded-xl border border-white/5 ${RATIO_CLASS[ratio]} ${className}`}
+      className={`skeleton relative flex w-full items-center justify-center overflow-hidden rounded-xl border border-border ${RATIO_CLASS[ratio]} ${className}`}
       role="img"
       aria-label={label ?? "Media placeholder"}
     >
-      <span className="flex items-center gap-2 text-xs font-medium tracking-wide text-white/30 uppercase">
+      <span className="flex items-center gap-2 text-xs font-medium tracking-wide text-foreground/30 uppercase">
         {kind === "video" ? <PlayIcon /> : <ImageIcon />}
         {label ?? (kind === "video" ? "Video" : "Image")}
       </span>

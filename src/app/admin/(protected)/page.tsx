@@ -38,7 +38,7 @@ export default async function AdminDashboardPage() {
           <Link
             key={card.label}
             href={card.href}
-            className="rounded-xl border border-white/10 bg-card p-5 hover:border-brand/40"
+            className="rounded-xl border border-border bg-card p-5 hover:border-brand/40"
           >
             <p className="text-xs font-semibold tracking-wide text-foreground/50 uppercase">
               {card.label}

@@ -37,7 +37,7 @@ export default function AdminLoginPage() {
     <div className="flex min-h-[70vh] items-center justify-center px-4">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm rounded-2xl border border-white/10 bg-card p-8"
+        className="w-full max-w-sm rounded-2xl border border-border bg-card p-8"
       >
         <h1 className="text-xl font-bold">Admin sign in</h1>
         <p className="mt-1 text-sm text-foreground/60">EcoStorage CMS</p>
@@ -50,7 +50,7 @@ export default function AdminLoginPage() {
               type="email"
               required
               autoComplete="email"
-              className="w-full rounded-lg border border-white/10 bg-background px-3 py-2 text-sm outline-none focus:border-brand"
+              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand"
             />
           </div>
           <div>
@@ -60,12 +60,12 @@ export default function AdminLoginPage() {
               type="password"
               required
               autoComplete="current-password"
-              className="w-full rounded-lg border border-white/10 bg-background px-3 py-2 text-sm outline-none focus:border-brand"
+              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand"
             />
           </div>
         </div>
 
-        {error && <p className="mt-4 text-sm text-red-400">{error}</p>}
+        {error && <p className="mt-4 text-sm text-red-500">{error}</p>}
 
         <Button type="submit" disabled={loading} className="mt-6 w-full">
           {loading ? "Signing in..." : "Sign in"}

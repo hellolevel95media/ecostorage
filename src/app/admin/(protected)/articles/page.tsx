@@ -19,7 +19,7 @@ export default async function AdminArticlesPage() {
         <ButtonLink href="/admin/articles/new">New article</ButtonLink>
       </div>
 
-      <div className="mt-4 overflow-hidden rounded-xl border border-white/10">
+      <div className="mt-4 overflow-hidden rounded-xl border border-border">
         <table className="w-full text-left text-sm">
           <thead className="bg-card text-xs text-foreground/50 uppercase">
             <tr>
@@ -29,7 +29,7 @@ export default async function AdminArticlesPage() {
               <th className="px-4 py-3" />
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/5">
+          <tbody className="divide-y divide-border">
             {(articles ?? []).map((article) => (
               <tr key={article.id}>
                 <td className="px-4 py-3 font-medium">{article.title}</td>

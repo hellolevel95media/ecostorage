@@ -68,7 +68,7 @@ export function SectionEditor({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-xl border border-white/10 bg-card p-5">
+    <form onSubmit={handleSubmit} className="rounded-xl border border-border bg-card p-5">
       <p className="text-xs font-semibold tracking-wide text-brand uppercase">{sectionKey}</p>
 
       <div className="mt-3 space-y-3">
@@ -80,7 +80,7 @@ export function SectionEditor({
             name="body"
             rows={3}
             defaultValue={initial.body}
-            className="w-full rounded-lg border border-white/10 bg-background px-3 py-2 text-sm outline-none focus:border-brand"
+            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand"
           />
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
@@ -95,7 +95,7 @@ export function SectionEditor({
         </Button>
         {saved && <span className="text-sm text-brand">Saved</span>}
       </div>
-      {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
+      {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
     </form>
   );
 }
@@ -115,7 +115,7 @@ function Field({
       <input
         name={name}
         defaultValue={defaultValue}
-        className="w-full rounded-lg border border-white/10 bg-background px-3 py-2 text-sm outline-none focus:border-brand"
+        className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand"
       />
     </div>
   );

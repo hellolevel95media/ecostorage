@@ -35,7 +35,7 @@ export function DeleteButton({
       type="button"
       onClick={handleDelete}
       disabled={loading}
-      className="text-sm font-medium text-red-400 hover:underline disabled:opacity-50"
+      className="text-sm font-medium text-red-500 hover:underline disabled:opacity-50"
     >
       {loading ? "Deleting..." : "Delete"}
     </button>
