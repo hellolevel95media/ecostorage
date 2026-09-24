@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# EcoStorage
+
+Personal & corporate storage marketing site and admin CMS, built with Next.js (App Router), TypeScript, Tailwind CSS, and Supabase.
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies and run the dev server:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the site.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Copy `.env.example` to `.env.local` and fill in your Supabase project credentials:
 
-## Learn More
+```bash
+cp .env.example .env.local
+```
 
-To learn more about Next.js, take a look at the following resources:
+| Variable | Description |
+| --- | --- |
+| `NEXT_PUBLIC_SUPABASE_URL` | Your Supabase project URL (Settings → API) |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Your Supabase anon/public API key (Settings → API) |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Supabase Setup
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Create a Supabase project (or use an existing one).
+2. Open the **SQL Editor** in the Supabase dashboard.
+3. Run the contents of [`supabase/migrations/01_schema.sql`](supabase/migrations/01_schema.sql) to create the required tables and Row Level Security policies.
+4. Copy your project's API URL and anon key into `.env.local` as described above.
 
-## Deploy on Vercel
+## Deployment (Vercel)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Push this repository to GitHub.
+2. In Vercel, import the GitHub repository as a new project.
+3. Add the environment variables from the table above under **Project Settings → Environment Variables**.
+4. Deploy. Vercel will automatically rebuild on every push to `main` (CI/CD via GitHub integration).
+5. Under **Project Settings → Domains**, add the custom domain `www.storagespace.com.sg` and follow Vercel's instructions to point your DNS records at Vercel.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Tech Stack
+
+- **Framework:** Next.js (App Router), TypeScript, Tailwind CSS
+- **Backend & Auth:** Supabase (PostgreSQL, Storage Buckets, Row Level Security)
+- **Deployment:** Vercel (automatic GitHub CI/CD)
+- **Testing:** Playwright CLI

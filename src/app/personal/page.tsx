@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import { TrustBanner } from "@/components/sections/TrustBanner";
@@ -8,15 +9,19 @@ import { getPageSections, getPublishedArticles, getServices, resolveSection } fr
 
 export const dynamic = "force-dynamic";
 
-export default async function HomePage() {
+export const metadata: Metadata = {
+  title: "Personal Storage | EcoStorage",
+};
+
+export default async function PersonalPage() {
   const [sections, services, articles] = await Promise.all([
-    getPageSections("home"),
-    getServices(),
-    getPublishedArticles(3),
+    getPageSections("personal"),
+    getServices("personal"),
+    getPublishedArticles(2),
   ]);
 
-  const hero = resolveSection(sections, "home", "hero");
-  const trust = resolveSection(sections, "home", "trust_banner");
+  const hero = resolveSection(sections, "personal", "hero");
+  const trust = resolveSection(sections, "personal", "trust_segment");
 
   return (
     <>
@@ -25,14 +30,9 @@ export default async function HomePage() {
       <StorageCalculator />
 
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <div className="flex items-end justify-between">
-          <h2 className="text-2xl font-bold sm:text-3xl">Our services</h2>
-          <Link href="/services" className="text-sm font-semibold text-brand hover:underline">
-            View all →
-          </Link>
-        </div>
-        <div className="mt-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
-          {services.slice(0, 4).map((service) => (
+        <h2 className="text-2xl font-bold sm:text-3xl">Personal storage services</h2>
+        <div className="mt-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+          {services.map((service) => (
             <ServiceCard key={service.id} service={service} />
           ))}
         </div>
@@ -40,12 +40,12 @@ export default async function HomePage() {
 
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="flex items-end justify-between">
-          <h2 className="text-2xl font-bold sm:text-3xl">Resource library</h2>
+          <h2 className="text-2xl font-bold sm:text-3xl">Related resources</h2>
           <Link href="/resources" className="text-sm font-semibold text-brand hover:underline">
-            Read more →
+            View library →
           </Link>
         </div>
-        <div className="mt-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="mt-6 grid gap-6 sm:grid-cols-2">
           {articles.map((article) => (
             <ArticleCard key={article.id} article={article} />
           ))}
