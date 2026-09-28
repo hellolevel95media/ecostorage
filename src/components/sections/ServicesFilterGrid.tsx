@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ServiceCard } from "@/components/sections/ServiceCard";
+import { CardCarousel } from "@/components/ui/CardCarousel";
 import type { Service } from "@/types/database";
 
 const TABS = ["All", "Personal", "Corporate"] as const;
@@ -29,11 +30,11 @@ export function ServicesFilterGrid({ services }: { services: Service[] }) {
         ))}
       </div>
 
-      <div className="mt-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+      <CardCarousel className="mt-6" gridClassName="lg:grid-cols-2 xl:grid-cols-3">
         {filtered.map((service) => (
           <ServiceCard key={service.id} service={service} />
         ))}
-      </div>
+      </CardCarousel>
     </div>
   );
 }

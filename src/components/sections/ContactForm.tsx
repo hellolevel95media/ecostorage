@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { createClient } from "@/lib/supabase/client";
 import type { InquiryType } from "@/types/database";
 import { Button } from "@/components/ui/Button";
+import { showToast } from "@/lib/toast";
 
 interface ContactFormProps {
   type: InquiryType;
@@ -37,13 +37,18 @@ export function ContactForm({
       company_name: String(form.get("company_name") ?? "") || null,
       address: String(form.get("address") ?? "") || null,
       message: String(form.get("message") ?? "") || null,
+      website: String(form.get("website") ?? ""),
     };
 
     try {
-      const supabase = createClient();
-      const { error } = await supabase.from("inquiries").insert(payload);
-      if (error) throw error;
+      const res = await fetch("/api/inquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error("request failed");
       setStatus("success");
+      showToast("Thanks — we've got your message!");
       event.currentTarget.reset();
     } catch {
       setStatus("error");
@@ -60,36 +65,53 @@ export function ContactForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className={`rounded-xl border border-border bg-card ${compact ? "p-4" : "p-6"}`}>
-      {title && <h3 className={compact ? "text-base font-semibold" : "text-xl font-semibold"}>{title}</h3>}
+    <form
+      onSubmit={handleSubmit}
+      className={compact ? "" : "rounded-xl border border-border bg-card p-6"}
+    >
+      <input
+        type="text"
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        className="absolute left-[-9999px] h-0 w-0 opacity-0"
+        aria-hidden="true"
+      />
+      {title && (
+        <h3 className={compact ? "text-xs font-semibold tracking-wide text-foreground/40 uppercase" : "text-xl font-semibold"}>
+          {title}
+        </h3>
+      )}
       {description && <p className="mt-1 text-sm text-foreground/70">{description}</p>}
 
-      <div className="mt-4 grid gap-3 sm:grid-cols-2">
-        <Field label="Name" name="name" required />
-        <Field label="Email" name="email" type="email" required />
-        <Field label="Mobile" name="phone" type="tel" />
-        {showCompanyFields ? (
-          <Field label="Company name" name="company_name" />
-        ) : (
-          <Field label="Address" name="address" />
-        )}
-        {showCompanyFields && (
+      <div className={`grid gap-2 ${compact ? "mt-2 sm:grid-cols-3" : "mt-3 sm:grid-cols-2"}`}>
+        <Field label="Name" name="name" required compact={compact} />
+        <Field label="Email" name="email" type="email" required compact={compact} />
+        <Field label="Mobile" name="phone" type="tel" compact={compact} />
+        {!compact && showCompanyFields && <Field label="Company name" name="company_name" />}
+        {!compact && !showCompanyFields && <Field label="Address" name="address" />}
+        {!compact && showCompanyFields && (
           <div className="sm:col-span-2">
             <Field label="Address" name="address" />
           </div>
         )}
-        <div className="sm:col-span-2">
-          <label className="mb-1 block text-xs font-medium text-foreground/60">Message</label>
+        <div className={compact ? "sm:col-span-3" : "sm:col-span-2"}>
+          {!compact && <label className="mb-1 block text-xs font-medium text-foreground/60">Message</label>}
           <textarea
             name="message"
-            rows={compact ? 2 : 4}
+            rows={compact ? 1 : 4}
             maxLength={500}
-            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand"
+            placeholder={compact ? "Message" : undefined}
+            className={`w-full rounded-lg border border-border bg-background text-sm outline-none focus:border-brand ${compact ? "px-3 py-1.5" : "px-3 py-2"}`}
           />
         </div>
       </div>
 
-      <Button type="submit" disabled={status === "submitting"} className="mt-4 w-full sm:w-auto">
+      <Button
+        type="submit"
+        disabled={status === "submitting"}
+        className={compact ? "mt-2 w-full sm:w-auto" : "mt-3 w-full sm:w-auto"}
+      >
         {status === "submitting" ? "Sending..." : "Submit"}
       </Button>
 
@@ -105,20 +127,23 @@ function Field({
   name,
   type = "text",
   required = false,
+  compact = false,
 }: {
   label: string;
   name: string;
   type?: string;
   required?: boolean;
+  compact?: boolean;
 }) {
   return (
     <div>
-      <label className="mb-1 block text-xs font-medium text-foreground/60">{label}</label>
+      {!compact && <label className="mb-1 block text-xs font-medium text-foreground/60">{label}</label>}
       <input
         name={name}
         type={type}
         required={required}
-        className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand"
+        placeholder={compact ? label : undefined}
+        className={`w-full rounded-lg border border-border bg-background text-sm outline-none focus:border-brand ${compact ? "px-3 py-1.5" : "px-3 py-2"}`}
       />
     </div>
   );

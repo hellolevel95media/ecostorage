@@ -11,6 +11,14 @@ export type Page = {
   updated_at: string;
 }
 
+export type TrustStat = {
+  value: number;
+  suffix?: string;
+  prefix?: string;
+  label: string;
+  emphasis?: boolean;
+};
+
 export type Section = {
   id: string;
   page_id: string;
@@ -21,6 +29,7 @@ export type Section = {
   media_url: string | null;
   cta_text: string | null;
   cta_link: string | null;
+  stats: TrustStat[] | null;
   sort_order: number;
   created_at: string;
   updated_at: string;
@@ -65,6 +74,14 @@ export type MediaAsset = {
   file_size: number | null;
   alt_text: string | null;
   uploaded_by: string | null;
+  created_at: string;
+}
+
+export type PageView = {
+  id: string;
+  path: string;
+  referrer: string | null;
+  user_agent: string | null;
   created_at: string;
 }
 
@@ -119,6 +136,12 @@ export interface Database {
         Row: Inquiry;
         Insert: Partial<Inquiry> & Pick<Inquiry, "type" | "name" | "email">;
         Update: Partial<Inquiry>;
+        Relationships: [];
+      };
+      page_views: {
+        Row: PageView;
+        Insert: Partial<PageView> & Pick<PageView, "path">;
+        Update: Partial<PageView>;
         Relationships: [];
       };
     };

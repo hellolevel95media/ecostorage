@@ -43,7 +43,16 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       )}
 
       <div className="mt-6">
-        <MediaPlaceholder ratio="wide" label={article.title} />
+        {article.thumbnail_url ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={article.thumbnail_url}
+            alt={article.title}
+            className="aspect-video w-full rounded-xl object-cover"
+          />
+        ) : (
+          <MediaPlaceholder ratio="wide" label={article.title} />
+        )}
       </div>
 
       <div className="mt-8 space-y-4 text-foreground/80">

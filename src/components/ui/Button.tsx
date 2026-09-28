@@ -10,7 +10,7 @@ const VARIANT_CLASS: Record<Variant, string> = {
 };
 
 const BASE_CLASS =
-  "inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all duration-200 active:scale-[0.97]";
+  "inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all duration-200 active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50 disabled:active:scale-100";
 
 export function Button({
   variant = "primary",
@@ -26,15 +26,21 @@ export function ButtonLink({
   href,
   variant = "primary",
   className = "",
+  onClick,
   children,
 }: {
   href: string;
   variant?: Variant;
   className?: string;
+  onClick?: () => void;
   children: ReactNode;
 }) {
   return (
-    <Link href={href} className={`${BASE_CLASS} ${VARIANT_CLASS[variant]} ${className}`}>
+    <Link
+      href={href}
+      onClick={onClick}
+      className={`${BASE_CLASS} ${VARIANT_CLASS[variant]} ${className}`}
+    >
       {children}
     </Link>
   );

@@ -22,10 +22,17 @@ export default function AdminLoginPage() {
     const supabase = createClient();
     const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
 
+    if (signInError) {
+      setLoading(false);
+      setError(signInError.message);
+      return;
+    }
+
+    const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
     setLoading(false);
 
-    if (signInError) {
-      setError(signInError.message);
+    if (aal && aal.nextLevel === "aal2" && aal.nextLevel !== aal.currentLevel) {
+      router.replace("/admin/mfa-challenge");
       return;
     }
 

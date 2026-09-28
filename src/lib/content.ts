@@ -91,6 +91,7 @@ export function resolveSection(
     body: dbSection.body ?? fallback.body,
     cta_text: dbSection.cta_text ?? fallback.cta_text,
     cta_link: dbSection.cta_link ?? fallback.cta_link,
+    stats: dbSection.stats ?? fallback.stats,
   };
 }
 

@@ -1,0 +1,155 @@
+EcoStorage — Session Changelog (2026-09-29)
+=============================================
+Everything below was built/fixed in this working session, committed together
+as one snapshot before moving the project to a MacBook. This file exists so
+that context carries over even without the original chat history, since
+Claude Code sessions are stored locally per-machine and don't follow the
+project across devices.
+
+MOBILE REDESIGN
+----------------
+- HeroBanner: full-bleed background image/video on mobile with a bottom
+  gradient scrim and content anchored near the bottom; unchanged side-by-side
+  layout preserved on desktop (lg: breakpoint+).
+- Header: mobile nav reworked into an always-visible floating button (top
+  corner, safe-area aware) that expands into a dropdown listing all nav links
+  plus a "Get a Quote" CTA. Desktop header/nav unchanged. Mobile header now
+  scrolls away naturally instead of staying sticky.
+- WhatsAppWidget: repositioned using safe-area-aware CSS (env(safe-area-*))
+  instead of fixed Tailwind offsets, so it doesn't collide with notches/home
+  indicators on modern phones.
+- New CardCarousel component: CSS-only swipeable carousel on mobile/tablet,
+  reverts to a normal CSS grid on desktop. Applied to services and article
+  grids across the homepage, personal, corporate, services, and resources
+  pages.
+- MediaPlaceholder: added a `bleed` prop for full-bleed hero backgrounds.
+- Added `.snap-section` / `.snap-section-flow` scroll-snap classes across all
+  public page sections for a cleaner mobile scroll feel.
+- Toast notifications wired into ContactForm and StorageCalculator success
+  states (src/lib/toast.ts + ToastHost).
+- Verified across common breakpoints (foldables, standard Android/iOS aspect
+  ratios) via manual review — no layout breakage found.
+
+ADMIN CMS / SITE FEATURES (built earlier this session)
+--------------------------------------------------------
+- Admin analytics dashboard (src/app/admin/(protected)/analytics) reading
+  from the new page_views table.
+- Admin security page + MFA challenge flow (2FA self-enrollment via
+  Supabase's authenticator support) — src/app/admin/(protected)/security,
+  src/app/admin/mfa-challenge.
+- Media library additions: MediaPicker component, upload size/type guard in
+  MediaUploader.
+- API routes: /api/inquiries (contact/quote form submissions), /api/analytics
+  (pageview beacon), /api/health (uptime monitoring target).
+- SEO: OrganizationJsonLd structured data, robots.ts, sitemap.ts,
+  opengraph-image.tsx, icon.tsx, apple-icon.tsx.
+- Cookie consent banner (CookieConsent) + /cookies policy page (GDPR-style
+  disclosure) + AnalyticsBeacon (only fires after consent).
+- Email notifications for new inquiries via Resend (src/lib/email.ts).
+- Automated daily DB backups: .github/workflows/backup.yml +
+  scripts/backup-db.sh (needs SUPABASE_PROJECT_REF / SUPABASE_DB_PASSWORD
+  GitHub Actions secrets — see todo.txt item 6).
+- New Supabase migrations: 02_section_stats.sql, 03_page_views.sql,
+  04_media_bucket_limits.sql.
+
+SECURITY — MUTATION TESTING FINDINGS (FIXED)
+-----------------------------------------------
+Ran adversarial/mutation tests against the API routes and rate limiter,
+found and fixed 3 real vulnerabilities:
+
+1. Rate limiter bypassable via X-Forwarded-For spoofing
+   - src/lib/rate-limit.ts read the FIRST hop of X-Forwarded-For (client-
+     controlled, trivially spoofable) instead of the LAST hop (the one the
+     trusted edge/proxy actually appends). An attacker could rotate a fake IP
+     per request and bypass rate limiting entirely.
+   - Fixed: now keys off the last hop in the chain.
+
+2. Unhandled exceptions returned bare empty 500 responses
+   - /api/inquiries and /api/analytics called createServerSupabaseClient()
+     without a try/catch; if it throws (e.g. missing/invalid Supabase env
+     vars), the route crashed with an empty non-JSON body instead of a clean
+     error, breaking the API contract for the frontend.
+   - Fixed: wrapped both calls in try/catch with proper JSON error responses.
+
+3. No request body size limit
+   - Both POST routes fully parsed arbitrarily large payloads (tested up to
+     5MB) before any validation ran — a low-cost DoS/amplification vector.
+   - Fixed: added a Content-Length check (20KB cap) returning 413 before
+     JSON parsing.
+
+Verified via a 3-pass mutation test script (isolated-IP retest confirming
+the bypass, then a clean 8/8 pass after fixes).
+
+Known limitation, flagged not fixed: /admin/login's actual password check
+runs client-side directly against Supabase's Auth API and never passes
+through the rate-limiting middleware, so only the page load (not password-
+guessing attempts) is currently throttled. Would require moving sign-in
+behind a server route — a bigger architectural change, left as a decision
+for later.
+
+SECURITY — BEST PRACTICE HARDENING
+-------------------------------------
+- npm audit: 0 vulnerabilities across all 541 dependencies.
+- next.config.ts: added `poweredByHeader: false` (drops the X-Powered-By
+  fingerprinting header) and a Strict-Transport-Security header (defense in
+  depth alongside whatever Vercel already adds).
+- Confirmed no open-redirect vectors — all redirect() targets in the codebase
+  are hardcoded literals, none user-controlled.
+- RLS / admin access gap: every "admin" RLS policy in the DB grants access to
+  ANY authenticated Supabase user, not specifically an admin — dangerous if
+  Supabase's public sign-up is left enabled. Fixed with a fail-closed
+  app-level email allowlist (ADMIN_ALLOWED_EMAILS env var) checked in
+  src/app/admin/(protected)/layout.tsx — locks out everyone, including the
+  real admin, until the env var is set. This is a BACKSTOP, not a
+  replacement for disabling public sign-up in the Supabase dashboard (see
+  todo.txt item 1 — still needs to be done by hand).
+- Media uploads had no real size/type enforcement anywhere (client-side
+  `accept` hint only, trivially bypassable). Fixed with a new migration
+  (04_media_bucket_limits.sql) setting a real 50MB cap and an image/video
+  MIME allowlist at the Supabase Storage bucket level (SVG deliberately
+  excluded — embedded-script XSS risk on a publicly-served bucket), plus a
+  matching client-side pre-check in MediaUploader.tsx for fast UX feedback.
+
+LOAD-TIME / PERFORMANCE
+--------------------------
+- Found via production bundle analysis: the Supabase browser client
+  (~67.5KB gzip) and the Sentry SDK (~126KB gzip) were both being eagerly
+  loaded on every single page view, including the homepage, regardless of
+  whether the visitor ever submitted a form or hit an error.
+- Fixed: StorageCalculator.tsx now dynamically imports the Supabase client
+  only inside its submit handler, instead of importing it at module scope.
+  Confirmed via prod build that the chunk no longer appears in the
+  homepage/personal-page HTML at all.
+- Fixed: instrumentation-client.ts now only imports/initializes Sentry when
+  NEXT_PUBLIC_SENTRY_DSN is actually set (it isn't yet — see todo.txt item
+  4). Since that env var is inlined at build time, the whole Sentry import is
+  dead-code-eliminated from the client bundle until Sentry is configured.
+- Found and fixed a related latent bug while in there: the CSP's connect-src
+  never allowlisted Sentry's ingest host, so once a real DSN is added, error
+  reports would have been silently blocked by the site's own CSP. Now
+  derives the ingest origin from the DSN automatically (same pattern already
+  used for the Supabase host).
+- Checked and confirmed fine, no changes needed: next/image config (not
+  applicable yet — project deliberately uses no static images per its
+  media-placeholder convention), font loading (already self-hosted via
+  next/font/google, no external blocking requests).
+
+VERIFICATION
+---------------
+- `npm run lint` — clean.
+- `npm run build` — clean production build, all 19 routes build successfully.
+- Manual curl/mutation-test verification of all security and load-time fixes
+  described above.
+
+STILL OUTSTANDING (see todo.txt for full detail — all require YOUR action
+outside of code, nothing here can be done by editing files):
+1. [CRITICAL] Disable public sign-up in the Supabase dashboard and set
+   ADMIN_ALLOWED_EMAILS in .env.local.
+2. Connect a live Supabase project (nothing DB-backed works without one).
+3. Resend (inquiry email notifications).
+4. Sentry (error monitoring).
+5. UptimeRobot (uptime monitoring against /api/health).
+6. GitHub Actions secrets for the automated DB backup workflow.
+7. Enable 2FA on your own admin account (feature is built, just not turned
+   on yet).
+8. Decide on media hosting if you outgrow Supabase Storage's free tier.

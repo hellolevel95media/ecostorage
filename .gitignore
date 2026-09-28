@@ -50,3 +50,5 @@ next-env.d.ts
 
 # Allow committing the safe template
 !.env.example
+# Local DB backup dumps
+backups/

@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { checkRateLimit, clientIp } from "@/lib/rate-limit";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -10,6 +11,23 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
  * Supabase auth cookie on every request so sessions don't expire mid-visit.
  */
 export async function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  if (pathname.startsWith("/api/")) {
+    const { allowed } = checkRateLimit(`api:${clientIp(request)}:${pathname}`, 20, 60_000);
+    if (!allowed) {
+      return NextResponse.json({ error: "Too many requests. Please try again shortly." }, { status: 429 });
+    }
+    return NextResponse.next({ request });
+  }
+
+  if (pathname === "/admin/login") {
+    const { allowed } = checkRateLimit(`login:${clientIp(request)}`, 10, 5 * 60_000);
+    if (!allowed) {
+      return NextResponse.json({ error: "Too many login attempts. Please try again later." }, { status: 429 });
+    }
+  }
+
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
@@ -31,7 +49,6 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { pathname } = request.nextUrl;
   const isLoginRoute = pathname === "/admin/login";
 
   if (!user && !isLoginRoute) {
@@ -46,5 +63,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*", "/api/:path*"],
 };

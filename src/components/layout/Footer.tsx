@@ -5,26 +5,26 @@ import { COMPANY, NAV_LINKS } from "@/lib/nav";
 
 export function Footer() {
   return (
-    <footer className="relative mt-24 border-t border-border bg-background">
+    <footer className="relative mt-10 border-t border-border bg-background">
       <div
         aria-hidden
         className="h-px w-full bg-gradient-to-r from-transparent via-brand/60 to-transparent"
       />
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.1fr_0.7fr_1.2fr] lg:gap-16 lg:px-8">
+      <div className="mx-auto grid max-w-7xl gap-4 px-4 py-4 sm:px-6 lg:grid-cols-[0.9fr_0.6fr_1.4fr] lg:items-start lg:gap-10 lg:px-8">
         <div>
           <Logo />
-          <p className="mt-4 max-w-xs text-sm text-foreground/60">
+          <p className="mt-2 max-w-xs text-sm text-foreground/60">
             Flexible personal and corporate storage, with pickup, delivery, and climate-controlled
             facilities.
           </p>
-          <address className="mt-4 space-y-1 text-sm text-foreground/60 not-italic">
+          <address className="mt-2 space-y-0.5 text-sm text-foreground/60 not-italic">
             <p>{COMPANY.address}</p>
             <p>{COMPANY.email}</p>
             <p>{COMPANY.phone}</p>
           </address>
           <Link
             href={COMPANY.googleReviewUrl}
-            className="mt-4 inline-block text-sm font-medium text-brand hover:underline"
+            className="mt-2 inline-block text-sm font-medium text-brand hover:underline"
           >
             Leave us a Google review →
           </Link>
@@ -47,13 +47,18 @@ export function Footer() {
       </div>
 
       <div className="border-t border-border">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-6 text-xs text-foreground/40 sm:flex-row sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-2 text-xs text-foreground/40 sm:flex-row sm:px-6 lg:px-8">
           <p>
             © {new Date().getFullYear()} {COMPANY.name}. All rights reserved.
           </p>
-          <Link href="/privacy" className="hover:text-brand">
-            Privacy Policy
-          </Link>
+          <div className="flex gap-4">
+            <Link href="/privacy" className="hover:text-brand">
+              Privacy Policy
+            </Link>
+            <Link href="/cookies" className="hover:text-brand">
+              Cookie Policy
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

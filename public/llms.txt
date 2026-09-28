@@ -1,0 +1,24 @@
+# EcoStorage
+
+> EcoStorage is a full-service pickup-and-delivery storage company serving personal and corporate customers across Singapore. The company collects, stores, and redelivers belongings on the customer's schedule — customers never visit a facility themselves — using recycled-pallet and wooden-crate storage methods that run at ambient (not air-conditioned) temperature for a lower carbon footprint than traditional 24/7 air-conditioned self-storage.
+
+EcoStorage operates 13 islandwide locations in Singapore and has served the market for 8 years. Facility/warehouse addresses are not published; the public contact address is 7030 Ang Mo Kio Ave 5, #08-94, Singapore 569880.
+
+## Services
+
+- [Personal storage](https://www.storagespace.com.sg/personal): pickup, storage, and on-demand delivery for households — dorm move-outs, full-home decluttering, and life transitions.
+- [Corporate storage](https://www.storagespace.com.sg/corporate): records/document archiving, inventory and pallet storage, and asset storage with account management.
+- [All services](https://www.storagespace.com.sg/services): pickup & storage, on-demand delivery, records management, inventory storage.
+- [Storage pricing calculator](https://www.storagespace.com.sg/): instant quotes by unit size, commitment period, and delivery add-ons, with environmental savings (CO2 and trees saved) shown alongside pricing.
+
+## Company
+
+- [Our mission](https://www.storagespace.com.sg/mission)
+- [Partner program](https://www.storagespace.com.sg/partner): referral partnerships for real estate agents, property managers, and moving companies.
+- [Resource library](https://www.storagespace.com.sg/resources): guides on packing, records retention, and climate-controlled storage.
+- [Contact](https://www.storagespace.com.sg/contact)
+
+## Policies
+
+- [Privacy Policy](https://www.storagespace.com.sg/privacy)
+- [Cookie Policy](https://www.storagespace.com.sg/cookies)

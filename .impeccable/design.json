@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-25T00:00:00Z",
+  "title": "Design System: EcoStorage",
+  "extensions": {
+    "colorMeta": {
+      "brand": { "role": "primary", "displayName": "Signal Mint", "canonical": "#00e599" },
+      "brand-foreground": { "role": "primary-foreground", "displayName": "Ink on Mint", "canonical": "#04140d" },
+      "background": { "role": "neutral", "displayName": "Paper White", "canonical": "#ffffff" },
+      "foreground": { "role": "neutral", "displayName": "Warehouse Slate", "canonical": "#0b0f17" },
+      "surface": { "role": "neutral", "displayName": "Soft Surface", "canonical": "#f4f6f8" },
+      "border": { "role": "neutral", "displayName": "Hairline Border", "canonical": "#e5e8ec" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero H1s only." },
+      "headline": { "displayName": "Headline", "purpose": "Section H2s." },
+      "body": { "displayName": "Body", "purpose": "Paragraph copy." },
+      "label": { "displayName": "Label", "purpose": "Eyebrow labels, tags, field labels." }
+    },
+    "shadows": [
+      { "name": "shadow-card", "value": "0 1px 2px 0 rgba(15,23,42,0.04), 0 18px 40px -22px rgba(15,23,42,0.18)", "purpose": "Resting elevation for panels meant to read as raised." },
+      { "name": "shadow-card-hover", "value": "0 1px 2px 0 rgba(15,23,42,0.06), 0 24px 48px -20px rgba(15,23,42,0.24)", "purpose": "Hover state for interactive cards." },
+      { "name": "shadow-glow", "value": "0 0 0 1px rgba(0,229,153,0.4), 0 10px 30px -10px rgba(0,229,153,0.5)", "purpose": "Primary button glow, brand reinforcement." }
+    ],
+    "motion": [
+      { "name": "duration-standard", "value": "200ms", "purpose": "transition-all duration-200 on buttons/cards." },
+      { "name": "press-scale", "value": "scale(0.97)", "purpose": "active:scale-[0.97] press feedback on buttons." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Main CTA button, fully rounded with brand glow.",
+      "html": "<button class=\"btn-primary\">Get a Quote</button>",
+      "css": ".btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 9999px; padding: 12px 24px; font-size: 0.875rem; font-weight: 600; background: #00e599; color: #04140d; box-shadow: 0 0 0 1px rgba(0,229,153,0.4), 0 10px 30px -10px rgba(0,229,153,0.5); transition: all 200ms; } .btn-primary:hover { background: rgba(0,229,153,0.9); } .btn-primary:active { transform: scale(0.97); } .btn-primary:disabled { opacity: 0.5; pointer-events: none; }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Service/article card with hover lift.",
+      "html": "<div class=\"ds-card\">...</div>",
+      "css": ".ds-card { border-radius: 12px; border: 1px solid #e5e8ec; background: #ffffff; transition: all 200ms; } .ds-card:hover { transform: translateY(-4px); border-color: rgba(0,229,153,0.3); box-shadow: 0 1px 2px 0 rgba(15,23,42,0.06), 0 24px 48px -20px rgba(15,23,42,0.24); }"
+    },
+    {
+      "name": "Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Text field used across contact/lead forms.",
+      "html": "<input class=\"ds-input\" type=\"text\" />",
+      "css": ".ds-input { width: 100%; border-radius: 8px; border: 1px solid #e5e8ec; background: #ffffff; padding: 8px 12px; font-size: 0.875rem; outline: none; } .ds-input:focus { border-color: #00e599; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Hassle-Free Vault",
+    "overview": "EcoStorage is pay-as-you-use, secure, hassle-free storage — customers never touch a facility, and the site's job is to make that promise feel instantly credible. The base surface stays clean, white, and unhurried, so trust-building content reads with total clarity. Brand green is a confident, recurring signal threaded through icons, stats, active states, and dividers so the sustainability story stays visually present throughout. The voice is approachable and warm rather than clinical: rounded-full buttons and rounded-xl cards soften the logistics-company edge, while numeric content is set in tabular figures for precision. Depth is structural, not ambient — surfaces sit flat at rest and shadows only appear as direct feedback to hover/focus.",
+    "keyCharacteristics": [
+      "Clean white base canvas with brand green as a confident, recurring signal",
+      "Rounded, tactile forms over sharp geometry",
+      "Numbers always set in tabular figures for a precise, trustworthy feel",
+      "Shadows appear only in response to interaction",
+      "No stock photography — empty media slots use skeleton shimmer"
+    ],
+    "rules": [
+      { "name": "The Recurring Signal Rule", "body": "Signal Mint is allowed to repeat across a single screen because the color itself carries meaning (trust + sustainability); it should never become the dominant surface color.", "section": "colors" },
+      { "name": "The Tabular Numbers Rule", "body": "Any live/computed numeric value is set with tabular-nums so digits don't shift width as values change.", "section": "typography" },
+      { "name": "The Earned Shadow Rule", "body": "A shadow only appears where the user's attention or action just landed (hover, focus, primary CTA). Flat surfaces stay flat until then.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use Signal Mint repeatedly and confidently across a screen — stats, CTAs, active states, dividers.",
+      "Do set every computed/live numeric value in tabular-nums.",
+      "Do keep all corners rounded — no sharp corners.",
+      "Do keep shadows flat at rest and only introduce them on hover/focus."
+    ],
+    "donts": [
+      "Don't hardcode stock photography, illustrations, or video — media slots stay empty placeholders.",
+      "Don't apply shadow-card as an always-on ambient shadow.",
+      "Don't introduce a second display typeface or serif pairing.",
+      "Don't disclose specific warehouse/facility locations in any UI copy or design artifact."
+    ]
+  }
+}

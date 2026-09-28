@@ -12,7 +12,7 @@ export function TrustBanner({
   const ctaLink = copy.cta_link ?? "/contact";
 
   return (
-    <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+    <section className="snap-section-flow mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
       <div className="relative overflow-hidden rounded-2xl border border-border bg-surface/60 px-6 py-12 text-center shadow-card sm:px-10 sm:py-16">
         <div
           aria-hidden

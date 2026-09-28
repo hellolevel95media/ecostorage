@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/Button";
+import { MediaPicker } from "@/components/admin/MediaPicker";
 import type { Article, ArticleStatus } from "@/types/database";
 
 export function ArticleForm({ article }: { article?: Article }) {
@@ -63,11 +64,7 @@ export function ArticleForm({ article }: { article?: Article }) {
           name="tags"
           defaultValue={article?.tags?.join(", ") ?? ""}
         />
-        <TextField
-          label="Thumbnail URL"
-          name="thumbnail_url"
-          defaultValue={article?.thumbnail_url ?? ""}
-        />
+        <MediaPicker label="Thumbnail" name="thumbnail_url" defaultValue={article?.thumbnail_url ?? ""} />
         <TextField label="Author" name="author" defaultValue={article?.author ?? ""} />
         <div>
           <label className="mb-1 block text-xs font-medium text-foreground/60">Status</label>

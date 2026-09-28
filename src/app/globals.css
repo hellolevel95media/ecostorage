@@ -7,6 +7,10 @@
   --card: #ffffff;
   --border: #e5e8ec;
   --brand: #00e599;
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-r: env(safe-area-inset-right, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-l: env(safe-area-inset-left, 0px);
 }
 
 @theme inline {
@@ -17,8 +21,8 @@
   --color-border: var(--border);
   --color-brand: var(--brand);
   --color-brand-foreground: #04140d;
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-app-sans);
+  --font-mono: var(--font-app-mono);
   --shadow-card: 0 1px 2px 0 rgba(15, 23, 42, 0.04), 0 18px 40px -22px rgba(15, 23, 42, 0.18);
   --shadow-card-hover: 0 1px 2px 0 rgba(15, 23, 42, 0.06), 0 24px 48px -20px rgba(15, 23, 42, 0.24);
   --shadow-glow: 0 0 0 1px rgba(0, 229, 153, 0.4), 0 10px 30px -10px rgba(0, 229, 153, 0.5);
@@ -30,6 +34,12 @@ body {
     var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  caret-color: var(--brand);
+  scrollbar-color: var(--border) var(--background);
+}
+
+a {
+  text-underline-offset: 3px;
 }
 
 ::selection {
@@ -79,5 +89,51 @@ body {
   }
   100% {
     background-position: -200% 0;
+  }
+}
+
+@keyframes toast-pop {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.toast-pop {
+  animation: toast-pop 0.2s ease-out;
+}
+
+/* ==========================================================================
+   Mobile layout (below the `lg` breakpoint used everywhere else on the site
+   to switch between the desktop nav and the mobile nav).
+   ========================================================================== */
+@media (max-width: 1023.98px) {
+  html {
+    scroll-snap-type: y proximity;
+  }
+
+  /* One full-viewport section per scroll stop. Sections that opt out with
+     .snap-section-flow keep natural height for content that shouldn't be
+     compressed to fit a single screen (long listings, long-form articles). */
+  .snap-section {
+    scroll-snap-align: start;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  .snap-section-flow {
+    scroll-snap-align: start;
+  }
+
+  /* Prevents iOS Safari from zooming the viewport when a form field is
+     focused — it only does this when the field's font-size is under 16px. */
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
   }
 }

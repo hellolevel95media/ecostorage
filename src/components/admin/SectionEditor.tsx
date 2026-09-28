@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/Button";
 import type { SectionCopy } from "@/lib/fallback-content";
+import type { TrustStat } from "@/types/database";
+
+const EMPTY_STAT: TrustStat = { value: 0, suffix: "", label: "" };
 
 export function SectionEditor({
   pageSlug,
@@ -21,6 +24,14 @@ export function SectionEditor({
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const hasStats = sectionKey === "trust_banner";
+  const [stats, setStats] = useState<TrustStat[]>(
+    initial.stats && initial.stats.length > 0 ? initial.stats : [EMPTY_STAT, EMPTY_STAT, EMPTY_STAT, EMPTY_STAT]
+  );
+
+  function updateStat(index: number, patch: Partial<TrustStat>) {
+    setStats((prev) => prev.map((s, i) => (i === index ? { ...s, ...patch } : s)));
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -52,6 +63,7 @@ export function SectionEditor({
         body: String(form.get("body") ?? "") || null,
         cta_text: String(form.get("cta_text") ?? "") || null,
         cta_link: String(form.get("cta_link") ?? "") || null,
+        stats: hasStats ? stats.filter((s) => s.label.trim().length > 0) : null,
       },
       { onConflict: "page_id,section_key" }
     );
@@ -87,6 +99,51 @@ export function SectionEditor({
           <Field label="CTA text" name="cta_text" defaultValue={initial.cta_text} />
           <Field label="CTA link" name="cta_link" defaultValue={initial.cta_link} />
         </div>
+
+        {hasStats && (
+          <div>
+            <p className="mb-2 text-xs font-medium text-foreground/60">Trust stats (4 count-up bubbles)</p>
+            <div className="space-y-3">
+              {stats.map((stat, i) => (
+                <div key={i} className="grid grid-cols-[1fr_4rem_4rem_auto] items-end gap-2 rounded-lg border border-border p-3">
+                  <div>
+                    <label className="mb-1 block text-xs font-medium text-foreground/60">Label</label>
+                    <input
+                      value={stat.label}
+                      onChange={(e) => updateStat(i, { label: e.target.value })}
+                      className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-medium text-foreground/60">Value</label>
+                    <input
+                      type="number"
+                      value={stat.value}
+                      onChange={(e) => updateStat(i, { value: Number(e.target.value) || 0 })}
+                      className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-medium text-foreground/60">Suffix</label>
+                    <input
+                      value={stat.suffix ?? ""}
+                      onChange={(e) => updateStat(i, { suffix: e.target.value })}
+                      className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand"
+                    />
+                  </div>
+                  <label className="flex items-center gap-1 pb-2 text-xs text-foreground/60">
+                    <input
+                      type="checkbox"
+                      checked={Boolean(stat.emphasis)}
+                      onChange={(e) => updateStat(i, { emphasis: e.target.checked })}
+                    />
+                    Emphasis
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="mt-4 flex items-center gap-3">

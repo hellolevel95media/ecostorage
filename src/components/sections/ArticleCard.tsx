@@ -8,7 +8,16 @@ export function ArticleCard({ article }: { article: Article }) {
       href={`/resources/${article.slug}`}
       className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card transition-all duration-200 hover:-translate-y-1 hover:border-brand/40 hover:shadow-card-hover"
     >
-      <MediaPlaceholder ratio="video" label={article.title} />
+      {article.thumbnail_url ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={article.thumbnail_url}
+          alt={article.title}
+          className="aspect-video w-full object-cover"
+        />
+      ) : (
+        <MediaPlaceholder ratio="video" label={article.title} />
+      )}
       <div className="flex flex-1 flex-col p-5">
         {article.category && (
           <span className="text-xs font-semibold tracking-wide text-brand uppercase">

@@ -10,6 +10,8 @@ const LINKS = [
   { href: "/admin/services", label: "Services" },
   { href: "/admin/media", label: "Media Library" },
   { href: "/admin/inquiries", label: "Inquiries" },
+  { href: "/admin/analytics", label: "Analytics" },
+  { href: "/admin/security", label: "Security" },
 ];
 
 export function AdminSidebar() {

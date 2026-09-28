@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { HeroBanner } from "@/components/sections/HeroBanner";
-import { TrustBanner } from "@/components/sections/TrustBanner";
+import { TrustStats } from "@/components/sections/TrustStats";
 import { StorageCalculator } from "@/components/sections/StorageCalculator";
 import { ServiceCard } from "@/components/sections/ServiceCard";
 import { ArticleCard } from "@/components/sections/ArticleCard";
+import { CardCarousel } from "@/components/ui/CardCarousel";
 import { getPageSections, getPublishedArticles, getServices, resolveSection } from "@/lib/content";
 
 export const dynamic = "force-dynamic";
@@ -21,35 +22,35 @@ export default async function HomePage() {
   return (
     <>
       <HeroBanner copy={hero} />
-      <TrustBanner copy={trust} />
+      <TrustStats copy={trust} />
       <StorageCalculator />
 
-      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+      <section className="snap-section-flow mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="flex items-end justify-between">
           <h2 className="text-2xl font-bold sm:text-3xl">Our services</h2>
           <Link href="/services" className="text-sm font-semibold text-brand hover:underline">
             View all →
           </Link>
         </div>
-        <div className="mt-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+        <CardCarousel className="mt-6" gridClassName="lg:grid-cols-2 xl:grid-cols-4">
           {services.slice(0, 4).map((service) => (
             <ServiceCard key={service.id} service={service} />
           ))}
-        </div>
+        </CardCarousel>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+      <section className="snap-section-flow mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="flex items-end justify-between">
           <h2 className="text-2xl font-bold sm:text-3xl">Resource library</h2>
           <Link href="/resources" className="text-sm font-semibold text-brand hover:underline">
             Read more →
           </Link>
         </div>
-        <div className="mt-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+        <CardCarousel className="mt-6" gridClassName="lg:grid-cols-2 xl:grid-cols-3">
           {articles.map((article) => (
             <ArticleCard key={article.id} article={article} />
           ))}
-        </div>
+        </CardCarousel>
       </section>
     </>
   );

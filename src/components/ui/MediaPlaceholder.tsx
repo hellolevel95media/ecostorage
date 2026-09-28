@@ -12,6 +12,9 @@ interface MediaPlaceholderProps {
   label?: string;
   kind?: "image" | "video";
   className?: string;
+  /** Fills the parent instead of enforcing its own aspect ratio — used for
+   * full-bleed mobile hero backgrounds where the parent section controls height. */
+  bleed?: boolean;
 }
 
 /**
@@ -24,10 +27,11 @@ export function MediaPlaceholder({
   label,
   kind = "image",
   className = "",
+  bleed = false,
 }: MediaPlaceholderProps) {
   return (
     <div
-      className={`skeleton relative flex w-full items-center justify-center overflow-hidden rounded-xl border border-border ${RATIO_CLASS[ratio]} ${className}`}
+      className={`skeleton relative flex w-full items-center justify-center overflow-hidden border border-border ${bleed ? "h-full rounded-none" : `rounded-xl ${RATIO_CLASS[ratio]}`} ${className}`}
       role="img"
       aria-label={label ?? "Media placeholder"}
     >

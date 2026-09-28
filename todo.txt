@@ -1,0 +1,98 @@
+EcoStorage — Outstanding Setup Tasks
+=====================================
+These are the things that need YOUR action outside of code (account creation,
+secrets, dashboard config). Nothing here should be done by pasting real
+passwords/keys into chat — always enter them directly into .env.local or the
+relevant dashboard's own UI.
+
+1) [CRITICAL — SECURITY] LOCK DOWN ADMIN SIGN-UP
+   Why: right now, RLS grants full CMS/inquiries access to ANY authenticated
+   Supabase user, not specifically you. A code-level allowlist (step 2 below)
+   is a backstop, but the real fix is disabling public sign-up at the source.
+   Steps:
+   - In the Supabase dashboard: Authentication > Providers > Email > turn
+     OFF "Allow new users to sign up".
+   - Add your own admin email(s) to .env.local:
+       ADMIN_ALLOWED_EMAILS=you@example.com
+     (comma-separate if more than one admin). Without this set, /admin locks
+     everyone out, including you — it fails closed on purpose.
+
+2) CONNECT A LIVE SUPABASE PROJECT
+   Why: nothing that touches the database works yet (admin CMS, trust stats,
+   analytics dashboard, inquiries, media library) — everything currently
+   fails soft or 500s.
+   Steps:
+   - Create a project at supabase.com (or use an existing one).
+   - In Project Settings > API, copy the Project URL and anon/publishable key.
+   - Copy these into .env.local (use .env.example as the template).
+   - Run the SQL in supabase/migrations/ (01, 02, 03) against the project,
+     in order, via the Supabase SQL editor or CLI.
+   - Restart the dev server so it picks up the new env vars.
+
+3) RESEND — EMAIL NOTIFICATIONS FOR NEW INQUIRIES
+   Why: right now inquiries just sit in the database with no alert.
+   Steps:
+   - Sign up free at resend.com.
+   - Add and verify a sending domain (or use their test domain while testing).
+   - Create an API key.
+   - Add to .env.local:
+       RESEND_API_KEY=...
+       INQUIRY_NOTIFICATION_EMAIL=<where you want alerts sent>
+       INQUIRY_NOTIFICATION_FROM=<a verified sender address>
+   - Submit a test inquiry via the contact form to confirm the email arrives.
+
+4) SENTRY — ERROR MONITORING
+   Why: production errors are currently invisible unless a user reports them.
+   Steps:
+   - Sign up free at sentry.io.
+   - Create a new project, framework = Next.js.
+   - Copy the DSN it gives you.
+   - Add to .env.local:
+       SENTRY_DSN=...
+       NEXT_PUBLIC_SENTRY_DSN=...
+   - Optional (for source-mapped stack traces on build): also set
+     SENTRY_ORG, SENTRY_PROJECT, SENTRY_AUTH_TOKEN (create the token under
+     Settings > Auth Tokens in Sentry).
+   - Trigger a test error and confirm it shows up in the Sentry dashboard.
+
+5) UPTIMEROBOT — UPTIME MONITORING
+   Why: independent alerting if the site goes down, outside of Vercel.
+   Steps:
+   - Sign up free at uptimerobot.com.
+   - Add a new HTTP(s) monitor pointing at:
+       https://www.storagespace.com.sg/api/health
+   - Set check interval (5 min is fine on the free tier) and alert contacts
+     (email/SMS) for when it stops returning 200.
+
+6) GITHUB ACTIONS SECRETS — AUTOMATED DB BACKUPS
+   Why: the backup workflow (.github/workflows/backup.yml) is already built
+   but needs credentials to actually run.
+   Steps:
+   - In the GitHub repo: Settings > Secrets and variables > Actions.
+   - Add secret SUPABASE_PROJECT_REF (the project ref from the Supabase URL).
+   - Add secret SUPABASE_DB_PASSWORD (the Postgres password, from Supabase
+     Project Settings > Database).
+   - The workflow runs daily at 03:00 UTC automatically; you can also trigger
+     it manually from the Actions tab ("Run workflow").
+   - Backups land as a downloadable artifact on each workflow run (kept 30
+     days). For longer retention, consider adding an upload step to S3/Backblaze
+     later.
+
+7) ADMIN 2FA — ENABLE ON YOUR OWN ACCOUNT
+   Why: the feature is built, but it isn't "on" until you personally enroll.
+   Steps:
+   - Log in to /admin.
+   - Go to the "Security" tab in the sidebar.
+   - Click "Enable 2FA", scan the QR code with an authenticator app (Google
+     Authenticator, Authy, 1Password, etc.), enter the 6-digit code to confirm.
+   - From then on, sign-in will ask for a code after your password.
+
+8) DECIDE ON A FREE MEDIA HOSTING PLAN (IF NOT USING SUPABASE STORAGE)
+   Why: flagged earlier as an open question — Supabase Storage is already
+   wired up and works for images/video once step 1 is done, so this is only
+   relevant if you want a separate CDN for large video files.
+   Steps (optional):
+   - If Supabase Storage's free tier (1GB) is enough for now, no action needed.
+   - If you outgrow it, Cloudflare R2 (free egress) or Bunny.net are worth
+     evaluating for video specifically.
+

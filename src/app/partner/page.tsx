@@ -21,12 +21,12 @@ export default async function PartnerPage() {
       <HeroBanner copy={hero} />
       <TrustBanner copy={trust} />
 
-      <section className="mx-auto max-w-3xl px-4 py-10 text-center sm:px-6 lg:px-8">
+      <section className="snap-section-flow mx-auto max-w-3xl px-4 py-10 text-center sm:px-6 lg:px-8">
         <h2 className="text-2xl font-bold sm:text-3xl">{referral.heading}</h2>
         {referral.body && <p className="mt-3 text-foreground/70">{referral.body}</p>}
       </section>
 
-      <section id="partner-form" className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
+      <section id="partner-form" className="snap-section-flow mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
         <ContactForm
           type="partner"
           title="Apply to become a partner"

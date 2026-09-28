@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { ArticleCard } from "@/components/sections/ArticleCard";
+import { CardCarousel } from "@/components/ui/CardCarousel";
 import type { Article } from "@/types/database";
 
 export function ResourceFilterGrid({ articles }: { articles: Article[] }) {
@@ -35,14 +36,15 @@ export function ResourceFilterGrid({ articles }: { articles: Article[] }) {
         </nav>
       </aside>
 
-      <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-        {filtered.map((article) => (
-          <ArticleCard key={article.id} article={article} />
-        ))}
-        {filtered.length === 0 && (
-          <p className="col-span-full text-sm text-foreground/60">No articles in this topic yet.</p>
-        )}
-      </div>
+      {filtered.length === 0 ? (
+        <p className="mt-6 text-sm text-foreground/60">No articles in this topic yet.</p>
+      ) : (
+        <CardCarousel gridClassName="lg:grid-cols-2 xl:grid-cols-3">
+          {filtered.map((article) => (
+            <ArticleCard key={article.id} article={article} />
+          ))}
+        </CardCarousel>
+      )}
     </div>
   );
 }

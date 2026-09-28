@@ -1,8 +1,8 @@
 "use client";
 
 import { useMemo, useState, type FormEvent, type ReactNode } from "react";
-import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/Button";
+import { showToast } from "@/lib/toast";
 import {
   SIZE_GUIDE,
   MODULE_SQFT,
@@ -107,10 +107,15 @@ export function StorageCalculator() {
     };
 
     try {
+      // Loaded on submit rather than imported at module scope — this
+      // component renders on the homepage, and the Supabase browser client
+      // is a ~67KB gzip chunk that most visitors never need to download.
+      const { createClient } = await import("@/lib/supabase/client");
       const supabase = createClient();
       const { error } = await supabase.from("inquiries").insert(payload);
       if (error) throw error;
       setStatus("success");
+      showToast("Thanks — your price is locked in!");
     } catch {
       setStatus("error");
     }
@@ -118,7 +123,7 @@ export function StorageCalculator() {
 
   if (status === "success") {
     return (
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <section className="snap-section-flow mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="rounded-3xl border border-brand/30 bg-brand/5 p-10 text-center shadow-card">
           <p className="text-2xl font-bold text-brand">Price Locked In!</p>
           <p className="mt-2 text-foreground/70">
@@ -130,8 +135,8 @@ export function StorageCalculator() {
   }
 
   return (
-    <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-      <div className="rounded-3xl border border-border bg-surface/60 p-5 shadow-card sm:p-8 lg:p-10">
+    <section className="snap-section-flow mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <div className="rounded-3xl border-2 border-foreground/15 bg-surface/60 p-5 shadow-card sm:p-8 lg:p-10">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-balance sm:text-3xl">
             Not sure how much space you need?
@@ -145,7 +150,7 @@ export function StorageCalculator() {
         <GuideHeaderBanner guide={guide} />
         <ItemBreakdownGrid guide={guide} />
 
-        <div className="mt-10 border-t border-border pt-8">
+        <div className="mt-10 border-t-2 border-foreground/15 pt-8">
           {/* Mobile wizard */}
           <div className="lg:hidden">
             <StepIndicator current={mobileStep} maxStep={maxMobileStep} onSelect={goToStep} />
@@ -205,9 +210,9 @@ export function StorageCalculator() {
               />
             </div>
 
-            <div className="space-y-6 rounded-2xl border border-border bg-card p-6 shadow-card">
+            <div className="space-y-6 rounded-2xl border-2 border-foreground/15 bg-card p-6 shadow-card">
               <RateDashboard quote={quote} numUnits={numUnits} />
-              <form onSubmit={handleSubmit} className="space-y-3 border-t border-border pt-6">
+              <form onSubmit={handleSubmit} className="space-y-3 border-t-2 border-foreground/15 pt-6">
                 <ContactFields contact={contact} errors={errors} onChange={setContact} />
                 <Button type="submit" disabled={status === "submitting"} className="w-full">
                   {status === "submitting" ? "Locking in your rate..." : "Lock In My Rate"}
@@ -250,11 +255,11 @@ function SizeGuideSelector({
             className={`flex shrink-0 flex-col rounded-xl border px-4 py-3 text-left shadow-card transition-colors sm:shrink ${
               active
                 ? "border-brand bg-brand text-brand-foreground shadow-glow"
-                : "border-border bg-card text-foreground hover:border-brand/40"
+                : "border-2 border-foreground/20 bg-card text-foreground hover:border-brand/60"
             }`}
           >
             <span className="text-sm font-bold whitespace-nowrap">{option.sqft} sqft</span>
-            <span className={`mt-0.5 text-xs whitespace-nowrap ${active ? "text-brand-foreground/80" : "text-foreground/60"}`}>
+            <span className={`mt-0.5 text-xs whitespace-nowrap tabular-nums ${active ? "text-brand-foreground/80" : "text-foreground/60"}`}>
               From ${option.monthlyRate}/mo
             </span>
           </button>
@@ -277,7 +282,7 @@ function GuideHeaderBanner({ guide }: { guide: SizeGuideOption }) {
         </p>
         <p className="text-sm opacity-90">Ideal for: {guide.idealFor}</p>
       </div>
-      <span className="inline-flex w-fit items-center rounded-full bg-brand-foreground/10 px-3 py-1 text-sm font-bold">
+      <span className="inline-flex w-fit items-center rounded-full bg-brand-foreground/10 px-3 py-1 text-sm font-bold tabular-nums">
         From ${guide.monthlyRate}/mo
       </span>
     </div>
@@ -290,7 +295,7 @@ function ItemBreakdownGrid({ guide }: { guide: SizeGuideOption }) {
       {guide.items.map((item) => (
         <div
           key={item}
-          className="flex items-center gap-2 rounded-lg border border-border bg-card p-3 text-sm"
+          className="flex items-center gap-2 rounded-lg border-2 border-foreground/15 bg-card p-3 text-sm"
         >
           <span
             aria-hidden="true"
@@ -345,8 +350,8 @@ function StepIndicator({
                 active
                   ? "border-brand bg-brand text-brand-foreground"
                   : reached
-                    ? "border-brand/40 text-brand"
-                    : "border-border"
+                    ? "border-brand/60 text-brand"
+                    : "border-foreground/20"
               }`}
             >
               {i + 1}
@@ -369,16 +374,16 @@ function UnitStepper({ numUnits, onChange }: { numUnits: number; onChange: (n: n
         <button
           type="button"
           onClick={() => onChange(Math.max(1, numUnits - 1))}
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-lg font-bold hover:border-brand/50"
+          className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-foreground/20 text-lg font-bold hover:border-brand/60"
           aria-label="Decrease module count"
         >
           −
         </button>
-        <span className="w-16 text-center text-2xl font-bold">{numUnits}</span>
+        <span className="w-16 text-center text-2xl font-bold tabular-nums">{numUnits}</span>
         <button
           type="button"
           onClick={() => onChange(numUnits + 1)}
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-lg font-bold hover:border-brand/50"
+          className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-foreground/20 text-lg font-bold hover:border-brand/60"
           aria-label="Increase module count"
         >
           +
@@ -457,7 +462,7 @@ function RadioCard({
       type="button"
       onClick={onClick}
       className={`rounded-lg border px-3 py-2 text-left text-sm transition-colors ${
-        active ? "border-brand bg-brand/10 text-brand" : "border-border text-foreground/70 hover:border-brand/40"
+        active ? "border-2 border-brand bg-brand/10 text-brand" : "border-2 border-foreground/20 text-foreground/70 hover:border-brand/60"
       }`}
     >
       {children}
@@ -484,13 +489,13 @@ function PromoCodeField({
           value={value}
           onChange={(e) => onChange(e.target.value.toUpperCase())}
           placeholder="ENTER CODE"
-          className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand"
+          className="w-full rounded-lg border-2 border-foreground/20 bg-background px-3 py-2 text-sm outline-none focus:border-brand"
         />
         <button
           type="button"
           onClick={onApply}
           disabled={!value.trim()}
-          className="shrink-0 rounded-lg border border-border px-4 py-2 text-sm font-semibold text-foreground/70 hover:border-brand/50 disabled:opacity-40"
+          className="shrink-0 rounded-lg border-2 border-foreground/20 px-4 py-2 text-sm font-semibold text-foreground/70 hover:border-brand/60 disabled:opacity-40"
         >
           Apply
         </button>
@@ -510,26 +515,26 @@ function RateDashboard({
   return (
     <div>
       <p className="text-xs font-semibold tracking-wide text-foreground/50 uppercase">Estimated monthly rate</p>
-      <p className="mt-1 text-4xl font-bold text-brand">
+      <p className="mt-1 text-4xl font-bold text-brand tabular-nums">
         ${quote.discountedMonthly.toFixed(2)}
         <span className="text-base font-medium text-foreground/50">/mo</span>
       </p>
-      <p className="mt-1 text-sm text-foreground/60">
+      <p className="mt-1 text-sm text-foreground/60 tabular-nums">
         {quote.billedMonths} billed month{quote.billedMonths > 1 ? "s" : ""} · {numUnits} module
         {numUnits > 1 ? "s" : ""}
       </p>
 
       <div className="mt-4 grid grid-cols-3 gap-3 text-center">
         <div className="rounded-lg bg-brand/5 p-3">
-          <p className="text-lg font-bold text-brand">${quote.savings.toFixed(0)}</p>
+          <p className="text-lg font-bold text-brand tabular-nums">${quote.savings.toFixed(0)}</p>
           <p className="text-xs text-foreground/60">Savings</p>
         </div>
         <div className="rounded-lg bg-brand/5 p-3">
-          <p className="text-lg font-bold text-brand">{quote.co2SavedKg}kg</p>
+          <p className="text-lg font-bold text-brand tabular-nums">{quote.co2SavedKg}kg</p>
           <p className="text-xs text-foreground/60">CO₂ saved</p>
         </div>
         <div className="rounded-lg bg-brand/5 p-3">
-          <p className="text-lg font-bold text-brand">{quote.treesSaved}</p>
+          <p className="text-lg font-bold text-brand tabular-nums">{quote.treesSaved}</p>
           <p className="text-xs text-foreground/60">Trees saved</p>
         </div>
       </div>
@@ -610,8 +615,8 @@ function TextField({
         value={value}
         required={required}
         onChange={(e) => onChange(e.target.value)}
-        className={`w-full rounded-lg border bg-background px-3 py-2 text-base outline-none focus:border-brand sm:text-sm ${
-          error ? "border-red-500" : "border-border"
+        className={`w-full rounded-lg border-2 bg-background px-3 py-2 text-base outline-none focus:border-brand sm:text-sm ${
+          error ? "border-red-500" : "border-foreground/20"
         }`}
       />
       {error && <p className="mt-1 text-xs text-red-500">{error}</p>}

@@ -19,7 +19,7 @@ export default async function ServicesPage() {
 
   return (
     <>
-      <section className="mx-auto max-w-7xl px-4 pt-10 sm:px-6 lg:px-8">
+      <section className="snap-section-flow mx-auto max-w-7xl px-4 pt-10 sm:px-6 lg:px-8">
         <h1 className="text-3xl font-bold tracking-tight sm:text-5xl">Services</h1>
         <p className="mt-3 max-w-2xl text-foreground/70">
           Personal and corporate storage solutions, tailored to how you work and live.
@@ -28,7 +28,7 @@ export default async function ServicesPage() {
 
       <TrustBanner copy={trust} />
 
-      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+      <section className="snap-section-flow mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <ServicesFilterGrid services={services} />
       </section>
     </>
