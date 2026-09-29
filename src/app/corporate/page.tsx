@@ -6,7 +6,7 @@ import { CardCarousel } from "@/components/ui/CardCarousel";
 import { getPageSections, getServices, resolveSection } from "@/lib/content";
 import { buildMetadata } from "@/lib/site";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export const metadata = buildMetadata({
   title: "Corporate Storage Singapore | Records & Inventory Management | EcoStorage",

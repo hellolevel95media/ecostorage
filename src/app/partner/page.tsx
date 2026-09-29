@@ -4,7 +4,7 @@ import { ContactForm } from "@/components/sections/ContactForm";
 import { getPageSections, resolveSection } from "@/lib/content";
 import { buildMetadata } from "@/lib/site";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export const metadata = buildMetadata({
   title: "Partner Program | Referral Partnerships | EcoStorage",

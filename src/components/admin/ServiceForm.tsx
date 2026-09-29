@@ -41,6 +41,12 @@ export function ServiceForm({ service }: { service?: Service }) {
       return;
     }
 
+    fetch("/api/revalidate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ paths: ["/services", "/personal", "/corporate"] }),
+    }).catch(() => {});
+
     router.push("/admin/services");
     router.refresh();
   }

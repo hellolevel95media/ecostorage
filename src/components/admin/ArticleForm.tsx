@@ -49,6 +49,12 @@ export function ArticleForm({ article }: { article?: Article }) {
       return;
     }
 
+    fetch("/api/revalidate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ paths: ["/resources", `/resources/${payload.slug}`] }),
+    }).catch(() => {});
+
     router.push("/admin/articles");
     router.refresh();
   }

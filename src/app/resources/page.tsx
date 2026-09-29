@@ -2,7 +2,7 @@ import { ResourceFilterGrid } from "@/components/sections/ResourceFilterGrid";
 import { getPageSections, getPublishedArticles, resolveSection } from "@/lib/content";
 import { buildMetadata } from "@/lib/site";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export const metadata = buildMetadata({
   title: "Resource Library | Storage Guides | EcoStorage",

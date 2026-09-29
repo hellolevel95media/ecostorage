@@ -77,6 +77,13 @@ export function SectionEditor({
 
     setSaved(true);
     router.refresh();
+
+    const publicPath = pageSlug === "home" ? "/" : `/${pageSlug}`;
+    fetch("/api/revalidate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ paths: [publicPath] }),
+    }).catch(() => {});
   }
 
   return (

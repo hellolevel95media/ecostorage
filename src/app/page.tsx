@@ -7,7 +7,7 @@ import { ArticleCard } from "@/components/sections/ArticleCard";
 import { CardCarousel } from "@/components/ui/CardCarousel";
 import { getPageSections, getPublishedArticles, getServices, resolveSection } from "@/lib/content";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function HomePage() {
   const [sections, services, articles] = await Promise.all([

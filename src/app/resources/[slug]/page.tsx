@@ -6,7 +6,7 @@ import { getArticleBySlug } from "@/lib/content";
 import { buildMetadata } from "@/lib/site";
 import { ArticleJsonLd } from "@/components/seo/ArticleJsonLd";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 interface ArticlePageProps {
   params: Promise<{ slug: string }>;

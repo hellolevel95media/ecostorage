@@ -4,7 +4,7 @@ import { getPageSections, resolveSection } from "@/lib/content";
 import { COMPANY } from "@/lib/nav";
 import { buildMetadata } from "@/lib/site";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export const metadata = buildMetadata({
   title: "Contact EcoStorage | Singapore Pickup & Delivery Storage",
