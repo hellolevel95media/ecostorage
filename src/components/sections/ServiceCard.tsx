@@ -13,7 +13,7 @@ export function ServiceCard({ service }: { service: Service }) {
         )}
         <Link
           href={service.cta_link ?? "/contact"}
-          className="mt-4 text-sm font-semibold text-brand hover:underline"
+          className="mt-4 text-sm font-semibold text-brand-ink hover:underline"
         >
           {service.cta_text ?? "Learn more"} →
         </Link>

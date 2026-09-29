@@ -37,7 +37,7 @@ export default async function AdminProtectedLayout({ children }: { children: Rea
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-xs font-semibold tracking-wide text-brand uppercase">Admin</p>
+          <p className="text-xs font-semibold tracking-wide text-brand-ink uppercase">Admin</p>
           <h1 className="text-2xl font-bold">EcoStorage CMS</h1>
         </div>
         <div className="flex items-center gap-3">

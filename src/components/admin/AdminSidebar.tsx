@@ -26,7 +26,7 @@ export function AdminSidebar() {
             key={link.href}
             href={link.href}
             className={`shrink-0 rounded-lg px-3 py-2 text-sm font-medium whitespace-nowrap ${
-              active ? "bg-card text-brand" : "text-foreground/60 hover:text-brand"
+              active ? "bg-card text-brand-ink" : "text-foreground/60 hover:text-brand-ink"
             }`}
           >
             {link.label}

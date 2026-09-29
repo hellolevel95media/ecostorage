@@ -125,7 +125,7 @@ export function StorageCalculator() {
     return (
       <section className="snap-section-flow mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="rounded-3xl border border-brand/30 bg-brand/5 p-10 text-center shadow-card">
-          <p className="text-2xl font-bold text-brand">Price Locked In!</p>
+          <p className="text-2xl font-bold text-brand-ink">Price Locked In!</p>
           <p className="mt-2 text-foreground/70">
             Our team will follow up within 24 hours to confirm your pickup and finalize your quote.
           </p>
@@ -299,7 +299,7 @@ function ItemBreakdownGrid({ guide }: { guide: SizeGuideOption }) {
         >
           <span
             aria-hidden="true"
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand/10 text-brand"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand/10 text-brand-ink"
           >
             <BoxIcon />
           </span>
@@ -342,7 +342,7 @@ function StepIndicator({
             disabled={!reached}
             onClick={() => onSelect(step.id)}
             className={`flex flex-1 flex-col items-center gap-1 rounded-lg py-2 text-xs font-medium transition-colors ${
-              active ? "text-brand" : reached ? "text-foreground/70" : "text-foreground/30"
+              active ? "text-brand-ink" : reached ? "text-foreground/70" : "text-foreground/30"
             }`}
           >
             <span
@@ -350,7 +350,7 @@ function StepIndicator({
                 active
                   ? "border-brand bg-brand text-brand-foreground"
                   : reached
-                    ? "border-brand/60 text-brand"
+                    ? "border-brand/60 text-brand-ink"
                     : "border-foreground/20"
               }`}
             >
@@ -413,7 +413,7 @@ function CommitmentSelector({
           >
             <span className="font-semibold">{option.label}</span>
             {option.freeMonths > 0 && (
-              <span className="mt-0.5 block text-xs text-brand">
+              <span className="mt-0.5 block text-xs text-brand-ink">
                 +{option.freeMonths} month{option.freeMonths > 1 ? "s" : ""} free
               </span>
             )}
@@ -462,7 +462,7 @@ function RadioCard({
       type="button"
       onClick={onClick}
       className={`rounded-lg border px-3 py-2 text-left text-sm transition-colors ${
-        active ? "border-2 border-brand bg-brand/10 text-brand" : "border-2 border-foreground/20 text-foreground/70 hover:border-brand/60"
+        active ? "border-2 border-brand bg-brand/10 text-brand-ink" : "border-2 border-foreground/20 text-foreground/70 hover:border-brand/60"
       }`}
     >
       {children}
@@ -515,7 +515,7 @@ function RateDashboard({
   return (
     <div>
       <p className="text-xs font-semibold tracking-wide text-foreground/50 uppercase">Estimated monthly rate</p>
-      <p className="mt-1 text-4xl font-bold text-brand tabular-nums">
+      <p className="mt-1 text-4xl font-bold text-brand-ink tabular-nums">
         ${quote.discountedMonthly.toFixed(2)}
         <span className="text-base font-medium text-foreground/50">/mo</span>
       </p>
@@ -526,15 +526,15 @@ function RateDashboard({
 
       <div className="mt-4 grid grid-cols-3 gap-3 text-center">
         <div className="rounded-lg bg-brand/5 p-3">
-          <p className="text-lg font-bold text-brand tabular-nums">${quote.savings.toFixed(0)}</p>
+          <p className="text-lg font-bold text-brand-ink tabular-nums">${quote.savings.toFixed(0)}</p>
           <p className="text-xs text-foreground/60">Savings</p>
         </div>
         <div className="rounded-lg bg-brand/5 p-3">
-          <p className="text-lg font-bold text-brand tabular-nums">{quote.co2SavedKg}kg</p>
+          <p className="text-lg font-bold text-brand-ink tabular-nums">{quote.co2SavedKg}kg</p>
           <p className="text-xs text-foreground/60">CO₂ saved</p>
         </div>
         <div className="rounded-lg bg-brand/5 p-3">
-          <p className="text-lg font-bold text-brand tabular-nums">{quote.treesSaved}</p>
+          <p className="text-lg font-bold text-brand-ink tabular-nums">{quote.treesSaved}</p>
           <p className="text-xs text-foreground/60">Trees saved</p>
         </div>
       </div>

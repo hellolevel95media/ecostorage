@@ -16,7 +16,7 @@ relevant dashboard's own UI.
        ADMIN_ALLOWED_EMAILS=you@example.com
      (comma-separate if more than one admin). Without this set, /admin locks
      everyone out, including you — it fails closed on purpose.
-
+[unable to find this setting upon following navigation instructions, skipped for now]
 2) CONNECT A LIVE SUPABASE PROJECT
    Why: nothing that touches the database works yet (admin CMS, trust stats,
    analytics dashboard, inquiries, media library) — everything currently
@@ -28,6 +28,13 @@ relevant dashboard's own UI.
    - Run the SQL in supabase/migrations/ (01, 02, 03) against the project,
      in order, via the Supabase SQL editor or CLI.
    - Restart the dev server so it picks up the new env vars.
+[connect this for me 
+Project URL https://dqmuuszmuyixjxonwjpv.supabase.co 
+Publishable Key sb_publishable_sm-G2WBoRm2eLwMZT-CIvQ_q6akOdsc
+Direct connection string postgresql://postgres:[YOUR-PASSWORD]@db.dqmuuszmuyixjxonwjpv.supabase.co:5432/postgres
+CLI setup commands supabase login
+supabase init
+supabase link --project-ref dqmuuszmuyixjxonwjpv]
 
 3) RESEND — EMAIL NOTIFICATIONS FOR NEW INQUIRIES
    Why: right now inquiries just sit in the database with no alert.
@@ -40,6 +47,7 @@ relevant dashboard's own UI.
        INQUIRY_NOTIFICATION_EMAIL=<where you want alerts sent>
        INQUIRY_NOTIFICATION_FROM=<a verified sender address>
    - Submit a test inquiry via the contact form to confirm the email arrives.
+[unable to create a test domain as you mentioned, perhaps due to there being existing setup from a different ongoing project]
 
 4) SENTRY — ERROR MONITORING
    Why: production errors are currently invisible unless a user reports them.
@@ -54,6 +62,7 @@ relevant dashboard's own UI.
      SENTRY_ORG, SENTRY_PROJECT, SENTRY_AUTH_TOKEN (create the token under
      Settings > Auth Tokens in Sentry).
    - Trigger a test error and confirm it shows up in the Sentry dashboard.
+[I have saved both to .env.local I cant move forward until you run npx @sentry/wizard@latest -i nextjs --saas --org level95media --project javascript-nextjs according to sentry setup sequence]
 
 5) UPTIMEROBOT — UPTIME MONITORING
    Why: independent alerting if the site goes down, outside of Vercel.
@@ -63,6 +72,7 @@ relevant dashboard's own UI.
        https://www.storagespace.com.sg/api/health
    - Set check interval (5 min is fine on the free tier) and alert contacts
      (email/SMS) for when it stops returning 200.
+[I cant point to this domain yet as the sysadmin for www.storagespace.com.sg is not me, I am building the testbed right now before we push to live so I need to skip this for now]
 
 6) GITHUB ACTIONS SECRETS — AUTOMATED DB BACKUPS
    Why: the backup workflow (.github/workflows/backup.yml) is already built

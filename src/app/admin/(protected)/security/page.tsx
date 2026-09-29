@@ -99,7 +99,7 @@ export default function SecurityPage() {
 
       {factors !== null && verifiedFactor && !enrolling && (
         <div className="mt-6 rounded-xl border border-border bg-card p-4">
-          <p className="text-sm font-medium text-brand">2FA is enabled</p>
+          <p className="text-sm font-medium text-brand-ink">2FA is enabled</p>
           <Button variant="ghost" className="mt-3" onClick={() => removeFactor(verifiedFactor.id)}>
             Disable 2FA
           </Button>

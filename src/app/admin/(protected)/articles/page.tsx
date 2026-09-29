@@ -39,7 +39,7 @@ export default async function AdminArticlesPage() {
                   <div className="flex justify-end gap-4">
                     <Link
                       href={`/admin/articles/${article.id}`}
-                      className="text-sm font-medium text-brand hover:underline"
+                      className="text-sm font-medium text-brand-ink hover:underline"
                     >
                       Edit
                     </Link>

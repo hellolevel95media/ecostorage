@@ -81,7 +81,7 @@ export function SectionEditor({
 
   return (
     <form onSubmit={handleSubmit} className="rounded-xl border border-border bg-card p-5">
-      <p className="text-xs font-semibold tracking-wide text-brand uppercase">{sectionKey}</p>
+      <p className="text-xs font-semibold tracking-wide text-brand-ink uppercase">{sectionKey}</p>
 
       <div className="mt-3 space-y-3">
         <Field label="Heading" name="heading" defaultValue={initial.heading} />
@@ -150,7 +150,7 @@ export function SectionEditor({
         <Button type="submit" disabled={saving}>
           {saving ? "Saving..." : "Save section"}
         </Button>
-        {saved && <span className="text-sm text-brand">Saved</span>}
+        {saved && <span className="text-sm text-brand-ink">Saved</span>}
       </div>
       {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
     </form>

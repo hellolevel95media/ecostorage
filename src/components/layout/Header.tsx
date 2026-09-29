@@ -29,8 +29,8 @@ export function Header() {
                   href={link.href}
                   className={`rounded-full px-3 py-2 text-sm font-medium transition-colors ${
                     active
-                      ? "bg-brand/10 text-brand ring-1 ring-brand/20"
-                      : "text-foreground/70 hover:text-brand"
+                      ? "bg-brand/10 text-brand-ink ring-1 ring-brand/20"
+                      : "text-foreground/70 hover:text-brand-ink"
                   }`}
                 >
                   {link.label}
@@ -79,7 +79,7 @@ export function Header() {
                   href={link.href}
                   onClick={() => setOpen(false)}
                   className={`rounded-lg px-3 py-2 text-sm font-medium ${
-                    active ? "bg-brand/10 text-brand" : "text-foreground/70"
+                    active ? "bg-brand/10 text-brand-ink" : "text-foreground/70"
                   }`}
                 >
                   {link.label}

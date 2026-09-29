@@ -27,7 +27,7 @@ export function CookieConsent() {
       <p className="text-sm text-foreground/80">
         We use essential cookies to run this site and, with your consent, anonymous analytics
         cookies to understand traffic. See our{" "}
-        <Link href="/cookies" className="font-medium text-brand hover:underline">
+        <Link href="/cookies" className="font-medium text-brand-ink hover:underline">
           Cookie Policy
         </Link>
         .

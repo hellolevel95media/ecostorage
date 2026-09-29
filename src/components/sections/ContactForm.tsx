@@ -59,7 +59,7 @@ export function ContactForm({
   if (status === "success") {
     return (
       <div className={`rounded-xl border border-brand/30 bg-card p-6 ${compact ? "text-sm" : ""}`}>
-        <p className="font-semibold text-brand">Thanks — we&apos;ve got it.</p>
+        <p className="font-semibold text-brand-ink">Thanks — we&apos;ve got it.</p>
         <p className="mt-1 text-foreground/70">Our team will reach out within one business day.</p>
       </div>
     );

@@ -7,7 +7,7 @@ export function Logo() {
         E
       </span>
       <span>
-        <span className="text-brand">Eco</span>Storage
+        <span className="text-brand-ink">Eco</span>Storage
       </span>
     </Link>
   );

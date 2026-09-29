@@ -37,7 +37,7 @@ export default async function AdminServicesPage() {
                   <div className="flex justify-end gap-4">
                     <Link
                       href={`/admin/services/${service.id}`}
-                      className="text-sm font-medium text-brand hover:underline"
+                      className="text-sm font-medium text-brand-ink hover:underline"
                     >
                       Edit
                     </Link>

@@ -43,7 +43,7 @@ export default async function AdminDashboardPage() {
             <p className="text-xs font-semibold tracking-wide text-foreground/50 uppercase">
               {card.label}
             </p>
-            <p className="mt-2 text-3xl font-bold text-brand">{card.value}</p>
+            <p className="mt-2 text-3xl font-bold text-brand-ink">{card.value}</p>
           </Link>
         ))}
       </div>

@@ -24,7 +24,7 @@ export function Footer() {
           </address>
           <Link
             href={COMPANY.googleReviewUrl}
-            className="mt-2 inline-block text-sm font-medium text-brand hover:underline"
+            className="mt-2 inline-block text-sm font-medium text-brand-ink hover:underline"
           >
             Leave us a Google review →
           </Link>
@@ -35,7 +35,7 @@ export function Footer() {
           <ul className="mt-3 grid grid-cols-2 gap-2 text-sm text-foreground/70">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="hover:text-brand">
+                <Link href={link.href} className="hover:text-brand-ink">
                   {link.label}
                 </Link>
               </li>
@@ -52,10 +52,10 @@ export function Footer() {
             © {new Date().getFullYear()} {COMPANY.name}. All rights reserved.
           </p>
           <div className="flex gap-4">
-            <Link href="/privacy" className="hover:text-brand">
+            <Link href="/privacy" className="hover:text-brand-ink">
               Privacy Policy
             </Link>
-            <Link href="/cookies" className="hover:text-brand">
+            <Link href="/cookies" className="hover:text-brand-ink">
               Cookie Policy
             </Link>
           </div>

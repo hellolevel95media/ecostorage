@@ -27,7 +27,7 @@ export function ResourceFilterGrid({ articles }: { articles: Article[] }) {
               type="button"
               onClick={() => setTopic(t)}
               className={`rounded-full px-3 py-1.5 text-left text-sm font-medium transition-colors lg:rounded-lg ${
-                topic === t ? "bg-brand text-brand-foreground" : "bg-card text-foreground/70 hover:text-brand"
+                topic === t ? "bg-brand text-brand-foreground" : "bg-card text-foreground/70 hover:text-brand-ink"
               }`}
             >
               {t}

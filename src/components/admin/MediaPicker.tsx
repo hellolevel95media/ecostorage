@@ -40,7 +40,7 @@ export function MediaPicker({
         <button
           type="button"
           onClick={() => setOpen((o) => !o)}
-          className="text-xs font-medium text-brand hover:underline"
+          className="text-xs font-medium text-brand-ink hover:underline"
         >
           {open ? "Close" : "Browse library"}
         </button>

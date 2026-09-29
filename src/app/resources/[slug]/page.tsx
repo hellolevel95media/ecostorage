@@ -51,12 +51,12 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         updatedAt={article.updated_at}
         author={article.author}
       />
-      <Link href="/resources" className="text-sm font-semibold text-brand hover:underline">
+      <Link href="/resources" className="text-sm font-semibold text-brand-ink hover:underline">
         ← Back to resources
       </Link>
 
       {article.category && (
-        <p className="mt-4 text-xs font-semibold tracking-wide text-brand uppercase">
+        <p className="mt-4 text-xs font-semibold tracking-wide text-brand-ink uppercase">
           {article.category}
         </p>
       )}

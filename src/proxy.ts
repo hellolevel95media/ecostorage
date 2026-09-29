@@ -30,20 +30,34 @@ export async function proxy(request: NextRequest) {
 
   let response = NextResponse.next({ request });
 
-  const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
-    cookies: {
-      getAll() {
-        return request.cookies.getAll();
+  // createServerClient throws synchronously if the Supabase env vars are
+  // missing/invalid — without this guard that crashes every /admin and
+  // /api request with Next's generic 500 page instead of something useful.
+  let supabase;
+  try {
+    supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+          response = NextResponse.next({ request });
+          cookiesToSet.forEach(({ name, value, options }) =>
+            response.cookies.set(name, value, options)
+          );
+        },
       },
-      setAll(cookiesToSet) {
-        cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
-        response = NextResponse.next({ request });
-        cookiesToSet.forEach(({ name, value, options }) =>
-          response.cookies.set(name, value, options)
-        );
-      },
-    },
-  });
+    });
+  } catch {
+    if (pathname.startsWith("/api/")) {
+      return NextResponse.json(
+        { error: "Service temporarily unavailable." },
+        { status: 503 }
+      );
+    }
+    return NextResponse.redirect(new URL("/config-error", request.url));
+  }
 
   const {
     data: { user },

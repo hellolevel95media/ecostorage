@@ -20,11 +20,11 @@ export function ArticleCard({ article }: { article: Article }) {
       )}
       <div className="flex flex-1 flex-col p-5">
         {article.category && (
-          <span className="text-xs font-semibold tracking-wide text-brand uppercase">
+          <span className="text-xs font-semibold tracking-wide text-brand-ink uppercase">
             {article.category}
           </span>
         )}
-        <h3 className="mt-2 font-semibold group-hover:text-brand">{article.title}</h3>
+        <h3 className="mt-2 font-semibold group-hover:text-brand-ink">{article.title}</h3>
         {article.excerpt && (
           <p className="mt-2 flex-1 text-sm text-foreground/70">{article.excerpt}</p>
         )}

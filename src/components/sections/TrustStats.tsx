@@ -90,7 +90,7 @@ function StatBubble({ stat, visible }: { stat: TrustStat; visible: boolean }) {
       )}
       <p
         className={`font-bold tabular-nums ${
-          stat.emphasis ? "text-3xl text-brand sm:text-4xl" : "text-2xl sm:text-3xl"
+          stat.emphasis ? "text-3xl text-brand-ink sm:text-4xl" : "text-2xl sm:text-3xl"
         }`}
       >
         {stat.prefix}
