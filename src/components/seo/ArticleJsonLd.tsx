@@ -5,12 +5,14 @@ interface ArticleJsonLdProps {
   description: string;
   slug: string;
   publishedAt: string | null;
+  updatedAt: string;
   author: string | null;
 }
 
 /** schema.org Article structured data — helps both traditional search rich
- * results and AI/LLM crawlers correctly attribute and date this content. */
-export function ArticleJsonLd({ title, description, slug, publishedAt, author }: ArticleJsonLdProps) {
+ * results and AI/LLM crawlers correctly attribute and date this content, and
+ * to see edits (dateModified) as a freshness signal, not just publish date. */
+export function ArticleJsonLd({ title, description, slug, publishedAt, updatedAt, author }: ArticleJsonLdProps) {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -18,6 +20,7 @@ export function ArticleJsonLd({ title, description, slug, publishedAt, author }:
     description,
     url: `${SITE_URL}/resources/${slug}`,
     ...(publishedAt ? { datePublished: publishedAt } : {}),
+    dateModified: updatedAt,
     ...(author ? { author: { "@type": "Person", name: author } } : {}),
     publisher: {
       "@type": "Organization",

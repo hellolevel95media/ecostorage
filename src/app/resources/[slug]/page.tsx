@@ -48,6 +48,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         description={metaDescription(article.excerpt)}
         slug={slug}
         publishedAt={article.published_at}
+        updatedAt={article.updated_at}
         author={article.author}
       />
       <Link href="/resources" className="text-sm font-semibold text-brand hover:underline">
