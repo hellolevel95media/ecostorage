@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useId, useState, type FormEvent } from "react";
 import type { InquiryType } from "@/types/database";
 import { Button } from "@/components/ui/Button";
 import { showToast } from "@/lib/toast";
@@ -23,6 +23,7 @@ export function ContactForm({
   compact = false,
 }: ContactFormProps) {
   const [status, setStatus] = useState<Status>("idle");
+  const messageId = useId();
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -96,12 +97,18 @@ export function ContactForm({
           </div>
         )}
         <div className={compact ? "sm:col-span-3" : "sm:col-span-2"}>
-          {!compact && <label className="mb-1 block text-xs font-medium text-foreground/60">Message</label>}
+          {!compact && (
+            <label htmlFor={messageId} className="mb-1 block text-xs font-medium text-foreground/60">
+              Message
+            </label>
+          )}
           <textarea
+            id={messageId}
             name="message"
             rows={compact ? 1 : 4}
             maxLength={500}
             placeholder={compact ? "Message" : undefined}
+            aria-label={compact ? "Message" : undefined}
             className={`w-full rounded-lg border border-border bg-background text-sm outline-none focus:border-brand ${compact ? "px-3 py-1.5" : "px-3 py-2"}`}
           />
         </div>
@@ -135,14 +142,21 @@ function Field({
   required?: boolean;
   compact?: boolean;
 }) {
+  const id = useId();
   return (
     <div>
-      {!compact && <label className="mb-1 block text-xs font-medium text-foreground/60">{label}</label>}
+      {!compact && (
+        <label htmlFor={id} className="mb-1 block text-xs font-medium text-foreground/60">
+          {label}
+        </label>
+      )}
       <input
+        id={id}
         name={name}
         type={type}
         required={required}
         placeholder={compact ? label : undefined}
+        aria-label={compact ? label : undefined}
         className={`w-full rounded-lg border border-border bg-background text-sm outline-none focus:border-brand ${compact ? "px-3 py-1.5" : "px-3 py-2"}`}
       />
     </div>

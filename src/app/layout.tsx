@@ -29,6 +29,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "EcoStorage | Personal & Corporate Storage",
   description,
+  alternates: { canonical: SITE_URL },
   openGraph: {
     title: "EcoStorage | Personal & Corporate Storage",
     description,

@@ -1,9 +1,10 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MediaPlaceholder } from "@/components/ui/MediaPlaceholder";
 import { ButtonLink } from "@/components/ui/Button";
 import { getArticleBySlug } from "@/lib/content";
+import { buildMetadata } from "@/lib/site";
+import { ArticleJsonLd } from "@/components/seo/ArticleJsonLd";
 
 export const dynamic = "force-dynamic";
 
@@ -11,10 +12,27 @@ interface ArticlePageProps {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
+const FALLBACK_DESCRIPTION =
+  "A storage guide from EcoStorage's resource library — practical advice on packing, records retention, and climate-controlled storage in Singapore.";
+
+// Admin-entered excerpts have no length limit in the CMS form — cap what
+// flows into <meta description> / og:description so a very long excerpt
+// doesn't produce a malformed-looking (or crawler-truncated) tag.
+function metaDescription(excerpt: string | null): string {
+  const text = excerpt?.trim();
+  if (!text) return FALLBACK_DESCRIPTION;
+  return text.length > 200 ? `${text.slice(0, 199)}…` : text;
+}
+
+export async function generateMetadata({ params }: ArticlePageProps) {
   const { slug } = await params;
   const article = await getArticleBySlug(slug);
-  return { title: article ? `${article.title} | EcoStorage` : "Article | EcoStorage" };
+  if (!article) return buildMetadata({ title: "Article | EcoStorage", description: FALLBACK_DESCRIPTION, path: `/resources/${slug}` });
+  return buildMetadata({
+    title: article.title.trim() ? `${article.title} | EcoStorage` : "Article | EcoStorage",
+    description: metaDescription(article.excerpt),
+    path: `/resources/${slug}`,
+  });
 }
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
@@ -25,6 +43,13 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   return (
     <article className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
+      <ArticleJsonLd
+        title={article.title}
+        description={metaDescription(article.excerpt)}
+        slug={slug}
+        publishedAt={article.published_at}
+        author={article.author}
+      />
       <Link href="/resources" className="text-sm font-semibold text-brand hover:underline">
         ← Back to resources
       </Link>

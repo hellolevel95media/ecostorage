@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import { TrustBanner } from "@/components/sections/TrustBanner";
@@ -7,12 +6,16 @@ import { ServiceCard } from "@/components/sections/ServiceCard";
 import { ArticleCard } from "@/components/sections/ArticleCard";
 import { CardCarousel } from "@/components/ui/CardCarousel";
 import { getPageSections, getPublishedArticles, getServices, resolveSection } from "@/lib/content";
+import { buildMetadata } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Personal Storage | EcoStorage",
-};
+export const metadata = buildMetadata({
+  title: "Personal Storage Singapore | Pickup, Storage & Delivery | EcoStorage",
+  description:
+    "Book pickup-and-delivery storage for your home in Singapore — dorm move-outs, decluttering, and life transitions. No self-storage trips, flexible unit sizes.",
+  path: "/personal",
+});
 
 export default async function PersonalPage() {
   const [sections, services, articles] = await Promise.all([

@@ -1,13 +1,16 @@
-import type { Metadata } from "next";
 import { TrustBanner } from "@/components/sections/TrustBanner";
 import { ServicesFilterGrid } from "@/components/sections/ServicesFilterGrid";
 import { getPageSections, getServices, resolveSection } from "@/lib/content";
+import { buildMetadata } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Services | EcoStorage",
-};
+export const metadata = buildMetadata({
+  title: "Storage Services | Pickup, Delivery & Records Management | EcoStorage",
+  description:
+    "All EcoStorage services in one place: pickup & storage, on-demand delivery, records management, and inventory storage for personal and corporate customers.",
+  path: "/services",
+});
 
 export default async function ServicesPage() {
   const [sections, services] = await Promise.all([

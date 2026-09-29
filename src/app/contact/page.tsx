@@ -1,14 +1,17 @@
-import type { Metadata } from "next";
 import { TrustBanner } from "@/components/sections/TrustBanner";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { getPageSections, resolveSection } from "@/lib/content";
 import { COMPANY } from "@/lib/nav";
+import { buildMetadata } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Contact | EcoStorage",
-};
+export const metadata = buildMetadata({
+  title: "Contact EcoStorage | Singapore Pickup & Delivery Storage",
+  description:
+    "Get in touch with EcoStorage for a pickup-and-delivery storage quote in Singapore. We respond to every enquiry — send us a message or call us directly.",
+  path: "/contact",
+});
 
 export default async function ContactPage() {
   const sections = await getPageSections("contact");

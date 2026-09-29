@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type FormEvent, type ReactNode } from "react";
+import { useId, useMemo, useState, type FormEvent, type ReactNode } from "react";
 import { Button } from "@/components/ui/Button";
 import { showToast } from "@/lib/toast";
 import {
@@ -607,19 +607,30 @@ function TextField({
   required?: boolean;
   error?: string;
 }) {
+  const id = useId();
+  const errorId = `${id}-error`;
   return (
     <div>
-      <label className="mb-1 block text-xs font-medium text-foreground/60">{label}</label>
+      <label htmlFor={id} className="mb-1 block text-xs font-medium text-foreground/60">
+        {label}
+      </label>
       <input
+        id={id}
         type={type}
         value={value}
         required={required}
         onChange={(e) => onChange(e.target.value)}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={error ? errorId : undefined}
         className={`w-full rounded-lg border-2 bg-background px-3 py-2 text-base outline-none focus:border-brand sm:text-sm ${
           error ? "border-red-500" : "border-foreground/20"
         }`}
       />
-      {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
+      {error && (
+        <p id={errorId} className="mt-1 text-xs text-red-500">
+          {error}
+        </p>
+      )}
     </div>
   );
 }

@@ -1,12 +1,15 @@
-import type { Metadata } from "next";
 import { ResourceFilterGrid } from "@/components/sections/ResourceFilterGrid";
 import { getPageSections, getPublishedArticles, resolveSection } from "@/lib/content";
+import { buildMetadata } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Resource Library | EcoStorage",
-};
+export const metadata = buildMetadata({
+  title: "Resource Library | Storage Guides | EcoStorage",
+  description:
+    "Guides on packing, records retention, and climate-controlled storage from EcoStorage's Singapore pickup-and-delivery storage specialists.",
+  path: "/resources",
+});
 
 export default async function ResourcesPage() {
   const [sections, articles] = await Promise.all([

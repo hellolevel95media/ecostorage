@@ -1,14 +1,17 @@
-import type { Metadata } from "next";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import { TrustBanner } from "@/components/sections/TrustBanner";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { getPageSections, resolveSection } from "@/lib/content";
+import { buildMetadata } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Our Mission | EcoStorage",
-};
+export const metadata = buildMetadata({
+  title: "Our Mission | Sustainable Storage | EcoStorage",
+  description:
+    "EcoStorage stores belongings in recycled-pallet, ambient-temperature crates instead of 24/7 air-conditioned units — a lower-carbon approach to self-storage in Singapore.",
+  path: "/mission",
+});
 
 export default async function MissionPage() {
   const sections = await getPageSections("mission");

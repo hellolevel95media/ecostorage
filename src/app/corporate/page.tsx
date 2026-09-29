@@ -1,16 +1,19 @@
-import type { Metadata } from "next";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import { TrustBanner } from "@/components/sections/TrustBanner";
 import { ServiceCard } from "@/components/sections/ServiceCard";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { CardCarousel } from "@/components/ui/CardCarousel";
 import { getPageSections, getServices, resolveSection } from "@/lib/content";
+import { buildMetadata } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Corporate Storage | EcoStorage",
-};
+export const metadata = buildMetadata({
+  title: "Corporate Storage Singapore | Records & Inventory Management | EcoStorage",
+  description:
+    "Pickup-and-delivery storage for businesses in Singapore — document/records archiving, inventory and pallet storage, with account management for teams.",
+  path: "/corporate",
+});
 
 export default async function CorporatePage() {
   const [sections, services] = await Promise.all([

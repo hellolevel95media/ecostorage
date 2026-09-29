@@ -1,14 +1,17 @@
-import type { Metadata } from "next";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import { TrustBanner } from "@/components/sections/TrustBanner";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { getPageSections, resolveSection } from "@/lib/content";
+import { buildMetadata } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Be a Partner | EcoStorage",
-};
+export const metadata = buildMetadata({
+  title: "Partner Program | Referral Partnerships | EcoStorage",
+  description:
+    "Refer clients to EcoStorage's pickup-and-delivery storage service. Built for real estate agents, property managers, and moving companies in Singapore.",
+  path: "/partner",
+});
 
 export default async function PartnerPage() {
   const sections = await getPageSections("partner");
