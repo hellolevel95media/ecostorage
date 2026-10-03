@@ -18,6 +18,7 @@ const csp = [
   "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com",
   "style-src 'self' 'unsafe-inline'",
   `img-src 'self' data: blob: ${supabaseHost}`,
+  `media-src 'self' blob: ${supabaseHost}`,
   "font-src 'self' data:",
   `connect-src 'self' ${supabaseHost} https://vitals.vercel-insights.com https://va.vercel-scripts.com${sentryIngestHost ? ` ${sentryIngestHost}` : ""}`,
   "frame-ancestors 'none'",
