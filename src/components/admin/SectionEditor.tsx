@@ -105,9 +105,9 @@ export function SectionEditor({
           />
         </div>
         <MediaPicker
-          label="Banner video"
+          label="Banner media (image or video)"
           name="media_url"
-          kind="video"
+          kind="any"
           defaultValue={initial.media_url ?? ""}
         />
         <div className="grid gap-3 sm:grid-cols-2">

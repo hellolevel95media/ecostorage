@@ -1,8 +1,11 @@
 import { MediaPlaceholder } from "@/components/ui/MediaPlaceholder";
 import { ButtonLink } from "@/components/ui/Button";
+import { inferMediaKind } from "@/lib/media";
 import type { SectionCopy } from "@/lib/fallback-content";
 
 export function HeroBanner({ copy }: { copy: SectionCopy }) {
+  const mediaKind = inferMediaKind(copy.media_url);
+
   return (
     <section className="snap-section relative flex overflow-hidden">
       <div
@@ -15,7 +18,7 @@ export function HeroBanner({ copy }: { copy: SectionCopy }) {
       <div className="absolute inset-0 lg:hidden">
         <MediaPlaceholder
           ratio="video"
-          kind="video"
+          kind={mediaKind}
           label="Hero video banner"
           src={copy.media_url}
           bleed
@@ -45,7 +48,7 @@ export function HeroBanner({ copy }: { copy: SectionCopy }) {
         </div>
         <MediaPlaceholder
           ratio="video"
-          kind="video"
+          kind={mediaKind}
           label="Hero video banner"
           src={copy.media_url}
           className="hidden shadow-card lg:flex"
