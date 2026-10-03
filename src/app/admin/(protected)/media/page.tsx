@@ -34,6 +34,8 @@ export default async function AdminMediaPage() {
                   alt={asset.alt_text ?? asset.file_name}
                   className="aspect-video w-full object-cover"
                 />
+              ) : asset.file_type.startsWith("video/") ? (
+                <video src={publicUrl.publicUrl} muted playsInline className="aspect-video w-full object-cover" />
               ) : (
                 <div className="flex aspect-video items-center justify-center bg-background text-xs text-foreground/50">
                   {asset.file_type}

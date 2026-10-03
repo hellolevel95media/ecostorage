@@ -4,6 +4,7 @@ export interface SectionCopy {
   heading?: string;
   subheading?: string;
   body?: string;
+  media_url?: string | null;
   cta_text?: string;
   cta_link?: string;
   stats?: TrustStat[];

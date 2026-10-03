@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/Button";
+import { MediaPicker } from "@/components/admin/MediaPicker";
 import type { Service, ServiceCategory } from "@/types/database";
 
 export function ServiceForm({ service }: { service?: Service }) {
@@ -73,12 +74,18 @@ export function ServiceForm({ service }: { service?: Service }) {
           type="number"
           defaultValue={String(service?.sort_order ?? 0)}
         />
-        <TextField
-          label="Thumbnail URL"
+        <MediaPicker
+          label="Thumbnail"
           name="thumbnail_url"
+          kind="image"
           defaultValue={service?.thumbnail_url ?? ""}
         />
-        <TextField label="Video URL" name="video_url" defaultValue={service?.video_url ?? ""} />
+        <MediaPicker
+          label="Video"
+          name="video_url"
+          kind="video"
+          defaultValue={service?.video_url ?? ""}
+        />
         <TextField label="CTA text" name="cta_text" defaultValue={service?.cta_text ?? ""} />
         <TextField label="CTA link" name="cta_link" defaultValue={service?.cta_link ?? ""} />
       </div>

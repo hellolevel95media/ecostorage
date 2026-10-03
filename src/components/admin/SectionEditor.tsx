@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/Button";
+import { MediaPicker } from "@/components/admin/MediaPicker";
 import type { SectionCopy } from "@/lib/fallback-content";
 import type { TrustStat } from "@/types/database";
 
@@ -61,6 +62,7 @@ export function SectionEditor({
         heading: String(form.get("heading") ?? "") || null,
         subheading: String(form.get("subheading") ?? "") || null,
         body: String(form.get("body") ?? "") || null,
+        media_url: String(form.get("media_url") ?? "") || null,
         cta_text: String(form.get("cta_text") ?? "") || null,
         cta_link: String(form.get("cta_link") ?? "") || null,
         stats: hasStats ? stats.filter((s) => s.label.trim().length > 0) : null,
@@ -102,6 +104,12 @@ export function SectionEditor({
             className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand"
           />
         </div>
+        <MediaPicker
+          label="Banner video"
+          name="media_url"
+          kind="video"
+          defaultValue={initial.media_url ?? ""}
+        />
         <div className="grid gap-3 sm:grid-cols-2">
           <Field label="CTA text" name="cta_text" defaultValue={initial.cta_text} />
           <Field label="CTA link" name="cta_link" defaultValue={initial.cta_link} />

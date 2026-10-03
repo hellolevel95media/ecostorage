@@ -13,7 +13,14 @@ export function HeroBanner({ copy }: { copy: SectionCopy }) {
       {/* Mobile: full-bleed video with the copy overlaid near the bottom.
           Desktop: unchanged side-by-side grid layout. */}
       <div className="absolute inset-0 lg:hidden">
-        <MediaPlaceholder ratio="video" kind="video" label="Hero video banner" bleed className="h-full" />
+        <MediaPlaceholder
+          ratio="video"
+          kind="video"
+          label="Hero video banner"
+          src={copy.media_url}
+          bleed
+          className="h-full"
+        />
         <div
           aria-hidden
           className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent"
@@ -40,6 +47,7 @@ export function HeroBanner({ copy }: { copy: SectionCopy }) {
           ratio="video"
           kind="video"
           label="Hero video banner"
+          src={copy.media_url}
           className="hidden shadow-card lg:flex"
         />
       </div>

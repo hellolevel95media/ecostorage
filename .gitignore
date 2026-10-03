@@ -53,5 +53,10 @@ next-env.d.ts
 # Local DB backup dumps
 backups/
 
+# Staging area for raw media before compression/upload to Supabase Storage —
+# not meant to be committed (media lives in Supabase Storage, not the repo).
+/media-inbox/*
+!/media-inbox/.gitkeep
+
 # Sentry Config File
 .env.sentry-build-plugin

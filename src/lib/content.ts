@@ -89,6 +89,7 @@ export function resolveSection(
     heading: dbSection.heading ?? fallback.heading,
     subheading: dbSection.subheading ?? fallback.subheading,
     body: dbSection.body ?? fallback.body,
+    media_url: dbSection.media_url ?? fallback.media_url ?? null,
     cta_text: dbSection.cta_text ?? fallback.cta_text,
     cta_link: dbSection.cta_link ?? fallback.cta_link,
     stats: dbSection.stats ?? fallback.stats,

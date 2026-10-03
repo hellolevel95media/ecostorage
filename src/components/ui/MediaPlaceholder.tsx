@@ -15,12 +15,16 @@ interface MediaPlaceholderProps {
   /** Fills the parent instead of enforcing its own aspect ratio — used for
    * full-bleed mobile hero backgrounds where the parent section controls height. */
   bleed?: boolean;
+  /** Public URL of an uploaded asset. When set, renders the real
+   * image/video instead of the empty skeleton. All site video is muted,
+   * looping, autoplaying background footage — never user-controlled audio. */
+  src?: string | null;
 }
 
 /**
- * Empty visual placeholder used everywhere a real image/video would go.
- * Keeps media slots empty per project rules until real assets are uploaded
- * through the admin CMS.
+ * Renders real uploaded media when `src` is set; otherwise falls back to an
+ * empty skeleton placeholder (project rule: never hardcode static media,
+ * only ever source it from the admin CMS).
  */
 export function MediaPlaceholder({
   ratio = "video",
@@ -28,10 +32,33 @@ export function MediaPlaceholder({
   kind = "image",
   className = "",
   bleed = false,
+  src,
 }: MediaPlaceholderProps) {
+  const shapeClass = bleed ? "h-full rounded-none" : `rounded-xl ${RATIO_CLASS[ratio]}`;
+
+  if (src) {
+    return (
+      <div className={`relative w-full overflow-hidden border border-border ${shapeClass} ${className}`}>
+        {kind === "video" ? (
+          <video
+            src={src}
+            muted
+            loop
+            autoPlay
+            playsInline
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={src} alt={label ?? ""} className="h-full w-full object-cover" />
+        )}
+      </div>
+    );
+  }
+
   return (
     <div
-      className={`skeleton relative flex w-full items-center justify-center overflow-hidden border border-border ${bleed ? "h-full rounded-none" : `rounded-xl ${RATIO_CLASS[ratio]}`} ${className}`}
+      className={`skeleton relative flex w-full items-center justify-center overflow-hidden border border-border ${shapeClass} ${className}`}
       role="img"
       aria-label={label ?? "Media placeholder"}
     >
