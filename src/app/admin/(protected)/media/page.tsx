@@ -1,6 +1,7 @@
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { MediaUploader } from "@/components/admin/MediaUploader";
 import { DeleteButton } from "@/components/admin/DeleteButton";
+import { VideoThumb } from "@/components/ui/VideoThumb";
 
 export const dynamic = "force-dynamic";
 
@@ -35,14 +36,7 @@ export default async function AdminMediaPage() {
                   className="aspect-video w-full object-cover"
                 />
               ) : asset.file_type.startsWith("video/") ? (
-                <video
-                  src={publicUrl.publicUrl}
-                  muted
-                  loop
-                  autoPlay
-                  playsInline
-                  className="aspect-video w-full object-cover"
-                />
+                <VideoThumb src={publicUrl.publicUrl} className="aspect-video w-full object-cover" />
               ) : (
                 <div className="flex aspect-video items-center justify-center bg-background text-xs text-foreground/50">
                   {asset.file_type}

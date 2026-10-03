@@ -1,3 +1,5 @@
+import { VideoThumb } from "@/components/ui/VideoThumb";
+
 type Ratio = "video" | "square" | "wide" | "portrait";
 
 const RATIO_CLASS: Record<Ratio, string> = {
@@ -40,14 +42,7 @@ export function MediaPlaceholder({
     return (
       <div className={`relative w-full overflow-hidden border border-border ${shapeClass} ${className}`}>
         {kind === "video" ? (
-          <video
-            src={src}
-            muted
-            loop
-            autoPlay
-            playsInline
-            className="h-full w-full object-cover"
-          />
+          <VideoThumb src={src} className="h-full w-full object-cover" />
         ) : (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={src} alt={label ?? ""} className="h-full w-full object-cover" />
