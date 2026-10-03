@@ -22,8 +22,10 @@ function escapeCsv(value: unknown): string {
 export function ExportCsvButton({ inquiries }: { inquiries: Inquiry[] }) {
   function handleExport() {
     const rows = [
-      COLUMNS.join(","),
-      ...inquiries.map((row) => COLUMNS.map((col) => escapeCsv(row[col])).join(",")),
+      [...COLUMNS, "partner_kind"].join(","),
+      ...inquiries.map((row) =>
+        [...COLUMNS.map((col) => escapeCsv(row[col])), escapeCsv(row.metadata?.partnerKind ?? "")].join(",")
+      ),
     ];
     const blob = new Blob([rows.join("\n")], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);

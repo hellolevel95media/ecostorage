@@ -2,6 +2,10 @@ export type ArticleStatus = "draft" | "published";
 export type ServiceCategory = "personal" | "corporate";
 export type InquiryType = "contact" | "personal" | "corporate" | "partner";
 
+// Distinguishes the /partner page's two audiences within inquiries.metadata
+// (partner-type inquiries only) — individual affiliates vs B2B partners.
+export type PartnerKind = "affiliate" | "business";
+
 export type Page = {
   id: string;
   slug: string;

@@ -11,6 +11,9 @@ interface ContactFormProps {
   description?: string;
   showCompanyFields?: boolean;
   compact?: boolean;
+  /** Extra allow-listed fields merged into the submitted payload, e.g.
+   * { partnerKind: "business" } on the /partner page. */
+  metadata?: Record<string, unknown>;
 }
 
 type Status = "idle" | "submitting" | "success" | "error";
@@ -21,6 +24,7 @@ export function ContactForm({
   description,
   showCompanyFields = false,
   compact = false,
+  metadata,
 }: ContactFormProps) {
   const [status, setStatus] = useState<Status>("idle");
   const messageId = useId();
@@ -29,7 +33,12 @@ export function ContactForm({
     event.preventDefault();
     setStatus("submitting");
 
-    const form = new FormData(event.currentTarget);
+    // Capture the form element before the first await — event.currentTarget
+    // is nulled by the browser once the synchronous event-dispatch phase
+    // ends, so reading it after an await throws (caught below as a false
+    // "error" status even though the request already succeeded).
+    const formEl = event.currentTarget;
+    const form = new FormData(formEl);
     const payload = {
       type,
       name: String(form.get("name") ?? ""),
@@ -39,6 +48,7 @@ export function ContactForm({
       address: String(form.get("address") ?? "") || null,
       message: String(form.get("message") ?? "") || null,
       website: String(form.get("website") ?? ""),
+      metadata,
     };
 
     try {
@@ -50,7 +60,7 @@ export function ContactForm({
       if (!res.ok) throw new Error("request failed");
       setStatus("success");
       showToast("Thanks — we've got your message!");
-      event.currentTarget.reset();
+      formEl.reset();
     } catch {
       setStatus("error");
     }

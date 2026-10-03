@@ -1,10 +1,24 @@
 import { NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { sendInquiryNotification } from "@/lib/email";
-import type { InquiryType } from "@/types/database";
+import type { InquiryType, PartnerKind } from "@/types/database";
 
 const VALID_TYPES: InquiryType[] = ["contact", "personal", "corporate", "partner"];
+const PARTNER_KINDS: PartnerKind[] = ["affiliate", "business"];
 const MAX_BODY_BYTES = 20_000;
+
+// Allow-listed metadata keys only — never persist arbitrary client JSON.
+// partnerKind distinguishes the /partner page's two audiences (individual
+// affiliates vs B2B partners) without needing a separate inquiry type.
+function sanitizeMetadata(input: unknown): Record<string, unknown> {
+  if (!input || typeof input !== "object") return {};
+  const raw = input as Record<string, unknown>;
+  const metadata: Record<string, unknown> = {};
+  if (typeof raw.partnerKind === "string" && PARTNER_KINDS.includes(raw.partnerKind as PartnerKind)) {
+    metadata.partnerKind = raw.partnerKind;
+  }
+  return metadata;
+}
 
 export async function POST(request: Request) {
   const contentLength = Number(request.headers.get("content-length") ?? 0);
@@ -18,7 +32,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 
-  const { type, name, email, phone, company_name, address, message, website } = body as Record<string, unknown>;
+  const { type, name, email, phone, company_name, address, message, website, metadata } =
+    body as Record<string, unknown>;
 
   // Honeypot: real users never fill this hidden field. Bots that do get a
   // fake success response so they don't learn to skip it.
@@ -41,6 +56,7 @@ export async function POST(request: Request) {
     company_name: typeof company_name === "string" && company_name.trim() ? company_name.trim() : null,
     address: typeof address === "string" && address.trim() ? address.trim() : null,
     message: typeof message === "string" && message.trim() ? message.trim() : null,
+    metadata: sanitizeMetadata(metadata),
   };
 
   try {

@@ -1,5 +1,5 @@
 import { Resend } from "resend";
-import type { InquiryType } from "@/types/database";
+import type { InquiryType, PartnerKind } from "@/types/database";
 
 const INQUIRY_LABELS: Record<InquiryType, string> = {
   contact: "General contact",
@@ -16,7 +16,13 @@ interface InquiryPayload {
   company_name: string | null;
   address: string | null;
   message: string | null;
+  metadata?: Record<string, unknown>;
 }
+
+const PARTNER_KIND_LABELS: Record<PartnerKind, string> = {
+  affiliate: "Individual affiliate",
+  business: "Business partner",
+};
 
 /**
  * Sends a staff notification for a new inquiry. Silently no-ops if
@@ -31,6 +37,7 @@ export async function sendInquiryNotification(inquiry: InquiryPayload) {
   if (!apiKey || !to || !from) return;
 
   const resend = new Resend(apiKey);
+  const partnerKind = inquiry.metadata?.partnerKind as PartnerKind | undefined;
 
   await resend.emails.send({
     from,
@@ -38,6 +45,7 @@ export async function sendInquiryNotification(inquiry: InquiryPayload) {
     subject: `New ${INQUIRY_LABELS[inquiry.type]} inquiry — ${inquiry.name}`,
     text: [
       `Type: ${INQUIRY_LABELS[inquiry.type]}`,
+      partnerKind ? `Partner kind: ${PARTNER_KIND_LABELS[partnerKind]}` : null,
       `Name: ${inquiry.name}`,
       `Email: ${inquiry.email}`,
       inquiry.phone ? `Phone: ${inquiry.phone}` : null,
