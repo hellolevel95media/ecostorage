@@ -82,6 +82,8 @@ export function MediaPicker({
                     <video
                       src={publicUrl.publicUrl}
                       muted
+                      loop
+                      autoPlay
                       playsInline
                       className="aspect-square w-full object-cover"
                     />
