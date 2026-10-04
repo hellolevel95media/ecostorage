@@ -11,8 +11,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install postgresql-client
-        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+      - name: Install postgresql-client matching the Supabase server version
+        # Ubuntu's default apt repo ships whatever postgresql-client happens
+        # to be current for that Ubuntu release (currently 16), which drifts
+        # behind Supabase's Postgres version over time — pg_dump refuses to
+        # dump a server newer than itself ("server version mismatch"). The
+        # official PostgreSQL apt repo (PGDG) always has the current major
+        # version, so install from there instead of pinning a number here.
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-common
+          sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
+          sudo apt-get install -y postgresql-client-17
       - name: Run backup
         env:
           NEXT_PUBLIC_SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
