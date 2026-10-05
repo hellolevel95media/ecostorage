@@ -95,7 +95,7 @@ export const VALET_OPTIONS: ValetOption[] = [
   {
     id: "standard",
     label: "Standard Valet",
-    description: "Pickup and delivery whenever you need it, plus complimentary partial extraction.",
+    description: "Pickup and delivery at our preferential rate, plus complimentary partial extraction.",
     monthlyFee: 15,
   },
   {
