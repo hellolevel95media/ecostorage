@@ -21,7 +21,14 @@ export function ArticleJsonLd({ title, description, slug, publishedAt, updatedAt
     url: `${SITE_URL}/resources/${slug}`,
     ...(publishedAt ? { datePublished: publishedAt } : {}),
     dateModified: updatedAt,
-    ...(author ? { author: { "@type": "Person", name: author } } : {}),
+    // "EcoStorage Team" (the only byline this CMS currently produces) reads
+    // as an organizational byline, not an individual — Person would be
+    // factually wrong and is the kind of mismatch Google's Rich Results
+    // Test flags. Treat any "... Team" author as an Organization; a real
+    // named individual would still get Person.
+    ...(author
+      ? { author: { "@type": /\bteam\b/i.test(author) ? "Organization" : "Person", name: author } }
+      : {}),
     publisher: {
       "@type": "Organization",
       name: "EcoStorage",

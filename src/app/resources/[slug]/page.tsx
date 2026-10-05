@@ -34,6 +34,7 @@ export async function generateMetadata({ params }: ArticlePageProps) {
     title: article.title.trim() ? `${article.title} | EcoStorage` : "Article | EcoStorage",
     description: metaDescription(article.excerpt),
     path: `/resources/${slug}`,
+    article: { publishedTime: article.published_at, modifiedTime: article.updated_at },
   });
 }
 

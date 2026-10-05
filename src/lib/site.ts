@@ -14,24 +14,40 @@ export function buildMetadata({
   title,
   description,
   path,
+  article,
 }: {
   title: string;
   description: string;
   path: string;
+  /** Set for /resources article pages — gives social shares/crawlers the
+   * proper og:type=article with real publish/modify dates instead of the
+   * generic website type every page got before. */
+  article?: { publishedTime?: string | null; modifiedTime?: string };
 }): Metadata {
   const url = path === "/" ? SITE_URL : `${SITE_URL}${path}`;
   return {
     title,
     description,
     alternates: { canonical: url },
-    openGraph: {
-      title,
-      description,
-      url,
-      siteName: "EcoStorage",
-      locale: "en_SG",
-      type: "website",
-    },
+    openGraph: article
+      ? {
+          title,
+          description,
+          url,
+          siteName: "EcoStorage",
+          locale: "en_SG",
+          type: "article",
+          ...(article.publishedTime ? { publishedTime: article.publishedTime } : {}),
+          ...(article.modifiedTime ? { modifiedTime: article.modifiedTime } : {}),
+        }
+      : {
+          title,
+          description,
+          url,
+          siteName: "EcoStorage",
+          locale: "en_SG",
+          type: "website",
+        },
     twitter: {
       card: "summary_large_image",
       title,

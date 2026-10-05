@@ -158,28 +158,3 @@ export const FALLBACK_SERVICES: FallbackService[] = [
   },
 ];
 
-export const FALLBACK_ARTICLES: {
-  slug: string;
-  title: string;
-  category: string;
-  excerpt: string;
-}[] = [
-  {
-    slug: "how-to-pack-a-storage-unit",
-    title: "How to Pack a Storage Unit Like a Pro",
-    category: "Personal",
-    excerpt: "Maximize every square foot with our room-by-room packing checklist.",
-  },
-  {
-    slug: "corporate-records-retention-guide",
-    title: "A Corporate Guide to Records Retention",
-    category: "Corporate",
-    excerpt: "What to keep, what to shred, and how long to store business documents.",
-  },
-  {
-    slug: "climate-controlled-storage-explained",
-    title: "Climate-Controlled Storage, Explained",
-    category: "Guides",
-    excerpt: "When it matters for your belongings — and when it doesn't.",
-  },
-];

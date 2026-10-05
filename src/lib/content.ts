@@ -1,31 +1,6 @@
 import { createServerSupabaseClient } from "@/lib/supabase/server";
-import {
-  FALLBACK_ARTICLES,
-  FALLBACK_SECTIONS,
-  FALLBACK_SERVICES,
-  type SectionCopy,
-} from "@/lib/fallback-content";
+import { FALLBACK_SECTIONS, FALLBACK_SERVICES, type SectionCopy } from "@/lib/fallback-content";
 import type { Article, Section, Service } from "@/types/database";
-
-function fallbackArticlesAsRows(limit?: number): Article[] {
-  const now = new Date().toISOString();
-  const rows: Article[] = FALLBACK_ARTICLES.map((a, i) => ({
-    id: `fallback-${a.slug}`,
-    slug: a.slug,
-    title: a.title,
-    category: a.category,
-    tags: [],
-    thumbnail_url: null,
-    excerpt: a.excerpt,
-    body: "",
-    status: "published",
-    published_at: new Date(Date.now() - i * 86_400_000).toISOString(),
-    author: "EcoStorage Team",
-    created_at: now,
-    updated_at: now,
-  }));
-  return limit ? rows.slice(0, limit) : rows;
-}
 
 function fallbackServicesAsRows(category?: "personal" | "corporate"): Service[] {
   const now = new Date().toISOString();
@@ -109,9 +84,16 @@ export async function getPublishedArticles(limit?: number): Promise<Article[]> {
 
     const { data, error } = await query;
     if (error) throw error;
-    return data && data.length > 0 ? data : fallbackArticlesAsRows(limit);
+    // No demo-article fallback here deliberately — real CMS content exists
+    // now, so zero published rows means genuinely zero published articles
+    // (e.g. everything is still in draft), not an unconfigured site. Showing
+    // fake placeholder articles in that case meant the live site, and the
+    // sitemap submitted to Google, were serving thin boilerplate pages
+    // ("Full article content will appear here...") under real-sounding
+    // titles whenever nothing happened to be published yet.
+    return data ?? [];
   } catch {
-    return fallbackArticlesAsRows(limit);
+    return [];
   }
 }
 
@@ -126,9 +108,9 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
       .maybeSingle();
 
     if (error) throw error;
-    return data ?? fallbackArticlesAsRows().find((a) => a.slug === slug) ?? null;
+    return data ?? null;
   } catch {
-    return fallbackArticlesAsRows().find((a) => a.slug === slug) ?? null;
+    return null;
   }
 }
 
