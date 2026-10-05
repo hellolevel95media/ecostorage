@@ -5,6 +5,8 @@ import { ButtonLink } from "@/components/ui/Button";
 import { getArticleBySlug } from "@/lib/content";
 import { buildMetadata } from "@/lib/site";
 import { ArticleJsonLd } from "@/components/seo/ArticleJsonLd";
+import { parseArticleBody } from "@/lib/article-body";
+import { inferMediaKind } from "@/lib/media";
 
 export const revalidate = 60;
 
@@ -81,12 +83,25 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         )}
       </div>
 
-      <div className="mt-8 space-y-4 text-foreground/80">
+      {/* max-w-prose (65ch) keeps body text at a comfortable reading
+          measure even though the title/hero image above use the wider
+          max-w-3xl column — unconstrained text at that width ran well
+          over 100 characters per line. */}
+      <div className="mt-8 max-w-prose space-y-4 text-foreground/80">
         {article.excerpt && <p className="text-lg text-foreground">{article.excerpt}</p>}
         {article.body ? (
-          article.body
-            .split("\n\n")
-            .map((paragraph, i) => <p key={i}>{paragraph}</p>)
+          parseArticleBody(article.body).map((block, i) =>
+            block.type === "media" ? (
+              inferMediaKind(block.url) === "video" ? (
+                <video key={i} src={block.url} controls className="w-full rounded-xl" />
+              ) : (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img key={i} src={block.url} alt="" className="w-full rounded-xl" />
+              )
+            ) : (
+              <p key={i}>{block.text}</p>
+            )
+          )
         ) : (
           <p>Full article content will appear here once published from the admin CMS.</p>
         )}

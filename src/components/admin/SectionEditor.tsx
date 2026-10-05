@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useId, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/Button";
@@ -40,7 +40,8 @@ export function SectionEditor({
     setError(null);
     setSaved(false);
 
-    const form = new FormData(event.currentTarget);
+    const formEl = event.currentTarget;
+    const form = new FormData(formEl);
     const supabase = createClient();
 
     const { data: page, error: pageError } = await supabase
@@ -89,79 +90,78 @@ export function SectionEditor({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-xl border border-border bg-card p-5">
+    <form onSubmit={handleSubmit} className="rounded-xl border border-border bg-card p-5 sm:p-6">
       <p className="text-xs font-semibold tracking-wide text-brand-ink uppercase">{sectionKey}</p>
 
-      <div className="mt-3 space-y-3">
-        <Field label="Heading" name="heading" defaultValue={initial.heading} />
-        <Field label="Subheading" name="subheading" defaultValue={initial.subheading} />
+      <div className="mt-4 grid gap-6 lg:grid-cols-[1fr_18rem]">
+        <div className="min-w-0 space-y-4">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="Heading" name="heading" defaultValue={initial.heading} />
+            <Field label="Subheading" name="subheading" defaultValue={initial.subheading} />
+          </div>
+          <TextAreaField label="Body" name="body" defaultValue={initial.body} rows={6} />
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="CTA text" name="cta_text" defaultValue={initial.cta_text} />
+            <Field label="CTA link" name="cta_link" defaultValue={initial.cta_link} />
+          </div>
+        </div>
+
         <div>
-          <label className="mb-1 block text-xs font-medium text-foreground/60">Body</label>
-          <textarea
-            name="body"
-            rows={3}
-            defaultValue={initial.body}
-            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand"
+          <MediaPicker
+            label="Banner media (image or video)"
+            name="media_url"
+            kind="any"
+            defaultValue={initial.media_url ?? ""}
           />
         </div>
-        <MediaPicker
-          label="Banner media (image or video)"
-          name="media_url"
-          kind="any"
-          defaultValue={initial.media_url ?? ""}
-        />
-        <div className="grid gap-3 sm:grid-cols-2">
-          <Field label="CTA text" name="cta_text" defaultValue={initial.cta_text} />
-          <Field label="CTA link" name="cta_link" defaultValue={initial.cta_link} />
-        </div>
-
-        {hasStats && (
-          <div>
-            <p className="mb-2 text-xs font-medium text-foreground/60">Trust stats (4 count-up bubbles)</p>
-            <div className="space-y-3">
-              {stats.map((stat, i) => (
-                <div key={i} className="grid grid-cols-[1fr_4rem_4rem_auto] items-end gap-2 rounded-lg border border-border p-3">
-                  <div>
-                    <label className="mb-1 block text-xs font-medium text-foreground/60">Label</label>
-                    <input
-                      value={stat.label}
-                      onChange={(e) => updateStat(i, { label: e.target.value })}
-                      className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand"
-                    />
-                  </div>
-                  <div>
-                    <label className="mb-1 block text-xs font-medium text-foreground/60">Value</label>
-                    <input
-                      type="number"
-                      value={stat.value}
-                      onChange={(e) => updateStat(i, { value: Number(e.target.value) || 0 })}
-                      className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand"
-                    />
-                  </div>
-                  <div>
-                    <label className="mb-1 block text-xs font-medium text-foreground/60">Suffix</label>
-                    <input
-                      value={stat.suffix ?? ""}
-                      onChange={(e) => updateStat(i, { suffix: e.target.value })}
-                      className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand"
-                    />
-                  </div>
-                  <label className="flex items-center gap-1 pb-2 text-xs text-foreground/60">
-                    <input
-                      type="checkbox"
-                      checked={Boolean(stat.emphasis)}
-                      onChange={(e) => updateStat(i, { emphasis: e.target.checked })}
-                    />
-                    Emphasis
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
 
-      <div className="mt-4 flex items-center gap-3">
+      {hasStats && (
+        <div className="mt-4">
+          <p className="mb-2 text-xs font-medium text-foreground/60">Trust stats (4 count-up bubbles)</p>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {stats.map((stat, i) => (
+              <div key={i} className="grid grid-cols-[1fr_4rem_4rem_auto] items-end gap-2 rounded-lg border border-border p-3">
+                <div>
+                  <label className="mb-1 block text-xs font-medium text-foreground/60">Label</label>
+                  <input
+                    value={stat.label}
+                    onChange={(e) => updateStat(i, { label: e.target.value })}
+                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs font-medium text-foreground/60">Value</label>
+                  <input
+                    type="number"
+                    value={stat.value}
+                    onChange={(e) => updateStat(i, { value: Number(e.target.value) || 0 })}
+                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs font-medium text-foreground/60">Suffix</label>
+                  <input
+                    value={stat.suffix ?? ""}
+                    onChange={(e) => updateStat(i, { suffix: e.target.value })}
+                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand"
+                  />
+                </div>
+                <label className="flex items-center gap-1 pb-2 text-xs text-foreground/60">
+                  <input
+                    type="checkbox"
+                    checked={Boolean(stat.emphasis)}
+                    onChange={(e) => updateStat(i, { emphasis: e.target.checked })}
+                  />
+                  Emphasis
+                </label>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="mt-5 flex items-center gap-3 border-t border-border pt-4">
         <Button type="submit" disabled={saving}>
           {saving ? "Saving..." : "Save section"}
         </Button>
@@ -181,13 +181,45 @@ function Field({
   name: string;
   defaultValue?: string;
 }) {
+  const id = useId();
   return (
     <div>
-      <label className="mb-1 block text-xs font-medium text-foreground/60">{label}</label>
+      <label htmlFor={id} className="mb-1 block text-xs font-medium text-foreground/60">
+        {label}
+      </label>
       <input
+        id={id}
         name={name}
         defaultValue={defaultValue}
         className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand"
+      />
+    </div>
+  );
+}
+
+function TextAreaField({
+  label,
+  name,
+  defaultValue,
+  rows = 3,
+}: {
+  label: string;
+  name: string;
+  defaultValue?: string;
+  rows?: number;
+}) {
+  const id = useId();
+  return (
+    <div>
+      <label htmlFor={id} className="mb-1 block text-xs font-medium text-foreground/60">
+        {label}
+      </label>
+      <textarea
+        id={id}
+        name={name}
+        rows={rows}
+        defaultValue={defaultValue}
+        className="w-full resize-y rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand"
       />
     </div>
   );

@@ -14,6 +14,7 @@ import {
   isValidMobile,
   type CommitmentId,
   type ValetId,
+  type ValetOption,
   type SizeGuideOption,
 } from "@/lib/calculator";
 
@@ -135,8 +136,14 @@ export function StorageCalculator() {
   }
 
   return (
-    <section className="snap-section-flow mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-      <div className="rounded-3xl border-2 border-foreground/15 bg-surface/60 p-5 shadow-card sm:p-8 lg:p-10">
+    // Full-bleed grey band (not just constrained to the content column) so
+    // the calculator card has visible contrast against the page's white
+    // background on either side — the card itself was previously a near-white
+    // bg-surface/60 sitting directly on the white page, which is why it read
+    // as flat/low-contrast before.
+    <section className="snap-section-flow bg-surface py-16">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="rounded-3xl border-2 border-foreground/15 bg-card p-5 shadow-card sm:p-8 lg:p-10">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-balance sm:text-3xl">
             Not sure how much space you need?
@@ -168,6 +175,7 @@ export function StorageCalculator() {
               <div className="mt-6 space-y-6">
                 <CommitmentSelector selected={commitmentId} onSelect={setCommitmentId} />
                 <ValetSelector selected={valetId} onSelect={setValetId} />
+                <ValetNotice valet={valet} />
                 <PromoCodeField
                   value={promoCode}
                   applied={promoApplied}
@@ -202,6 +210,7 @@ export function StorageCalculator() {
               <UnitStepper numUnits={numUnits} onChange={setNumUnits} />
               <CommitmentSelector selected={commitmentId} onSelect={setCommitmentId} />
               <ValetSelector selected={valetId} onSelect={setValetId} />
+              <ValetNotice valet={valet} />
               <PromoCodeField
                 value={promoCode}
                 applied={promoApplied}
@@ -223,6 +232,7 @@ export function StorageCalculator() {
               </form>
             </div>
           </div>
+        </div>
         </div>
       </div>
     </section>
@@ -444,6 +454,18 @@ function ValetSelector({
           </RadioCard>
         ))}
       </div>
+    </div>
+  );
+}
+
+function ValetNotice({ valet }: { valet: ValetOption }) {
+  if (valet.id === "none") return null;
+  return (
+    <div className="rounded-lg bg-brand/5 p-3 text-xs text-foreground/70">
+      <span className="font-semibold text-brand-ink">
+        {valet.label} (+${valet.monthlyFee}/mo):
+      </span>{" "}
+      {valet.description}
     </div>
   );
 }

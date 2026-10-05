@@ -92,8 +92,18 @@ export interface ValetOption {
 
 export const VALET_OPTIONS: ValetOption[] = [
   { id: "none", label: "No Valet", description: "Self-access only.", monthlyFee: 0 },
-  { id: "standard", label: "Standard Valet", description: "Doorstep pickup and delivery.", monthlyFee: 15 },
-  { id: "premium", label: "Premium Valet", description: "Full itemisation and priority service.", monthlyFee: 30 },
+  {
+    id: "standard",
+    label: "Standard Valet",
+    description: "Pickup and delivery whenever you need it, plus complimentary partial extraction.",
+    monthlyFee: 15,
+  },
+  {
+    id: "premium",
+    label: "Premium Valet",
+    description: "Everything in Standard Valet, plus full inventory cataloging and box-level labeling on every item we receive.",
+    monthlyFee: 30,
+  },
 ];
 
 export function volumeDiscountPerUnit(numUnits: number): number {
