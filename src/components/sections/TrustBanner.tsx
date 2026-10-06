@@ -1,18 +1,6 @@
 import { ButtonLink } from "@/components/ui/Button";
 import type { SectionCopy } from "@/lib/fallback-content";
-
-function parseBody(body?: string) {
-  const lines = (body ?? "").split("\n").map((l) => l.trim()).filter(Boolean);
-  const intro = lines.filter((l) => !l.startsWith("- ")).join(" ");
-  const points = lines
-    .filter((l) => l.startsWith("- "))
-    .map((l) => {
-      const text = l.slice(2);
-      const i = text.indexOf(": ");
-      return i > 0 ? { title: text.slice(0, i), text: text.slice(i + 2) } : { title: "", text };
-    });
-  return { intro, points };
-}
+import { parseCommitments } from "@/lib/commitments";
 
 export function TrustBanner({
   copy,
@@ -23,7 +11,7 @@ export function TrustBanner({
 }) {
   const ctaText = copy.cta_text ?? "Get a Free Quote";
   const ctaLink = copy.cta_link ?? "/contact";
-  const { intro, points } = parseBody(copy.body);
+  const { intro, points } = parseCommitments(copy.body);
 
   const cta = showCta && (
     <div className="mt-6">

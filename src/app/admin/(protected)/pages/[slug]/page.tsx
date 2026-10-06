@@ -24,7 +24,7 @@ export default async function AdminPageEditor({
     <div>
       <h2 className="text-xl font-semibold">{page.title}</h2>
       <p className="mt-1 text-sm text-foreground/60">
-        Edit copy for each section on this page. Changes appear live once saved.
+        Each box below is one part of the page. Change the text, then press Save on that box. Changes appear on the live site within a minute.
       </p>
 
       <div className="mt-4 space-y-4">
