@@ -71,7 +71,16 @@ export function resolveSection(
   };
 }
 
-export async function getPublishedArticles(limit?: number): Promise<Article[]> {
+export async function getPublishedArticles(
+  limit?: number,
+  // Defaults to "en" so every existing call site (home page, personal page,
+  // the main /resources grid) keeps showing exactly what it shows today,
+  // unchanged, even after Chinese articles exist — nothing mixes languages
+  // unless a caller explicitly asks for "zh" (the dedicated Chinese hub) or
+  // "all" (the sitemap, which should list every published page regardless
+  // of language).
+  locale: "en" | "zh" | "all" = "en"
+): Promise<Article[]> {
   try {
     const supabase = await createServerSupabaseClient();
     let query = supabase
@@ -80,6 +89,7 @@ export async function getPublishedArticles(limit?: number): Promise<Article[]> {
       .eq("status", "published")
       .order("published_at", { ascending: false });
 
+    if (locale !== "all") query = query.eq("locale", locale);
     if (limit) query = query.limit(limit);
 
     const { data, error } = await query;

@@ -10,6 +10,10 @@ import { NAV_LINKS } from "@/lib/nav";
 export function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const onZhHub = pathname.startsWith("/resources/zh");
+  const langSwitch = onZhHub
+    ? { href: "/resources", label: "EN" }
+    : { href: "/resources/zh", label: "中文" };
 
   return (
     <>
@@ -39,7 +43,14 @@ export function Header() {
             })}
           </nav>
 
-          <div className="hidden lg:block">
+          <div className="hidden items-center gap-3 lg:flex">
+            <Link
+              href={langSwitch.href}
+              lang={onZhHub ? "en" : "zh"}
+              className="rounded-full border border-border px-3 py-1.5 text-sm font-medium text-foreground/70 transition-colors hover:border-brand/40 hover:text-brand-ink"
+            >
+              {langSwitch.label}
+            </Link>
             <ButtonLink href="/contact">Get a Quote</ButtonLink>
           </div>
         </div>
@@ -86,6 +97,14 @@ export function Header() {
                 </Link>
               );
             })}
+            <Link
+              href={langSwitch.href}
+              lang={onZhHub ? "en" : "zh"}
+              onClick={() => setOpen(false)}
+              className="rounded-lg px-3 py-2 text-sm font-medium text-foreground/70"
+            >
+              {langSwitch.label}
+            </Link>
             <ButtonLink href="/contact" className="mt-2 w-full" onClick={() => setOpen(false)}>
               Get a Quote
             </ButtonLink>

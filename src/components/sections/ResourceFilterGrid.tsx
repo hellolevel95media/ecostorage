@@ -5,21 +5,34 @@ import { ArticleCard } from "@/components/sections/ArticleCard";
 import { CardCarousel } from "@/components/ui/CardCarousel";
 import type { Article } from "@/types/database";
 
-export function ResourceFilterGrid({ articles }: { articles: Article[] }) {
+export function ResourceFilterGrid({
+  articles,
+  allLabel = "All",
+  byTopicLabel = "By topic",
+  emptyMessage = "No articles in this topic yet.",
+}: {
+  articles: Article[];
+  /** These three default to the existing English copy, so the main
+   * /resources page is completely unaffected — only the Chinese hub page
+   * passes Chinese equivalents. */
+  allLabel?: string;
+  byTopicLabel?: string;
+  emptyMessage?: string;
+}) {
   const topics = useMemo(() => {
     const set = new Set(articles.map((a) => a.category).filter(Boolean) as string[]);
-    return ["All", ...Array.from(set)];
-  }, [articles]);
+    return [allLabel, ...Array.from(set)];
+  }, [articles, allLabel]);
 
-  const [topic, setTopic] = useState("All");
+  const [topic, setTopic] = useState(allLabel);
 
   const filtered =
-    topic === "All" ? articles : articles.filter((a) => a.category === topic);
+    topic === allLabel ? articles : articles.filter((a) => a.category === topic);
 
   return (
     <div className="grid gap-8 lg:grid-cols-[200px_1fr]">
       <aside className="lg:sticky lg:top-24 lg:self-start">
-        <p className="text-xs font-semibold tracking-wide text-foreground/40 uppercase">By topic</p>
+        <p className="text-xs font-semibold tracking-wide text-foreground/40 uppercase">{byTopicLabel}</p>
         <nav className="mt-3 flex flex-wrap gap-2 lg:flex-col">
           {topics.map((t) => (
             <button
@@ -37,7 +50,7 @@ export function ResourceFilterGrid({ articles }: { articles: Article[] }) {
       </aside>
 
       {filtered.length === 0 ? (
-        <p className="mt-6 text-sm text-foreground/60">No articles in this topic yet.</p>
+        <p className="mt-6 text-sm text-foreground/60">{emptyMessage}</p>
       ) : (
         <CardCarousel gridClassName="lg:grid-cols-2 xl:grid-cols-3">
           {filtered.map((article) => (

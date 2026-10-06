@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { MediaPicker } from "@/components/admin/MediaPicker";
 import { AssetGrid } from "@/components/admin/AssetGrid";
 import { mediaMarker } from "@/lib/article-body";
-import type { Article, ArticleStatus } from "@/types/database";
+import type { Article, ArticleStatus, ArticleLocale } from "@/types/database";
 
 export function ArticleForm({ article }: { article?: Article }) {
   const router = useRouter();
@@ -53,6 +53,7 @@ export function ArticleForm({ article }: { article?: Article }) {
       excerpt: String(form.get("excerpt") ?? "") || null,
       body,
       status: form.get("status") as ArticleStatus,
+      locale: form.get("locale") as ArticleLocale,
       author: String(form.get("author") ?? "") || null,
       published_at:
         form.get("status") === "published"
@@ -143,6 +144,16 @@ export function ArticleForm({ article }: { article?: Article }) {
             >
               <option value="draft">Draft</option>
               <option value="published">Published</option>
+            </select>
+
+            <label className="mt-3 mb-1 block text-xs font-medium text-foreground/60">Language</label>
+            <select
+              name="locale"
+              defaultValue={article?.locale ?? "en"}
+              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand"
+            >
+              <option value="en">English</option>
+              <option value="zh">中文 (Chinese)</option>
             </select>
 
             <div className="mt-3">

@@ -25,6 +25,7 @@ export default async function AdminArticlesPage() {
             <tr>
               <th className="px-4 py-3">Title</th>
               <th className="px-4 py-3">Status</th>
+              <th className="px-4 py-3">Language</th>
               <th className="px-4 py-3">Category</th>
               <th className="px-4 py-3" />
             </tr>
@@ -34,6 +35,7 @@ export default async function AdminArticlesPage() {
               <tr key={article.id}>
                 <td className="px-4 py-3 font-medium">{article.title}</td>
                 <td className="px-4 py-3 capitalize text-foreground/70">{article.status}</td>
+                <td className="px-4 py-3 text-foreground/70">{article.locale === "zh" ? "中文" : "English"}</td>
                 <td className="px-4 py-3 text-foreground/70">{article.category ?? "—"}</td>
                 <td className="px-4 py-3 text-right">
                   <div className="flex justify-end gap-4">
@@ -50,7 +52,7 @@ export default async function AdminArticlesPage() {
             ))}
             {(!articles || articles.length === 0) && (
               <tr>
-                <td colSpan={4} className="px-4 py-6 text-center text-foreground/50">
+                <td colSpan={5} className="px-4 py-6 text-center text-foreground/50">
                   No articles yet.
                 </td>
               </tr>

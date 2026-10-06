@@ -43,6 +43,13 @@ body {
   scrollbar-color: var(--border) var(--background);
 }
 
+/* Scoped to lang="zh" content specifically (e.g. a Chinese article's body),
+   not the whole site — Plus Jakarta Sans has no CJK glyphs. Everything
+   outside a lang="zh" element is completely unaffected. */
+:lang(zh) {
+  font-family: var(--font-app-sc), var(--font-sans), sans-serif;
+}
+
 a {
   text-underline-offset: 3px;
 }

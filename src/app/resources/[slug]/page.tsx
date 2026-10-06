@@ -45,7 +45,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   if (!article) notFound();
 
   return (
-    <article className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
+    <article lang={article.locale} className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
       <ArticleJsonLd
         title={article.title}
         description={metaDescription(article.excerpt)}

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans, JetBrains_Mono, Noto_Sans_SC } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Header } from "@/components/layout/Header";
@@ -19,6 +19,15 @@ const appSans = Plus_Jakarta_Sans({
 
 const appMono = JetBrains_Mono({
   variable: "--font-app-mono",
+  subsets: ["latin"],
+});
+
+// Loaded globally but only actually applied via the :lang(zh) rule in
+// globals.css — has zero effect on existing English pages, Plus Jakarta
+// Sans doesn't cover CJK glyphs so Chinese article content needs this.
+const appSC = Noto_Sans_SC({
+  variable: "--font-app-sc",
+  weight: ["400", "500", "700"],
   subsets: ["latin"],
 });
 
@@ -57,7 +66,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${appSans.variable} ${appMono.variable} h-full antialiased`}
+      className={`${appSans.variable} ${appMono.variable} ${appSC.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-background text-foreground">
         <OrganizationJsonLd />

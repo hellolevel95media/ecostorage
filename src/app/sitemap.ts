@@ -11,12 +11,15 @@ const STATIC_ROUTES = [
   "/partner",
   "/contact",
   "/resources",
+  "/resources/zh",
   "/privacy",
   "/cookies",
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const articles = await getPublishedArticles();
+  // "all" — the sitemap should list every published page regardless of
+  // language, unlike page-level article queries which default to "en" only.
+  const articles = await getPublishedArticles(undefined, "all");
 
   // No lastModified here deliberately — this route is forced dynamic (the
   // Supabase call below reads cookies()), so new Date() would mean every

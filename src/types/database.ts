@@ -1,4 +1,5 @@
 export type ArticleStatus = "draft" | "published";
+export type ArticleLocale = "en" | "zh";
 export type ServiceCategory = "personal" | "corporate";
 export type InquiryType = "contact" | "personal" | "corporate" | "partner";
 
@@ -49,6 +50,7 @@ export type Article = {
   excerpt: string | null;
   body: string;
   status: ArticleStatus;
+  locale: ArticleLocale;
   published_at: string | null;
   author: string | null;
   created_at: string;
