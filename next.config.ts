@@ -31,6 +31,9 @@ const nextConfig: NextConfig = {
   // fingerprints the framework (and indirectly narrows the version) for
   // anyone probing the site.
   poweredByHeader: false,
+  async redirects() {
+    return [{ source: "/zh", destination: "/resources/zh", permanent: true }];
+  },
   async headers() {
     return [
       {

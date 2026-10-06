@@ -1,22 +1,24 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useSyncExternalStore } from "react";
 
 export const COOKIE_CONSENT_KEY = "ecostorage-cookie-consent";
 
-export function CookieConsent() {
-  const [visible, setVisible] = useState(false);
-  const [mounted, setMounted] = useState(false);
+function subscribe(onChange: () => void) {
+  window.addEventListener("cookie-consent-change", onChange);
+  return () => window.removeEventListener("cookie-consent-change", onChange);
+}
 
-  if (!mounted) {
-    setMounted(true);
-    setVisible(typeof window !== "undefined" && !localStorage.getItem(COOKIE_CONSENT_KEY));
-  }
+export function CookieConsent() {
+  const visible = useSyncExternalStore(
+    subscribe,
+    () => !localStorage.getItem(COOKIE_CONSENT_KEY),
+    () => false,
+  );
 
   function choose(value: "accepted" | "declined") {
     localStorage.setItem(COOKIE_CONSENT_KEY, value);
-    setVisible(false);
     window.dispatchEvent(new Event("cookie-consent-change"));
   }
 
