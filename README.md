@@ -39,7 +39,7 @@ cp .env.example .env.local
 2. In Vercel, import the GitHub repository as a new project.
 3. Add the environment variables from the table above under **Project Settings → Environment Variables**.
 4. Deploy. Vercel will automatically rebuild on every push to `main` (CI/CD via GitHub integration).
-5. Under **Project Settings → Domains**, add the custom domain `www.storagespace.com.sg` and follow Vercel's instructions to point your DNS records at Vercel.
+5. Under **Project Settings → Domains**, add the custom domain `ecostorage.sg` and follow Vercel's instructions to point your DNS records at Vercel.
 
 ## Tech Stack
 

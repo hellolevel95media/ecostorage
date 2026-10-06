@@ -18,7 +18,7 @@ export default function PrivacyPage() {
           We never sell your data. Information submitted through this site is stored securely in
           our Supabase database and is only accessible to authenticated EcoStorage staff.
         </p>
-        <p>Contact hello@storagespace.com with any privacy questions or data requests.</p>
+        <p>Contact hello@ecostorage.sg with any privacy questions or data requests.</p>
       </div>
     </section>
   );

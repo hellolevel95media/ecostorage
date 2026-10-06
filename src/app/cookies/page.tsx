@@ -32,7 +32,7 @@ export default function CookiesPage() {
             this site.
           </p>
         </div>
-        <p>Contact hello@storagespace.com with any cookie or privacy questions.</p>
+        <p>Contact hello@ecostorage.sg with any cookie or privacy questions.</p>
       </div>
     </section>
   );

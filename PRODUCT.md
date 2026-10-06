@@ -28,7 +28,7 @@ Main warehousing runs at 100% ambient temperature (not air-conditioned); only ~1
 
 - Market: fully Singapore-based, island-wide, with 13 locations.
 - Warehouse/facility addresses are confidential and must never be disclosed publicly (security/operational policy). The public-facing contact address is: **7030 Ang Mo Kio Ave 5, #08-94, Singapore 569880**.
-- Primary domain: `www.storagespace.com.sg`.
+- Primary domain: `ecostorage.sg`.
 - Known stale content: `src/lib/nav.ts`'s `COMPANY` object currently has a placeholder Seattle, WA (US) address and a non-`.sg` email — this is confirmed incorrect and should not be treated as real; it needs a content fix (not done as part of this record, flagged for follow-up).
 
 ## Capabilities & Constraints

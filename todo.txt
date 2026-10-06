@@ -73,6 +73,12 @@ supabase link --project-ref dqmuuszmuyixjxonwjpv]
    - Set check interval (5 min is fine on the free tier) and alert contacts
      (email/SMS) for when it stops returning 200.
 [I cant point to this domain yet as the sysadmin for www.storagespace.com.sg is not me, I am building the testbed right now before we push to live so I need to skip this for now]
+[UPDATE 2026-10-06: ecostorage.sg bought via Exabytes (registrar of record,
+DNS managed there). Vercel DNS records set (A + www CNAME). Zoho Mail Lite
+(2 paid users) DNS records added in Exabytes (MX/SPF/DKIM); waiting on Zoho
+"Verify all records". Remaining: add domain in Vercel + set NEXT_PUBLIC_SITE_URL
+to https://ecostorage.sg, create hello@/jonnylim@ users and sales@ alias/group,
+point UptimeRobot here, and verify a Resend sending domain (item 3).]
 
 6) GITHUB ACTIONS SECRETS — AUTOMATED DB BACKUPS
    Why: the backup workflow (.github/workflows/backup.yml) is already built

@@ -23,7 +23,7 @@ export const MANAGED_PAGES = [
 export const COMPANY = {
   name: "EcoStorage",
   address: "7030 Ang Mo Kio Ave 5, #08-94, Singapore 569880",
-  email: "hello@storagespace.com.sg",
+  email: "hello@ecostorage.sg",
   phone: "+65 8899 7017",
   googleReviewUrl: "#",
 };

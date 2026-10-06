@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.storagespace.com.sg";
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://ecostorage.sg";
 
 /**
  * Every page previously only set `title`, so it silently inherited the root
