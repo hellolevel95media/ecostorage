@@ -15,7 +15,9 @@ const sentryIngestHost = sentryDsn ? new URL(sentryDsn).origin : null;
 
 const csp = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com",
+  // challenges.cloudflare.com: Turnstile bot check on the enquiry forms.
+  "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com https://challenges.cloudflare.com",
+  "frame-src https://challenges.cloudflare.com",
   "style-src 'self' 'unsafe-inline'",
   `img-src 'self' data: blob: ${supabaseHost}`,
   `media-src 'self' blob: ${supabaseHost}`,

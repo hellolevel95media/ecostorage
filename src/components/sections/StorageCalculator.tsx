@@ -1,7 +1,9 @@
 "use client";
 
-import { useId, useMemo, useState, type FormEvent, type ReactNode } from "react";
+import { useId, useMemo, useState, useSyncExternalStore, type FormEvent, type ReactNode } from "react";
 import { Button } from "@/components/ui/Button";
+import { PromoCodeInput, type AppliedPromo } from "@/components/ui/PromoCodeInput";
+import { Turnstile, turnstileEnabled } from "@/components/ui/Turnstile";
 import { showToast } from "@/lib/toast";
 import {
   SIZE_GUIDE,
@@ -10,9 +12,11 @@ import {
   VALET_OPTIONS,
   moduleCountFromSqft,
   calculateQuote,
+  referralCommitment,
   isValidEmail,
   isValidMobile,
   type CommitmentId,
+  type CommitmentOption,
   type ValetId,
   type ValetOption,
   type SizeGuideOption,
@@ -33,6 +37,21 @@ interface ContactState {
   address: string;
 }
 
+// Mobile and desktop layouts are both in the DOM (one hidden by CSS); the
+// bot-check widget must only render in the visible one.
+const DESKTOP_QUERY = "(min-width: 1024px)";
+function useIsDesktop() {
+  return useSyncExternalStore(
+    (onChange) => {
+      const mql = window.matchMedia(DESKTOP_QUERY);
+      mql.addEventListener("change", onChange);
+      return () => mql.removeEventListener("change", onChange);
+    },
+    () => window.matchMedia(DESKTOP_QUERY).matches,
+    () => false,
+  );
+}
+
 const EMPTY_CONTACT: ContactState = { firstName: "", lastName: "", email: "", phone: "", address: "" };
 
 export function StorageCalculator() {
@@ -40,8 +59,12 @@ export function StorageCalculator() {
   const [numUnits, setNumUnits] = useState(() => moduleCountFromSqft(20));
   const [commitmentId, setCommitmentId] = useState<CommitmentId>("monthly");
   const [valetId, setValetId] = useState<ValetId>("none");
-  const [promoCode, setPromoCode] = useState("");
-  const [promoApplied, setPromoApplied] = useState(false);
+  const [promo, setPromo] = useState<AppliedPromo>(null);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [captchaKey, setCaptchaKey] = useState(0);
+  const isDesktop = useIsDesktop();
+  // Load the bot check only once the visitor starts on their contact details.
+  const [engaged, setEngaged] = useState(false);
   const [mobileStep, setMobileStep] = useState<MobileStep>("items");
   const [maxMobileStep, setMaxMobileStep] = useState<MobileStep>("items");
   const [contact, setContact] = useState<ContactState>(EMPTY_CONTACT);
@@ -49,9 +72,20 @@ export function StorageCalculator() {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
 
   const guide = SIZE_GUIDE.find((g) => g.sqft === selectedGuideSqft) ?? SIZE_GUIDE[0];
-  const commitment = COMMITMENT_OPTIONS.find((c) => c.id === commitmentId)!;
+  // A valid referral code unlocks one extra plan (e.g. 1 month free on 4).
+  const commitmentOptions = useMemo<CommitmentOption[]>(
+    () => (promo ? [...COMMITMENT_OPTIONS, referralCommitment(promo.offer)] : COMMITMENT_OPTIONS),
+    [promo]
+  );
+  const commitment = commitmentOptions.find((c) => c.id === commitmentId) ?? COMMITMENT_OPTIONS[0];
   const valet = VALET_OPTIONS.find((v) => v.id === valetId)!;
   const quote = useMemo(() => calculateQuote({ numUnits, commitment, valet }), [numUnits, commitment, valet]);
+
+  function applyPromo(next: AppliedPromo) {
+    setPromo(next);
+    if (next) setCommitmentId("referral");
+    else if (commitmentId === "referral") setCommitmentId("monthly");
+  }
 
   function selectGuide(sqft: number) {
     setSelectedGuideSqft(sqft);
@@ -88,37 +122,26 @@ export function StorageCalculator() {
       name: [contact.firstName, contact.lastName].filter(Boolean).join(" "),
       email: contact.email,
       phone: contact.phone,
-      company_name: null,
       address: contact.address || null,
-      message: null,
-      metadata: {
-        source: "storage_calculator",
-        moduleSqft: MODULE_SQFT,
-        numUnits,
-        commitment: commitment.id,
-        billedMonths: quote.billedMonths,
-        valet: valet.id,
-        promoCode: promoApplied ? promoCode : null,
-        estimatedMonthly: quote.discountedMonthly,
-        estimatedTotal: quote.totalCost,
-        savings: quote.savings,
-        co2SavedKg: quote.co2SavedKg,
-        treesSaved: quote.treesSaved,
-      },
+      // Selections only; the server recomputes the quote itself.
+      calculator: { numUnits, commitment: commitment.id, valet: valet.id },
+      promo_code: promo?.code ?? null,
+      turnstile_token: captchaToken,
     };
 
     try {
-      // Loaded on submit rather than imported at module scope — this
-      // component renders on the homepage, and the Supabase browser client
-      // is a ~67KB gzip chunk that most visitors never need to download.
-      const { createClient } = await import("@/lib/supabase/client");
-      const supabase = createClient();
-      const { error } = await supabase.from("inquiries").insert(payload);
-      if (error) throw error;
+      const res = await fetch("/api/inquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error("request failed");
       setStatus("success");
       showToast("Thanks — your price is locked in!");
     } catch {
       setStatus("error");
+      // Turnstile tokens are single-use; get a fresh one for the retry.
+      setCaptchaKey((k) => k + 1);
     }
   }
 
@@ -173,15 +196,10 @@ export function StorageCalculator() {
 
             {mobileStep === "plan" && (
               <div className="mt-6 space-y-6">
-                <CommitmentSelector selected={commitmentId} onSelect={setCommitmentId} />
+                <CommitmentSelector options={commitmentOptions} selected={commitmentId} onSelect={setCommitmentId} />
                 <ValetSelector selected={valetId} onSelect={setValetId} />
                 <ValetNotice valet={valet} />
-                <PromoCodeField
-                  value={promoCode}
-                  applied={promoApplied}
-                  onChange={setPromoCode}
-                  onApply={() => setPromoApplied(true)}
-                />
+                <PromoCodeInput applied={promo} onApplied={applyPromo} />
                 <Button type="button" className="w-full" onClick={() => advanceStep("contact")}>
                   Next: Review &amp; contact
                 </Button>
@@ -191,9 +209,10 @@ export function StorageCalculator() {
             {mobileStep === "contact" && (
               <div className="mt-6 space-y-6">
                 <RateDashboard quote={quote} numUnits={numUnits} />
-                <form onSubmit={handleSubmit} className="space-y-3">
+                <form onSubmit={handleSubmit} onFocusCapture={() => setEngaged(true)} className="space-y-3">
                   <ContactFields contact={contact} errors={errors} onChange={setContact} />
-                  <Button type="submit" disabled={status === "submitting"} className="w-full">
+                  {engaged && !isDesktop && <Turnstile onToken={setCaptchaToken} resetKey={captchaKey} />}
+                  <Button type="submit" disabled={status === "submitting" || (turnstileEnabled && !captchaToken)} className="w-full">
                     {status === "submitting" ? "Locking in your rate..." : "Lock In My Rate"}
                   </Button>
                   {status === "error" && (
@@ -208,22 +227,18 @@ export function StorageCalculator() {
           <div className="hidden lg:grid lg:grid-cols-2 lg:gap-10">
             <div className="space-y-8">
               <UnitStepper numUnits={numUnits} onChange={setNumUnits} />
-              <CommitmentSelector selected={commitmentId} onSelect={setCommitmentId} />
+              <CommitmentSelector options={commitmentOptions} selected={commitmentId} onSelect={setCommitmentId} />
               <ValetSelector selected={valetId} onSelect={setValetId} />
               <ValetNotice valet={valet} />
-              <PromoCodeField
-                value={promoCode}
-                applied={promoApplied}
-                onChange={setPromoCode}
-                onApply={() => setPromoApplied(true)}
-              />
+              <PromoCodeInput applied={promo} onApplied={applyPromo} />
             </div>
 
             <div className="space-y-6 rounded-2xl border-2 border-foreground/15 bg-card p-6 shadow-card">
               <RateDashboard quote={quote} numUnits={numUnits} />
-              <form onSubmit={handleSubmit} className="space-y-3 border-t-2 border-foreground/15 pt-6">
+              <form onSubmit={handleSubmit} onFocusCapture={() => setEngaged(true)} className="space-y-3 border-t-2 border-foreground/15 pt-6">
                 <ContactFields contact={contact} errors={errors} onChange={setContact} />
-                <Button type="submit" disabled={status === "submitting"} className="w-full">
+                {engaged && isDesktop && <Turnstile onToken={setCaptchaToken} resetKey={captchaKey} />}
+                <Button type="submit" disabled={status === "submitting" || (turnstileEnabled && !captchaToken)} className="w-full">
                   {status === "submitting" ? "Locking in your rate..." : "Lock In My Rate"}
                 </Button>
                 {status === "error" && (
@@ -405,9 +420,11 @@ function UnitStepper({ numUnits, onChange }: { numUnits: number; onChange: (n: n
 }
 
 function CommitmentSelector({
+  options,
   selected,
   onSelect,
 }: {
+  options: CommitmentOption[];
   selected: CommitmentId;
   onSelect: (id: CommitmentId) => void;
 }) {
@@ -415,7 +432,7 @@ function CommitmentSelector({
     <div>
       <p className="text-xs font-medium text-foreground/60">Commitment period</p>
       <div className="mt-2 grid grid-cols-2 gap-2">
-        {COMMITMENT_OPTIONS.map((option) => (
+        {options.map((option) => (
           <RadioCard
             key={option.id}
             active={option.id === selected}
@@ -489,41 +506,6 @@ function RadioCard({
     >
       {children}
     </button>
-  );
-}
-
-function PromoCodeField({
-  value,
-  applied,
-  onChange,
-  onApply,
-}: {
-  value: string;
-  applied: boolean;
-  onChange: (value: string) => void;
-  onApply: () => void;
-}) {
-  return (
-    <div>
-      <p className="text-xs font-medium text-foreground/60">Promo code (optional)</p>
-      <div className="mt-2 flex gap-2">
-        <input
-          value={value}
-          onChange={(e) => onChange(e.target.value.toUpperCase())}
-          placeholder="ENTER CODE"
-          className="w-full rounded-lg border-2 border-foreground/20 bg-background px-3 py-2 text-sm outline-none focus:border-brand"
-        />
-        <button
-          type="button"
-          onClick={onApply}
-          disabled={!value.trim()}
-          className="shrink-0 rounded-lg border-2 border-foreground/20 px-4 py-2 text-sm font-semibold text-foreground/70 hover:border-brand/60 disabled:opacity-40"
-        >
-          Apply
-        </button>
-      </div>
-      {applied && <p className="mt-1 text-xs text-foreground/50">Code submitted for review with your quote.</p>}
-    </div>
   );
 }
 

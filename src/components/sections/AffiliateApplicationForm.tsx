@@ -2,6 +2,7 @@
 
 import { useId, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
+import { Turnstile, turnstileEnabled } from "@/components/ui/Turnstile";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -10,28 +11,33 @@ interface AffiliateApplicationPayload {
   email: string;
   phone: string;
   promotionPlan: string;
+  consent: boolean;
+  website: string;
+  turnstileToken: string | null;
 }
 
 /**
- * Isolated on purpose — this currently submits to the main site's
- * /api/inquiries, but will later be re-pointed to the separate affiliate
- * system's own application endpoint once that's live. Keeping the call in
- * one function means that's a one-line change, not a form rewrite.
+ * Posts to this site's /api/affiliate-applications, which forwards the
+ * application (signed, server-to-server) to the separate affiliate system's
+ * review queue.
  */
 async function submitAffiliateApplication(payload: AffiliateApplicationPayload) {
-  const res = await fetch("/api/inquiries", {
+  const res = await fetch("/api/affiliate-applications", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      type: "partner",
       name: payload.name,
       email: payload.email,
       phone: payload.phone || null,
-      message: payload.promotionPlan || null,
-      metadata: { partnerKind: "affiliate" },
+      promotion_plan: payload.promotionPlan || null,
+      consent: payload.consent,
+      website: payload.website,
+      turnstile_token: payload.turnstileToken,
+      locale: document.documentElement.lang?.startsWith("zh") ? "zh-Hans" : "en",
     }),
   });
-  if (!res.ok) throw new Error("request failed");
+  const data = (await res.json().catch(() => ({}))) as { error?: string };
+  if (!res.ok) throw new Error(data.error ?? "Something went wrong — please try again.");
 }
 
 const BENEFITS = [
@@ -44,6 +50,10 @@ const BENEFITS = [
 
 export function AffiliateApplicationForm() {
   const [status, setStatus] = useState<Status>("idle");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [engaged, setEngaged] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [captchaKey, setCaptchaKey] = useState(0);
   const promotionId = useId();
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -62,11 +72,16 @@ export function AffiliateApplicationForm() {
         email: String(form.get("email") ?? ""),
         phone: String(form.get("phone") ?? ""),
         promotionPlan: String(form.get("promotion_plan") ?? ""),
+        consent: form.get("consent") === "on",
+        website: String(form.get("website") ?? ""),
+        turnstileToken: captchaToken,
       });
       setStatus("success");
       formEl.reset();
-    } catch {
+    } catch (err) {
+      setErrorMessage(err instanceof Error ? err.message : null);
       setStatus("error");
+      setCaptchaKey((k) => k + 1);
     }
   }
 
@@ -89,7 +104,15 @@ export function AffiliateApplicationForm() {
           <p className="font-semibold text-brand-ink">Thanks, we review every application personally and will be in touch.</p>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="mt-4">
+        <form onSubmit={handleSubmit} onFocusCapture={() => setEngaged(true)} className="mt-4">
+          <input
+            type="text"
+            name="website"
+            tabIndex={-1}
+            autoComplete="off"
+            className="absolute left-[-9999px] h-0 w-0 opacity-0"
+            aria-hidden="true"
+          />
           <div className="grid gap-3 sm:grid-cols-2">
             <TextField label="Name" name="name" required />
             <TextField label="Email" name="email" type="email" required />
@@ -117,12 +140,22 @@ export function AffiliateApplicationForm() {
             portal.
           </p>
 
-          <Button type="submit" disabled={status === "submitting"} className="mt-3 w-full sm:w-auto">
+          {engaged && (
+            <div className="mt-3">
+              <Turnstile onToken={setCaptchaToken} resetKey={captchaKey} />
+            </div>
+          )}
+
+          <Button
+            type="submit"
+            disabled={status === "submitting" || (turnstileEnabled && !captchaToken)}
+            className="mt-3 w-full sm:w-auto"
+          >
             {status === "submitting" ? "Sending..." : "Apply"}
           </Button>
 
           {status === "error" && (
-            <p className="mt-2 text-sm text-red-500">Something went wrong — please try again.</p>
+            <p className="mt-2 text-sm text-red-500">{errorMessage ?? "Something went wrong — please try again."}</p>
           )}
         </form>
       )}

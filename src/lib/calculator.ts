@@ -59,7 +59,7 @@ export function moduleCountFromSqft(preferredSqft: number): number {
   return Math.max(1, Math.round(preferredSqft / MODULE_SQFT));
 }
 
-export type CommitmentId = "monthly" | "8mo" | "12mo" | "18mo";
+export type CommitmentId = "monthly" | "8mo" | "12mo" | "18mo" | "referral";
 
 export interface CommitmentOption {
   id: CommitmentId;
@@ -80,6 +80,28 @@ export const COMMITMENT_OPTIONS: CommitmentOption[] = [
   { id: "12mo", label: "12-Month Lock-in", months: 12, freeMonths: 2, billedMonths: 10 },
   { id: "18mo", label: "18-Month Lock-in", months: 18, freeMonths: 3, billedMonths: 15 },
 ];
+
+/** Offer returned by the affiliate system for a valid referral code. */
+export interface ReferralOffer {
+  commitment_months: number;
+  free_months: number;
+}
+
+/**
+ * The extra plan unlocked by a valid affiliate code (e.g. 1 month free on a
+ * 4-month commitment). Shown only after the code is checked server-side;
+ * never listed in COMMITMENT_OPTIONS so it can't be picked without one.
+ */
+export function referralCommitment(offer: ReferralOffer): CommitmentOption {
+  const free = Math.max(0, Math.min(offer.free_months, offer.commitment_months - 1));
+  return {
+    id: "referral",
+    label: `${offer.commitment_months}-Month Referral Plan`,
+    months: offer.commitment_months,
+    freeMonths: free,
+    billedMonths: offer.commitment_months - free,
+  };
+}
 
 export type ValetId = "none" | "standard" | "premium";
 

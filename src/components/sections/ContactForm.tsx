@@ -3,6 +3,8 @@
 import { useId, useState, type FormEvent } from "react";
 import type { InquiryType } from "@/types/database";
 import { Button } from "@/components/ui/Button";
+import { PromoCodeInput, type AppliedPromo } from "@/components/ui/PromoCodeInput";
+import { Turnstile, turnstileEnabled } from "@/components/ui/Turnstile";
 import { showToast } from "@/lib/toast";
 
 interface ContactFormProps {
@@ -28,6 +30,13 @@ export function ContactForm({
 }: ContactFormProps) {
   const [status, setStatus] = useState<Status>("idle");
   const messageId = useId();
+  const [promo, setPromo] = useState<AppliedPromo>(null);
+  // The bot check loads only once someone starts using the form, so pages
+  // with the footer form don't all pull in Cloudflare's script.
+  const [engaged, setEngaged] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [captchaKey, setCaptchaKey] = useState(0);
+  const showPromo = !compact && type !== "partner";
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -49,6 +58,8 @@ export function ContactForm({
       message: String(form.get("message") ?? "") || null,
       website: String(form.get("website") ?? ""),
       metadata,
+      promo_code: showPromo ? (promo?.code ?? null) : null,
+      turnstile_token: captchaToken,
     };
 
     try {
@@ -63,6 +74,8 @@ export function ContactForm({
       formEl.reset();
     } catch {
       setStatus("error");
+      // Turnstile tokens are single-use; get a fresh one for the retry.
+      setCaptchaKey((k) => k + 1);
     }
   }
 
@@ -78,6 +91,7 @@ export function ContactForm({
   return (
     <form
       onSubmit={handleSubmit}
+      onFocusCapture={() => setEngaged(true)}
       className={compact ? "" : "rounded-xl border border-border bg-card p-6"}
     >
       <input
@@ -124,9 +138,21 @@ export function ContactForm({
         </div>
       </div>
 
+      {showPromo && (
+        <div className="mt-3">
+          <PromoCodeInput applied={promo} onApplied={setPromo} />
+        </div>
+      )}
+
+      {engaged && (
+        <div className="mt-3">
+          <Turnstile onToken={setCaptchaToken} resetKey={captchaKey} />
+        </div>
+      )}
+
       <Button
         type="submit"
-        disabled={status === "submitting"}
+        disabled={status === "submitting" || (turnstileEnabled && !captchaToken)}
         className={compact ? "mt-2 w-full sm:w-auto" : "mt-3 w-full sm:w-auto"}
       >
         {status === "submitting" ? "Sending..." : "Submit"}

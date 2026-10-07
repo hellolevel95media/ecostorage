@@ -10,8 +10,8 @@ export default function CookiesPage() {
       <h1 className="text-3xl font-bold">Cookie Policy</h1>
       <div className="mt-6 space-y-4 text-sm text-foreground/70">
         <p>
-          EcoStorage uses a small number of cookies to run this site. We split them into two
-          categories, and only the first is ever active without your consent.
+          EcoStorage uses a small number of cookies to run this site. We split them into three
+          categories. Analytics cookies are only ever active with your consent.
         </p>
         <div>
           <h2 className="font-semibold text-foreground">Essential cookies</h2>
@@ -19,6 +19,17 @@ export default function CookiesPage() {
             Used to keep administrators signed in to the EcoStorage CMS (/admin) and to remember
             your cookie preference. The site cannot function correctly for our staff without
             these, so they are not optional.
+          </p>
+        </div>
+        <div>
+          <h2 className="font-semibold text-foreground">Referral cookie</h2>
+          <p className="mt-1">
+            If you arrive through a link shared by one of our affiliates, we store a cookie
+            called <code>eco_ref</code> for 14 days. It holds only the affiliate&apos;s referral
+            code and the time you clicked, so we can credit the right affiliate if you go on to
+            send us an enquiry. It contains no personal information and is not used for
+            advertising or tracking across other sites. You can delete it at any time by
+            clearing your browser&apos;s cookies for this site.
           </p>
         </div>
         <div>

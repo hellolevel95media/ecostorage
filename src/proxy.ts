@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { checkRateLimit, clientIp } from "@/lib/rate-limit";
+import { REFERRAL_COOKIE, refParamCode, referralCookieMaxAge, serializeReferral } from "@/lib/affiliate/referral-cookie";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -12,6 +13,23 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
  */
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // Public pages only reach the proxy when they carry ?ref= (see matcher):
+  // remember the affiliate referral for 14 days. Last click wins.
+  if (!pathname.startsWith("/api/") && !pathname.startsWith("/admin")) {
+    const response = NextResponse.next();
+    const code = refParamCode(request.nextUrl.searchParams.get("ref"));
+    if (code) {
+      response.cookies.set(REFERRAL_COOKIE, serializeReferral(code), {
+        maxAge: referralCookieMaxAge(),
+        httpOnly: true,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+        path: "/",
+      });
+    }
+    return response;
+  }
 
   if (pathname.startsWith("/api/")) {
     const { allowed } = checkRateLimit(`api:${clientIp(request)}:${pathname}`, 20, 60_000);
@@ -77,5 +95,14 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/:path*"],
+  matcher: [
+    "/admin/:path*",
+    "/api/:path*",
+    // Any public page, but only when an affiliate ?ref= is present, so
+    // normal page views never pay for the proxy.
+    {
+      source: "/((?!api|admin|_next/static|_next/image|favicon.ico|.*\\..*).*)",
+      has: [{ type: "query", key: "ref" }],
+    },
+  ],
 };
