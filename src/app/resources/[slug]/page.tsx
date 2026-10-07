@@ -15,7 +15,7 @@ interface ArticlePageProps {
 }
 
 const FALLBACK_DESCRIPTION =
-  "A storage guide from EcoStorage's resource library — practical advice on packing, records retention, and climate-controlled storage in Singapore.";
+  "A practical storage guide covering packing, records retention and storage in Singapore.";
 
 // Admin-entered excerpts have no length limit in the CMS form — cap what
 // flows into <meta description> / og:description so a very long excerpt
@@ -23,15 +23,17 @@ const FALLBACK_DESCRIPTION =
 function metaDescription(excerpt: string | null): string {
   const text = excerpt?.trim();
   if (!text) return FALLBACK_DESCRIPTION;
-  return text.length > 200 ? `${text.slice(0, 199)}…` : text;
+  if (text.length <= 155) return text;
+  const cut = text.slice(0, 154);
+  return `${cut.slice(0, cut.lastIndexOf(" ")).replace(/[,;:.\s]+$/, "")}…`;
 }
 
 export async function generateMetadata({ params }: ArticlePageProps) {
   const { slug } = await params;
   const article = await getArticleBySlug(slug);
-  if (!article) return buildMetadata({ title: "Article | EcoStorage", description: FALLBACK_DESCRIPTION, path: `/resources/${slug}` });
+  if (!article) return buildMetadata({ title: "Storage Guide", description: FALLBACK_DESCRIPTION, path: `/resources/${slug}` });
   return buildMetadata({
-    title: article.title.trim() ? `${article.title} | EcoStorage` : "Article | EcoStorage",
+    title: article.title.trim() || "Storage Guide",
     description: metaDescription(article.excerpt),
     path: `/resources/${slug}`,
     article: { publishedTime: article.published_at, modifiedTime: article.updated_at },

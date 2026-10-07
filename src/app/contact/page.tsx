@@ -7,9 +7,9 @@ import { buildMetadata } from "@/lib/site";
 export const revalidate = 60;
 
 export const metadata = buildMetadata({
-  title: "Contact EcoStorage | Singapore Pickup & Delivery Storage",
+  title: "Get a Storage Quote in Singapore | Pickup & Delivery",
   description:
-    "Get in touch with EcoStorage for a pickup-and-delivery storage quote in Singapore. We respond to every enquiry — send us a message or call us directly.",
+    "Tell us what you need to store and get a pickup-and-delivery quote in Singapore. Every enquiry gets a reply within one business day.",
   path: "/contact",
 });
 

@@ -7,9 +7,9 @@ import { buildMetadata } from "@/lib/site";
 export const revalidate = 60;
 
 export const metadata = buildMetadata({
-  title: "Our Mission | Sustainable Storage | EcoStorage",
+  title: "Lower-Carbon Storage in Singapore | Ambient Warehousing",
   description:
-    "EcoStorage stores belongings in recycled-pallet, ambient-temperature crates instead of 24/7 air-conditioned units — a lower-carbon approach to self-storage in Singapore.",
+    "Ambient-temperature warehousing and recycled pallets give you storage with a lower carbon footprint than 24/7 air-conditioned self-storage in Singapore.",
   path: "/mission",
 });
 

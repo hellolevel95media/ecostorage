@@ -1,8 +1,11 @@
-import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Cookie Policy | EcoStorage",
-};
+export const metadata = buildMetadata({
+  title: "Cookie Policy",
+  description:
+    "How we use essential and optional analytics cookies on this website, and how you can accept or decline them.",
+  path: "/cookies",
+});
 
 export default function CookiesPage() {
   return (

@@ -6,9 +6,9 @@ import { buildMetadata } from "@/lib/site";
 export const revalidate = 60;
 
 export const metadata = buildMetadata({
-  title: "Storage Services | Pickup, Delivery & Records Management | EcoStorage",
+  title: "Storage Services Singapore | Pickup, Delivery & Records",
   description:
-    "All EcoStorage services in one place: pickup & storage, on-demand delivery, records management, and inventory storage for personal and corporate customers.",
+    "Pickup and storage, on-demand delivery, records management and inventory storage for households and businesses, with itemised quotes you can follow.",
   path: "/services",
 });
 

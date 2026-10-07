@@ -24,10 +24,18 @@ export function OrganizationJsonLd() {
     areaServed: "Singapore",
   };
 
+  const webSite = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: COMPANY.name,
+    alternateName: "EcoStorage Singapore",
+    url: SITE_URL,
+  };
+
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webSite) }} />
+    </>
   );
 }

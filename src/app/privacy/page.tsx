@@ -1,8 +1,11 @@
-import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Privacy Policy | EcoStorage",
-};
+export const metadata = buildMetadata({
+  title: "Privacy Policy",
+  description:
+    "How we collect, use and protect your personal information when you use this website and our storage services in Singapore.",
+  path: "/privacy",
+});
 
 export default function PrivacyPage() {
   return (

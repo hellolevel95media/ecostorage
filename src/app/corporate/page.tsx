@@ -9,9 +9,9 @@ import { buildMetadata } from "@/lib/site";
 export const revalidate = 60;
 
 export const metadata = buildMetadata({
-  title: "Corporate Storage Singapore | Records & Inventory Management | EcoStorage",
+  title: "Corporate Storage Singapore | Records & Inventory",
   description:
-    "Pickup-and-delivery storage for businesses in Singapore — document/records archiving, inventory and pallet storage, with account management for teams.",
+    "Document archiving, inventory and pallet storage for Singapore businesses. Every item is logged and tracked, with dedicated account management.",
   path: "/corporate",
 });
 

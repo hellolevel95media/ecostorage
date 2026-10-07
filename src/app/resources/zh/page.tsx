@@ -5,8 +5,8 @@ import { buildMetadata } from "@/lib/site";
 export const revalidate = 60;
 
 export const metadata = buildMetadata({
-  title: "中文资源 | EcoStorage",
-  description: "EcoStorage 新加坡上门存储服务的中文指南与文章。",
+  title: "新加坡存储与搬家指南 | 中文资源",
+  description: "新加坡上门取件存储的中文指南：HDB 翻新、搬家、打包与长期存储实用建议。",
   path: "/resources/zh",
 });
 

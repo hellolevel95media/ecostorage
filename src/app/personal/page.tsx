@@ -11,9 +11,9 @@ import { buildMetadata } from "@/lib/site";
 export const revalidate = 60;
 
 export const metadata = buildMetadata({
-  title: "Personal Storage Singapore | Pickup, Storage & Delivery | EcoStorage",
+  title: "Personal Storage Singapore | We Pick Up, Store & Deliver",
   description:
-    "Book pickup-and-delivery storage for your home in Singapore — dorm move-outs, decluttering, and life transitions. No self-storage trips, flexible unit sizes.",
+    "Moving out, decluttering or between homes? We collect, carefully wrap and store your belongings, then deliver them back when ready. Flexible unit sizes.",
   path: "/personal",
 });
 

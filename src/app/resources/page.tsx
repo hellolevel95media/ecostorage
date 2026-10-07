@@ -5,9 +5,9 @@ import { buildMetadata } from "@/lib/site";
 export const revalidate = 60;
 
 export const metadata = buildMetadata({
-  title: "Resource Library | Storage Guides | EcoStorage",
+  title: "Storage & Moving Guides for Singapore | HIP, Packing & More",
   description:
-    "Guides on packing, records retention, and climate-controlled storage from EcoStorage's Singapore pickup-and-delivery storage specialists.",
+    "Practical guides on HDB HIP preparation, packing fragile items, long-term storage and moving between rentals in Singapore.",
   path: "/resources",
 });
 

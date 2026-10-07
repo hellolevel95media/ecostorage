@@ -13,6 +13,16 @@ interface ArticleJsonLdProps {
  * results and AI/LLM crawlers correctly attribute and date this content, and
  * to see edits (dateModified) as a freshness signal, not just publish date. */
 export function ArticleJsonLd({ title, description, slug, publishedAt, updatedAt, author }: ArticleJsonLdProps) {
+  const breadcrumbs = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "Resources", item: `${SITE_URL}/resources` },
+      { "@type": "ListItem", position: 3, name: title, item: `${SITE_URL}/resources/${slug}` },
+    ],
+  };
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -37,9 +47,9 @@ export function ArticleJsonLd({ title, description, slug, publishedAt, updatedAt
   };
 
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }} />
+    </>
   );
 }

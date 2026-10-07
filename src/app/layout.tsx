@@ -32,15 +32,15 @@ const appSC = Noto_Sans_SC({
 });
 
 const description =
-  "Flexible personal and corporate storage with on-demand pickup, delivery, and climate-controlled facilities.";
+  "Skip the self-storage trips. We collect, wrap, track and return your belongings on your schedule, for Singapore homes and businesses. Free quote.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "EcoStorage | Personal & Corporate Storage",
+  title: "Pickup & Delivery Storage in Singapore for Homes & Business",
   description,
   alternates: { canonical: SITE_URL },
   openGraph: {
-    title: "EcoStorage | Personal & Corporate Storage",
+    title: "Pickup & Delivery Storage in Singapore for Homes & Business",
     description,
     url: SITE_URL,
     siteName: "EcoStorage",
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "EcoStorage | Personal & Corporate Storage",
+    title: "Pickup & Delivery Storage in Singapore for Homes & Business",
     description,
   },
 };

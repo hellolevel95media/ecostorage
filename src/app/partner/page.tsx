@@ -8,9 +8,9 @@ import { buildMetadata } from "@/lib/site";
 export const revalidate = 60;
 
 export const metadata = buildMetadata({
-  title: "Partner Program | Referral Partnerships | EcoStorage",
+  title: "Storage Referral Partners | Agents & Property Managers",
   description:
-    "Refer clients to EcoStorage's pickup-and-delivery storage service. Built for real estate agents, property managers, and moving companies in Singapore.",
+    "Refer clients to a pickup-and-delivery storage service in Singapore. Built for real estate agents, property managers and moving companies.",
   path: "/partner",
 });
 
