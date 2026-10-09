@@ -14,8 +14,7 @@ export function Footer() {
         <div>
           <Logo />
           <p className="mt-2 max-w-xs text-sm text-foreground/60">
-            Flexible personal and corporate storage, with pickup, delivery, and climate-controlled
-            facilities.
+            Flexible personal and corporate storage, with pickup, delivery, and climate-controlled facilities across Singapore.
           </p>
           <address className="mt-2 space-y-0.5 text-sm text-foreground/60 not-italic">
             <p>{COMPANY.address}</p>
@@ -24,18 +23,18 @@ export function Footer() {
           </address>
           <Link
             href={COMPANY.googleReviewUrl}
-            className="mt-2 inline-block text-sm font-medium text-brand-ink hover:underline"
+            className="mt-1 inline-flex min-h-11 items-center lg:min-h-0 lg:py-1 text-sm font-medium text-brand-ink hover:underline"
           >
             Leave us a Google review →
           </Link>
         </div>
 
         <nav aria-label="Footer navigation">
-          <p className="text-xs font-semibold tracking-wide text-foreground/40 uppercase">Navigation</p>
-          <ul className="mt-3 grid grid-cols-2 gap-2 text-sm text-foreground/70">
+          <p className="text-xs font-semibold tracking-wide text-foreground/60 uppercase">Navigation</p>
+          <ul className="mt-1 grid grid-cols-2 gap-x-4 text-sm text-foreground/70">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="hover:text-brand-ink">
+                <Link href={link.href} className="inline-flex min-h-11 items-center lg:min-h-0 lg:py-1 hover:text-brand-ink">
                   {link.label}
                 </Link>
               </li>
@@ -43,19 +42,19 @@ export function Footer() {
           </ul>
         </nav>
 
-        <ContactForm type="contact" title="Quick contact" compact />
+        <ContactForm type="contact" title="Quick contact" compact headingAs="h2" />
       </div>
 
       <div className="border-t border-border">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-2 text-xs text-foreground/40 sm:flex-row sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-2 text-xs text-foreground/60 sm:flex-row sm:px-6 lg:px-8">
           <p>
             © {new Date().getFullYear()} {COMPANY.name}. All rights reserved.
           </p>
           <div className="flex gap-4">
-            <Link href="/privacy" className="hover:text-brand-ink">
+            <Link href="/privacy" className="inline-flex min-h-11 items-center lg:min-h-0 lg:py-1 hover:text-brand-ink">
               Privacy Policy
             </Link>
-            <Link href="/cookies" className="hover:text-brand-ink">
+            <Link href="/cookies" className="inline-flex min-h-11 items-center lg:min-h-0 lg:py-1 hover:text-brand-ink">
               Cookie Policy
             </Link>
           </div>

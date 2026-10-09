@@ -32,14 +32,14 @@ export function ResourceFilterGrid({
   return (
     <div className="grid gap-8 lg:grid-cols-[200px_1fr]">
       <aside className="lg:sticky lg:top-24 lg:self-start">
-        <p className="text-xs font-semibold tracking-wide text-foreground/40 uppercase">{byTopicLabel}</p>
-        <nav className="mt-3 flex flex-wrap gap-2 lg:flex-col">
+        <p className="text-xs font-semibold tracking-wide text-foreground/60 uppercase">{byTopicLabel}</p>
+        <nav aria-label={byTopicLabel} className="mt-3 flex flex-wrap gap-2 lg:flex-col">
           {topics.map((t) => (
             <button
               key={t}
               type="button"
               onClick={() => setTopic(t)}
-              className={`rounded-full px-3 py-1.5 text-left text-sm font-medium transition-colors lg:rounded-lg ${
+              className={`rounded-full px-3 py-2.5 text-left text-sm font-medium transition-colors lg:rounded-lg ${
                 topic === t ? "bg-brand text-brand-foreground" : "bg-card text-foreground/70 hover:text-brand-ink"
               }`}
             >
@@ -54,7 +54,7 @@ export function ResourceFilterGrid({
       ) : (
         <CardCarousel gridClassName="lg:grid-cols-2 xl:grid-cols-3">
           {filtered.map((article) => (
-            <ArticleCard key={article.id} article={article} />
+            <ArticleCard key={article.id} article={article} headingLevel="h2" />
           ))}
         </CardCarousel>
       )}

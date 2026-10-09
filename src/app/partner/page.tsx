@@ -23,7 +23,7 @@ export default async function PartnerPage() {
   return (
     <>
       <HeroBanner copy={hero} />
-      <TrustBanner copy={trust} />
+      <TrustBanner copy={trust} showCta={false} />
 
       <section className="snap-section-flow mx-auto max-w-3xl px-4 py-10 text-center sm:px-6 lg:px-8">
         <h2 className="text-2xl font-bold sm:text-3xl">{referral.heading}</h2>
@@ -64,7 +64,7 @@ export default async function PartnerPage() {
       <section id="partner-form" className="snap-section-flow mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
         <ContactForm
           type="partner"
-          title="Apply to become a partner"
+          title="Business partnership enquiry"
           description="Share a few details and our partnerships team will reach out."
           showCompanyFields
           metadata={{ partnerKind: "business" }}

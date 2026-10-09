@@ -45,8 +45,8 @@ export default async function PersonalPage() {
       <section className="snap-section-flow mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="flex items-end justify-between">
           <h2 className="text-2xl font-bold sm:text-3xl">Related resources</h2>
-          <Link href="/resources" className="text-sm font-semibold text-brand-ink hover:underline">
-            View library →
+          <Link href="/resources" className="inline-flex min-h-11 items-center text-sm font-semibold text-brand-ink hover:underline">
+            View all guides →
           </Link>
         </div>
         <CardCarousel className="mt-6" gridClassName="lg:grid-cols-2">

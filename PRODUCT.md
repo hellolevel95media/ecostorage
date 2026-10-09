@@ -29,7 +29,7 @@ Main warehousing runs at 100% ambient temperature (not air-conditioned); only ~1
 - Market: fully Singapore-based, island-wide, with 13 locations.
 - Warehouse/facility addresses are confidential and must never be disclosed publicly (security/operational policy). The public-facing contact address is: **7030 Ang Mo Kio Ave 5, #08-94, Singapore 569880**.
 - Primary domain: `ecostorage.sg`.
-- Known stale content: `src/lib/nav.ts`'s `COMPANY` object currently has a placeholder Seattle, WA (US) address and a non-`.sg` email — this is confirmed incorrect and should not be treated as real; it needs a content fix (not done as part of this record, flagged for follow-up).
+- Contact details in `src/lib/nav.ts` (`COMPANY`) are correct: office address above, `hello@ecostorage.sg`, +65 8899 7017.
 
 ## Capabilities & Constraints
 
@@ -45,7 +45,9 @@ Main warehousing runs at 100% ambient temperature (not air-conditioned); only ~1
 ## Evidence on Hand
 
 - Real, confirmed facts: pallet/shrink-wrap and crate storage methods, ~15% AC vs ~85% ambient warehouse space split, in-progress LowCarbonSG certification, 13 island-wide Singapore locations, confidential warehouse addresses, public office address above.
-- No testimonials, case studies, press mentions, or third-party proof points on file yet — future work must not fabricate these.
+- **Owner-verified operating claims (confirmed 2026-10-09):** these figures come from the sister company's existing operations, which EcoStorage runs the same way under new management with optimisations. Approved for public copy: 24/7 monitored facilities, fully insured pickups, 6,500+ happy customers ("thousands of households and businesses"), 13 islandwide locations, 8 years of securing belongings, enquiries answered within one business day, on-demand delivery within 24 hours.
+- No testimonials, case studies, press mentions, or third-party proof points on file yet — future work must not fabricate these. Do not quote or paraphrase individual sister-company customer reviews as EcoStorage testimonials.
+- Copy rule: say "Singapore"/"island-wide", not "the region". Climate-controlled space is a real, minority offering (~15% of warehouse space) and may be mentioned as an option, but do not describe the whole warehouse as climate-controlled; the ambient story is the main one.
 
 ## Product Principles
 

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { PromoCodeInput, type AppliedPromo } from "@/components/ui/PromoCodeInput";
 import { Turnstile, turnstileEnabled } from "@/components/ui/Turnstile";
 import { showToast } from "@/lib/toast";
+import { NETWORK_ERROR_MESSAGE, submitErrorMessage } from "@/lib/form-errors";
 import {
   SIZE_GUIDE,
   MODULE_SQFT,
@@ -70,6 +71,7 @@ export function StorageCalculator() {
   const [contact, setContact] = useState<ContactState>(EMPTY_CONTACT);
   const [errors, setErrors] = useState<Partial<Record<keyof ContactState, string>>>({});
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const guide = SIZE_GUIDE.find((g) => g.sqft === selectedGuideSqft) ?? SIZE_GUIDE[0];
   // A valid referral code unlocks one extra plan (e.g. 1 month free on 4).
@@ -114,7 +116,18 @@ export function StorageCalculator() {
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    if (!validateContact()) return;
+    if (!validateContact()) {
+      requestAnimationFrame(() =>
+        document.querySelector<HTMLElement>('form [aria-invalid="true"]')?.focus()
+      );
+      return;
+    }
+    if (turnstileEnabled && !captchaToken) {
+      setEngaged(true);
+      setErrorMessage("Please wait a moment for the security check to finish, then try again.");
+      setStatus("error");
+      return;
+    }
     setStatus("submitting");
 
     const payload = {
@@ -135,10 +148,11 @@ export function StorageCalculator() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error("request failed");
+      if (!res.ok) throw new Error(submitErrorMessage(res.status));
       setStatus("success");
-      showToast("Thanks — your price is locked in!");
-    } catch {
+      showToast("Thanks — we've got your request!");
+    } catch (err) {
+      setErrorMessage(err instanceof Error && err.message !== "Failed to fetch" ? err.message : NETWORK_ERROR_MESSAGE);
       setStatus("error");
       // Turnstile tokens are single-use; get a fresh one for the retry.
       setCaptchaKey((k) => k + 1);
@@ -149,9 +163,9 @@ export function StorageCalculator() {
     return (
       <section className="snap-section-flow mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="rounded-3xl border border-brand/30 bg-brand/5 p-10 text-center shadow-card">
-          <p className="text-2xl font-bold text-brand-ink">Price Locked In!</p>
+          <p className="text-2xl font-bold text-brand-ink">Request received!</p>
           <p className="mt-2 text-foreground/70">
-            Our team will follow up within 24 hours to confirm your pickup and finalize your quote.
+            Our team will follow up within one business day to confirm your pickup and finalise your quote.
           </p>
         </div>
       </section>
@@ -209,14 +223,14 @@ export function StorageCalculator() {
             {mobileStep === "contact" && (
               <div className="mt-6 space-y-6">
                 <RateDashboard quote={quote} numUnits={numUnits} />
-                <form onSubmit={handleSubmit} onFocusCapture={() => setEngaged(true)} className="space-y-3">
+                <form noValidate onSubmit={handleSubmit} onFocusCapture={() => setEngaged(true)} className="space-y-3">
                   <ContactFields contact={contact} errors={errors} onChange={setContact} />
                   {engaged && !isDesktop && <Turnstile onToken={setCaptchaToken} resetKey={captchaKey} />}
-                  <Button type="submit" disabled={status === "submitting" || (turnstileEnabled && !captchaToken)} className="w-full">
-                    {status === "submitting" ? "Locking in your rate..." : "Lock In My Rate"}
+                  <Button type="submit" disabled={status === "submitting" || (turnstileEnabled && engaged && !captchaToken)} className="w-full">
+                    {status === "submitting" ? "Sending your request..." : "Get My Quote"}
                   </Button>
                   {status === "error" && (
-                    <p className="text-sm text-red-500">Something went wrong. Please try again.</p>
+                    <p role="alert" className="text-sm text-red-500">{errorMessage}</p>
                   )}
                 </form>
               </div>
@@ -235,14 +249,14 @@ export function StorageCalculator() {
 
             <div className="space-y-6 rounded-2xl border-2 border-foreground/15 bg-card p-6 shadow-card">
               <RateDashboard quote={quote} numUnits={numUnits} />
-              <form onSubmit={handleSubmit} onFocusCapture={() => setEngaged(true)} className="space-y-3 border-t-2 border-foreground/15 pt-6">
+              <form noValidate onSubmit={handleSubmit} onFocusCapture={() => setEngaged(true)} className="space-y-3 border-t-2 border-foreground/15 pt-6">
                 <ContactFields contact={contact} errors={errors} onChange={setContact} />
                 {engaged && isDesktop && <Turnstile onToken={setCaptchaToken} resetKey={captchaKey} />}
-                <Button type="submit" disabled={status === "submitting" || (turnstileEnabled && !captchaToken)} className="w-full">
-                  {status === "submitting" ? "Locking in your rate..." : "Lock In My Rate"}
+                <Button type="submit" disabled={status === "submitting" || (turnstileEnabled && engaged && !captchaToken)} className="w-full">
+                  {status === "submitting" ? "Sending your request..." : "Get My Quote"}
                 </Button>
                 {status === "error" && (
-                  <p className="text-sm text-red-500">Something went wrong. Please try again.</p>
+                  <p role="alert" className="text-sm text-red-500">{errorMessage}</p>
                 )}
               </form>
             </div>
@@ -367,11 +381,11 @@ function StepIndicator({
             disabled={!reached}
             onClick={() => onSelect(step.id)}
             className={`flex flex-1 flex-col items-center gap-1 rounded-lg py-2 text-xs font-medium transition-colors ${
-              active ? "text-brand-ink" : reached ? "text-foreground/70" : "text-foreground/30"
+              active ? "text-brand-ink" : reached ? "text-foreground/80" : "text-foreground/60"
             }`}
           >
             <span
-              className={`flex h-6 w-6 items-center justify-center rounded-full border text-[11px] ${
+              className={`flex h-6 w-6 items-center justify-center rounded-full border text-xs ${
                 active
                   ? "border-brand bg-brand text-brand-foreground"
                   : reached
@@ -518,10 +532,10 @@ function RateDashboard({
 }) {
   return (
     <div>
-      <p className="text-xs font-semibold tracking-wide text-foreground/50 uppercase">Estimated monthly rate</p>
+      <p className="text-xs font-semibold tracking-wide text-foreground/60 uppercase">Estimated monthly rate</p>
       <p className="mt-1 text-4xl font-bold text-brand-ink tabular-nums">
         ${quote.discountedMonthly.toFixed(2)}
-        <span className="text-base font-medium text-foreground/50">/mo</span>
+        <span className="text-base font-medium text-foreground/60">/mo</span>
       </p>
       <p className="mt-1 text-sm text-foreground/60 tabular-nums">
         {quote.billedMonths} billed month{quote.billedMonths > 1 ? "s" : ""} · {numUnits} module
@@ -617,6 +631,7 @@ function TextField({
     <div>
       <label htmlFor={id} className="mb-1 block text-xs font-medium text-foreground/60">
         {label}
+        {required && <span aria-hidden="true"> *</span>}
       </label>
       <input
         id={id}

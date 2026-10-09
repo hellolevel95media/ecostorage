@@ -20,7 +20,7 @@ export const FALLBACK_SECTIONS: Record<string, Record<string, SectionCopy>> = {
     hero: {
       heading: "Storage that moves at the speed of your life.",
       subheading:
-        "Flexible personal and corporate storage space, on-demand pickup, and climate-controlled units across the region.",
+        "Flexible personal and corporate storage space, on-demand pickup, and climate-controlled units across Singapore.",
       cta_text: "Get a Free Quote",
       cta_link: "/contact",
     },

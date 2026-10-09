@@ -67,10 +67,10 @@ export function Header() {
           onClick={() => setOpen((v) => !v)}
           aria-label="Toggle navigation"
           aria-expanded={open}
-          className="flex h-11 w-11 flex-col items-center justify-center gap-[3px] rounded-full border border-border bg-background/95 shadow-card backdrop-blur"
+          className="flex h-11 w-11 flex-col items-center justify-center gap-1 rounded-full border border-border bg-background/95 shadow-card backdrop-blur"
         >
           <span className="sr-only">Menu</span>
-          {[0, 1, 2, 3, 4].map((i) => (
+          {[0, 1, 2].map((i) => (
             <span
               key={i}
               aria-hidden="true"

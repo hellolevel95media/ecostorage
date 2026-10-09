@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { MediaPlaceholder } from "@/components/ui/MediaPlaceholder";
+import { formatDate } from "@/lib/format";
 import type { Article } from "@/types/database";
 
-export function ArticleCard({ article }: { article: Article }) {
+export function ArticleCard({ article, headingLevel: Heading = "h3" }: { article: Article; headingLevel?: "h2" | "h3" }) {
   return (
     <Link
       href={`/resources/${article.slug}`}
@@ -24,13 +25,13 @@ export function ArticleCard({ article }: { article: Article }) {
             {article.category}
           </span>
         )}
-        <h3 className="mt-2 font-semibold group-hover:text-brand-ink">{article.title}</h3>
+        <Heading className="mt-2 font-semibold group-hover:text-brand-ink">{article.title}</Heading>
         {article.excerpt && (
           <p className="mt-2 flex-1 text-sm text-foreground/70">{article.excerpt}</p>
         )}
         {article.published_at && (
-          <p className="mt-4 text-xs text-foreground/40">
-            {new Date(article.published_at).toLocaleDateString()}
+          <p className="mt-4 text-xs text-foreground/60">
+            {formatDate(article.published_at, article.locale)}
           </p>
         )}
       </div>

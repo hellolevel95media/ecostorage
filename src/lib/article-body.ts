@@ -10,6 +10,8 @@ const MEDIA_MARKER = /^\[\[media:(.+)\]\]$/;
 
 export type ArticleBodyBlock =
   | { type: "paragraph"; text: string }
+  | { type: "heading"; text: string }
+  | { type: "list"; items: string[] }
   | { type: "media"; url: string };
 
 export function parseArticleBody(body: string): ArticleBodyBlock[] {
@@ -19,7 +21,11 @@ export function parseArticleBody(body: string): ArticleBodyBlock[] {
     .filter(Boolean)
     .map((chunk) => {
       const match = chunk.match(MEDIA_MARKER);
-      return match ? { type: "media" as const, url: match[1] } : { type: "paragraph" as const, text: chunk };
+      if (match) return { type: "media" as const, url: match[1] };
+      if (chunk.startsWith("## ") && !chunk.includes("\n")) return { type: "heading" as const, text: chunk.slice(3).trim() };
+      const lines = chunk.split("\n").map((l) => l.trim());
+      if (lines.every((l) => l.startsWith("- "))) return { type: "list" as const, items: lines.map((l) => l.slice(2).trim()) };
+      return { type: "paragraph" as const, text: chunk };
     });
 }
 

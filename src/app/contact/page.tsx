@@ -25,16 +25,24 @@ export default async function ContactPage() {
 
       <TrustBanner copy={trust} showCta={false} />
 
-      <section className="snap-section-flow mx-auto grid max-w-5xl gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[1fr_1.2fr] lg:px-8">
+      <section className="snap-section-flow mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[1fr_1.5fr] lg:px-8">
         <div>
           <h2 className="text-xl font-semibold">Get in touch</h2>
           <address className="mt-4 space-y-2 text-sm text-foreground/70 not-italic">
             <p>{COMPANY.address}</p>
-            <p>{COMPANY.email}</p>
-            <p>{COMPANY.phone}</p>
+            <p>
+              <a href={`mailto:${COMPANY.email}`} className="inline-flex min-h-11 items-center lg:min-h-0 lg:py-1 hover:text-brand-ink hover:underline">
+                {COMPANY.email}
+              </a>
+            </p>
+            <p>
+              <a href={`tel:${COMPANY.phone.replace(/\s/g, "")}`} className="inline-flex min-h-11 items-center lg:min-h-0 lg:py-1 hover:text-brand-ink hover:underline">
+                {COMPANY.phone}
+              </a>
+            </p>
           </address>
         </div>
-        <ContactForm type="contact" title="Send a message" description="Short form — 500 words or less." />
+        <ContactForm type="contact" title="Send a message" description="Tell us a little about what you need stored. Fields marked * are required." />
       </section>
     </>
   );

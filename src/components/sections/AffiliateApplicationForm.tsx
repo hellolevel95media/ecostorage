@@ -87,7 +87,7 @@ export function AffiliateApplicationForm() {
 
   return (
     <div className="rounded-xl border border-border bg-card p-6">
-      <h3 className="text-xl font-semibold">Become an EcoStorage affiliate</h3>
+      <h3 className="text-xl font-semibold">Affiliate application</h3>
       <ul className="mt-3 space-y-1.5 text-sm text-foreground/70">
         {BENEFITS.map((benefit) => (
           <li key={benefit} className="flex gap-2">
@@ -116,7 +116,9 @@ export function AffiliateApplicationForm() {
           <div className="grid gap-3 sm:grid-cols-2">
             <TextField label="Name" name="name" required />
             <TextField label="Email" name="email" type="email" required />
-            <TextField label="Mobile" name="phone" type="tel" />
+            <div className="sm:col-span-2">
+              <TextField label="Mobile (optional)" name="phone" type="tel" />
+            </div>
             <div className="sm:col-span-2">
               <label htmlFor={promotionId} className="mb-1 block text-xs font-medium text-foreground/60">
                 How do you plan to promote EcoStorage?
@@ -135,7 +137,7 @@ export function AffiliateApplicationForm() {
             <input type="checkbox" name="consent" required className="mt-0.5" />
             <span>I agree to be contacted about the affiliate programme.</span>
           </label>
-          <p className="mt-1 text-xs text-foreground/50">
+          <p className="mt-1 text-xs text-foreground/60">
             This isn&apos;t the full programme terms — those are shared and accepted later, inside the affiliate
             portal.
           </p>
@@ -148,14 +150,14 @@ export function AffiliateApplicationForm() {
 
           <Button
             type="submit"
-            disabled={status === "submitting" || (turnstileEnabled && !captchaToken)}
+            disabled={status === "submitting" || (turnstileEnabled && engaged && !captchaToken)}
             className="mt-3 w-full sm:w-auto"
           >
             {status === "submitting" ? "Sending..." : "Apply"}
           </Button>
 
           {status === "error" && (
-            <p className="mt-2 text-sm text-red-500">{errorMessage ?? "Something went wrong — please try again."}</p>
+            <p role="alert" className="mt-2 text-sm text-red-600">{errorMessage ?? "Something went wrong — please try again."}</p>
           )}
         </form>
       )}
@@ -179,12 +181,15 @@ function TextField({
     <div>
       <label htmlFor={id} className="mb-1 block text-xs font-medium text-foreground/60">
         {label}
+        {required && <span aria-hidden="true"> *</span>}
       </label>
       <input
         id={id}
         name={name}
         type={type}
         required={required}
+        pattern={type === "email" ? "[^\\s@]+@[^\\s@]+\\.[^\\s@]+" : undefined}
+        title={type === "email" ? "Enter an email address like name@example.com" : undefined}
         className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand"
       />
     </div>

@@ -2,7 +2,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MediaPlaceholder } from "@/components/ui/MediaPlaceholder";
 import { ButtonLink } from "@/components/ui/Button";
-import { getArticleBySlug } from "@/lib/content";
+import { getArticleBySlug, getPublishedArticles } from "@/lib/content";
+import { ArticleCard } from "@/components/sections/ArticleCard";
+import { formatDate } from "@/lib/format";
 import { buildMetadata } from "@/lib/site";
 import { ArticleJsonLd } from "@/components/seo/ArticleJsonLd";
 import { parseArticleBody } from "@/lib/article-body";
@@ -46,6 +48,13 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   if (!article) notFound();
 
+  const sameLanguage = await getPublishedArticles(undefined, article.locale);
+  const others = sameLanguage.filter((a) => a.slug !== slug);
+  const related = [
+    ...others.filter((a) => a.category === article.category),
+    ...others.filter((a) => a.category !== article.category),
+  ].slice(0, 3);
+
   return (
     <article lang={article.locale} className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
       <ArticleJsonLd
@@ -67,8 +76,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       )}
       <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">{article.title}</h1>
       {article.published_at && (
-        <p className="mt-2 text-sm text-foreground/50">
-          {new Date(article.published_at).toLocaleDateString()}
+        <p className="mt-2 text-sm text-foreground/60">
+          {formatDate(article.published_at, article.locale)}
           {article.author ? ` · ${article.author}` : ""}
         </p>
       )}
@@ -101,6 +110,16 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 // eslint-disable-next-line @next/next/no-img-element
                 <img key={i} src={block.url} alt="" className="w-full rounded-xl" />
               )
+            ) : block.type === "heading" ? (
+              <h2 key={i} className="pt-4 text-xl font-semibold text-foreground">
+                {block.text}
+              </h2>
+            ) : block.type === "list" ? (
+              <ul key={i} className="list-disc space-y-1 pl-5">
+                {block.items.map((item, j) => (
+                  <li key={j}>{item}</li>
+                ))}
+              </ul>
             ) : (
               <p key={i}>{block.text}</p>
             )
@@ -111,8 +130,21 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       </div>
 
       <div className="mt-10">
-        <ButtonLink href="/contact">Talk to a EcoStorage specialist</ButtonLink>
+        <ButtonLink href="/contact">Talk to an EcoStorage specialist</ButtonLink>
       </div>
+
+      {related.length > 0 && (
+        <section className="mt-14 border-t border-border pt-8" aria-labelledby="keep-reading">
+          <h2 id="keep-reading" className="text-xl font-bold">
+            {article.locale === "zh" ? "继续阅读" : "Keep reading"}
+          </h2>
+          <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {related.map((a) => (
+              <ArticleCard key={a.id} article={a} />
+            ))}
+          </div>
+        </section>
+      )}
     </article>
   );
 }

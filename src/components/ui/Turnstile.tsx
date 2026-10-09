@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type TurnstileApi = {
   render: (el: HTMLElement, options: Record<string, unknown>) => string;
@@ -43,6 +43,8 @@ export const turnstileEnabled = Boolean(SITE_KEY);
 export function Turnstile({ onToken, resetKey = 0 }: { onToken: (token: string | null) => void; resetKey?: number }) {
   const container = useRef<HTMLDivElement>(null);
   const callback = useRef(onToken);
+  const [state, setState] = useState<"loading" | "ready" | "failed">("loading");
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     callback.current = onToken;
@@ -61,19 +63,53 @@ export function Turnstile({ onToken, resetKey = 0 }: { onToken: (token: string |
           sitekey: SITE_KEY,
           theme: "auto",
           size: "flexible",
-          callback: (token: string) => callback.current(token),
+          callback: (token: string) => {
+            setState("ready");
+            callback.current(token);
+          },
           "expired-callback": () => callback.current(null),
-          "error-callback": () => callback.current(null),
+          "error-callback": () => {
+            setState("failed");
+            callback.current(null);
+          },
         });
       })
-      .catch(() => callback.current(null));
+      .catch(() => {
+        if (cancelled) return;
+        setState("failed");
+        callback.current(null);
+      });
 
     return () => {
       cancelled = true;
       if (widgetId) window.turnstile?.remove(widgetId);
     };
-  }, [resetKey]);
+  }, [resetKey, attempt]);
 
   if (!SITE_KEY) return null;
-  return <div ref={container} className="min-h-[65px]" />;
+  return (
+    <div>
+      <div ref={container} className="min-h-[65px]" />
+      {state === "loading" && (
+        <p role="status" className="mt-1 text-xs text-foreground/60">
+          Running a quick security check. The Submit button turns on when it&apos;s done.
+        </p>
+      )}
+      {state === "failed" && (
+        <p role="alert" className="mt-1 text-xs text-red-600">
+          The security check couldn&apos;t load. An ad blocker or privacy extension may be blocking it.{" "}
+          <button
+            type="button"
+            onClick={() => {
+              setState("loading");
+              setAttempt((n) => n + 1);
+            }}
+            className="font-medium underline"
+          >
+            Try again
+          </button>
+        </p>
+      )}
+    </div>
+  );
 }

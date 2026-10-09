@@ -57,7 +57,7 @@ export function MediaPlaceholder({
       role="img"
       aria-label={label ?? "Media placeholder"}
     >
-      <span className="flex items-center gap-2 text-xs font-medium tracking-wide text-foreground/30 uppercase">
+      <span className="flex items-center gap-2 text-xs font-medium tracking-wide text-foreground/50 uppercase">
         {kind === "video" ? <PlayIcon /> : <ImageIcon />}
         {label ?? (kind === "video" ? "Video" : "Image")}
       </span>
