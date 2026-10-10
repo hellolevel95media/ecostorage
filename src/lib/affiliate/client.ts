@@ -3,7 +3,7 @@ import { createHmac } from "node:crypto";
 
 /**
  * Signed server-to-server calls to the separate affiliate system
- * (ecostorage-affiliates). Spec: D:\ecostorage-affiliates\docs\main-site-integration.md.
+ * (Novac). Spec: docs/novac-integration.md.
  *
  *   X-Eco-Timestamp: <unix seconds>
  *   X-Eco-Signature: v1=<hex HMAC-SHA256(AFFILIATE_WEBHOOK_SECRET, `${ts}.${rawBody}`)>

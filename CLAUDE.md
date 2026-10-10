@@ -1,5 +1,7 @@
 # Storage Space v2.0 - Project Instructions
 
+**Read `HANDOFF.md` first** for current status, open items and how this site connects to Novac (`D:\Novac`).
+
 ## Tech Stack & Core Standards
 - **Framework:** Next.js (App Router), TypeScript, Tailwind CSS
 - **Backend & Auth:** Supabase (PostgreSQL, Storage Buckets, RLS Security)
