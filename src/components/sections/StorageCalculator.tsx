@@ -8,6 +8,7 @@ import { showToast } from "@/lib/toast";
 import { NETWORK_ERROR_MESSAGE, submitErrorMessage } from "@/lib/form-errors";
 import {
   SIZE_GUIDE,
+  formatDollars,
   MODULE_SQFT,
   COMMITMENT_OPTIONS,
   VALET_OPTIONS,
@@ -299,7 +300,7 @@ function SizeGuideSelector({
           >
             <span className="text-sm font-bold whitespace-nowrap">{option.sqft} sqft</span>
             <span className={`mt-0.5 text-xs whitespace-nowrap tabular-nums ${active ? "text-brand-foreground/80" : "text-foreground/60"}`}>
-              From ${option.monthlyRate}/mo
+              From ${formatDollars(option.monthlyRate)}/mo
             </span>
           </button>
         );
@@ -322,7 +323,7 @@ function GuideHeaderBanner({ guide }: { guide: SizeGuideOption }) {
         <p className="text-sm opacity-90">Ideal for: {guide.idealFor}</p>
       </div>
       <span className="inline-flex w-fit items-center rounded-full bg-brand-foreground/10 px-3 py-1 text-sm font-bold tabular-nums">
-        From ${guide.monthlyRate}/mo
+        From ${formatDollars(guide.monthlyRate)}/mo
       </span>
     </div>
   );

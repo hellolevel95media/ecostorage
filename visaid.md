@@ -41,9 +41,9 @@ The current guide contains six static scenarios:
 | Footprint | Starting rate | Practical use case | Ideal-for description |
 |---:|---:|---|---|
 | 20 sqft | $60/mo | Bedroom Declutter / Festive Storage | HDB storeroom or bedroom declutter. |
-| 40 sqft | $116.66/mo | Living Room Cleanout | Compact dining area or small apartment refresh. |
-| 60 sqft | $170.01/mo | Kitchen Remodeling Storage | Two-room home move or document storage. |
-| 80 sqft | $226.68/mo | Single Bedroom Flat Storage | Family living room or medium office setup. |
+| 40 sqft | $116.70/mo | Living Room Cleanout | Compact dining area or small apartment refresh. |
+| 60 sqft | $170.10/mo | Kitchen Remodeling Storage | Two-room home move or document storage. |
+| 80 sqft | $226.70/mo | Single Bedroom Flat Storage | Family living room or medium office setup. |
 | 100 sqft | $275/mo | 3-Room HDB Renovation | Large home contents or heavier furniture. |
 | 120 sqft | $330/mo | Full Home Relocation / Office | Complete 3-bedroom HDB or condo layout equivalent. |
 

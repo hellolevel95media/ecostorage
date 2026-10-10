@@ -57,6 +57,11 @@ export const SIZE_GUIDE: SizeGuideOption[] = SIZE_GUIDE_CONTENT.map((option) => 
   monthlyRate: monthlyStorageRate(option.sqft / MODULE_SQFT),
 }));
 
+/** "60" for whole dollars, "116.70" otherwise. */
+export function formatDollars(amount: number): string {
+  return Number.isInteger(amount) ? String(amount) : amount.toFixed(2);
+}
+
 export function moduleCountFromSqft(preferredSqft: number): number {
   return Math.max(1, Math.round(preferredSqft / MODULE_SQFT));
 }
@@ -69,18 +74,22 @@ export interface CommitmentOption {
   /** Total occupancy months covered by the offer (billed + free). */
   months: number;
   freeMonths: number;
+  /** The lock-in: months the customer pays for. Free months come after. */
   billedMonths: number;
 }
 
-// The source spec's "Duration" column mixes billed months (8-month tier) and
-// occupancy months (12/18-month tiers). These values are derived instead from
-// its literal "N billed months" wording so billedMonths = months - freeMonths
-// holds consistently across every tier.
+/** A lock-in of N paid months with F free months added at the end (N + F). */
+function lockIn(id: CommitmentId, label: string, billedMonths: number, freeMonths: number): CommitmentOption {
+  return { id, label, months: billedMonths + freeMonths, freeMonths, billedMonths };
+}
+
+// Plans read as "paid + free", e.g. 12-Month Lock-in = 12 months + 2 months:
+// 14 months of storage, 12 billed, the last 2 free.
 export const COMMITMENT_OPTIONS: CommitmentOption[] = [
-  { id: "monthly", label: "Month-to-Month", months: 1, freeMonths: 0, billedMonths: 1 },
-  { id: "8mo", label: "8-Month Lock-in", months: 9, freeMonths: 1, billedMonths: 8 },
-  { id: "12mo", label: "12-Month Lock-in", months: 12, freeMonths: 2, billedMonths: 10 },
-  { id: "18mo", label: "18-Month Lock-in", months: 18, freeMonths: 3, billedMonths: 15 },
+  lockIn("monthly", "Month-to-Month", 1, 0),
+  lockIn("8mo", "8-Month Lock-in", 8, 1),
+  lockIn("12mo", "12-Month Lock-in", 12, 2),
+  lockIn("18mo", "18-Month Lock-in", 18, 3),
 ];
 
 /** Offer returned by the affiliate system for a valid referral code. */
@@ -91,18 +100,13 @@ export interface ReferralOffer {
 
 /**
  * The extra plan unlocked by a valid affiliate code (e.g. 1 month free on a
- * 4-month commitment). Shown only after the code is checked server-side;
- * never listed in COMMITMENT_OPTIONS so it can't be picked without one.
+ * 4-month commitment = 4 paid + 1 free). Shown only after the code is checked
+ * server-side; never listed in COMMITMENT_OPTIONS so it can't be picked
+ * without one.
  */
 export function referralCommitment(offer: ReferralOffer): CommitmentOption {
-  const free = Math.max(0, Math.min(offer.free_months, offer.commitment_months - 1));
-  return {
-    id: "referral",
-    label: `${offer.commitment_months}-Month Referral Plan`,
-    months: offer.commitment_months,
-    freeMonths: free,
-    billedMonths: offer.commitment_months - free,
-  };
+  const free = Math.max(0, Math.min(offer.free_months, offer.commitment_months));
+  return lockIn("referral", `${offer.commitment_months}-Month Referral Plan`, offer.commitment_months, free);
 }
 
 export type ValetId = "none" | "standard" | "premium";
@@ -137,10 +141,16 @@ export function volumeDiscountPerUnit(numUnits: number): number {
   return 5;
 }
 
+/** Rounds a dollar amount up to the next 10 cents (116.66 -> 116.70). */
+function roundUpTo10Cents(amount: number): number {
+  const cents = Math.round(amount * 100);
+  return (Math.ceil(cents / 10) * 10) / 100;
+}
+
 /** Monthly storage rent for a number of modules, before valet and offers. */
 export function monthlyStorageRate(numUnits: number): number {
   const ratePerUnit = Math.max(MODULE_MIN_RATE, MODULE_BASE_RATE - volumeDiscountPerUnit(numUnits));
-  return Math.round(ratePerUnit * numUnits * 100) / 100;
+  return roundUpTo10Cents(ratePerUnit * numUnits);
 }
 
 export interface QuoteInput {
@@ -165,10 +175,10 @@ export interface QuoteResult {
 export function calculateQuote({ numUnits, commitment, valet }: QuoteInput): QuoteResult {
   const volumeDiscount = volumeDiscountPerUnit(numUnits);
   const ratePerUnit = Math.max(MODULE_MIN_RATE, MODULE_BASE_RATE - volumeDiscount);
-  const monthlyTotal = ratePerUnit * numUnits;
+  const monthlyTotal = monthlyStorageRate(numUnits);
   const discountedMonthly = Math.max(0, monthlyTotal) + valet.monthlyFee;
   const billedMonths = commitment.billedMonths;
-  const totalCost = discountedMonthly * billedMonths;
+  const totalCost = Math.round(discountedMonthly * billedMonths * 100) / 100;
   const standardTotal = MODULE_BASE_RATE * numUnits * commitment.months + valet.monthlyFee * commitment.months;
   const savings = Math.max(0, standardTotal - totalCost);
 

@@ -41,11 +41,11 @@ The current calculator offers four duration options:
 | Option | Duration | Free months | Effect |
 |---|---:|---:|---|
 | Month-to-Month | 1 month | 0 | No commitment discount. |
-| 8-Month Lock-in | 8 months | 1 | Eight billed months provide nine months of occupancy value in the offer model. |
-| 12-Month Lock-in | 12 months | 2 | Ten billed months are used in the current calculation model. |
-| 18-Month Lock-in | 18 months | 3 | Fifteen billed months are used in the current calculation model. |
+| 8-Month Lock-in | 8 months | 1 | 8 billed + 1 free = 9 months of storage. |
+| 12-Month Lock-in | 12 months | 2 | 12 billed + 2 free = 14 months of storage. |
+| 18-Month Lock-in | 18 months | 3 | 18 billed + 3 free = 21 months of storage. |
 
-The free-month mapping is implemented by `calcFreeMonths(durationMonths)`. The user-facing label communicates the commitment duration and the free-month badge communicates the promotion.
+Rule: the lock-in length is always the number of billed months; free months are added at the end ("12 months + 2 months"). Free months exist only with a fixed lock-in. In the Next.js site this is `lockIn()` in `src/lib/calculator.ts`. The free-month mapping is implemented by `calcFreeMonths(durationMonths)`. The user-facing label communicates the commitment duration and the free-month badge communicates the promotion.
 
 ## 4. Valet Options
 
@@ -78,8 +78,8 @@ The current procedure applies the volume discount only when the selected unit is
 ```text
 volumeDiscount = calcVolumeDiscount(N, sqft)
 ratePerUnit    = max(55, B - volumeDiscount)   # S$55/module/month hard floor
-monthlyTotal   = ratePerUnit × N
-billableMonths = M - F
+monthlyTotal   = roundUpTo10Cents(ratePerUnit × N)
+billableMonths = M   # the lock-in length; free months F are extra, so occupancy = M + F
 ```
 
 The normal admin fee is calculated from the monthly total and duration:
@@ -100,7 +100,7 @@ totalCost         = discountedMonthly × billableMonths + effectiveAdminFee
 The reference comparison uses the undiscounted base rate across the full commitment duration:
 
 ```text
-standardTotal = B × N × M
+standardTotal = B × N × (M + F)   # list price for every month of storage, free ones included
 savings       = max(0, standardTotal - totalCost)
 ```
 

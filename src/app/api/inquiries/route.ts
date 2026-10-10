@@ -63,8 +63,9 @@ function calculatorMetadata(input: unknown, hasPromoCode: boolean): Record<strin
     quote: {
       numUnits,
       commitment: commitment.id,
-      commitmentMonths: commitment.months,
+      commitmentMonths: commitment.billedMonths,
       freeMonths: commitment.freeMonths,
+      totalMonths: commitment.months,
       valet: valet.id,
       estimatedMonthly: quote.discountedMonthly,
       estimatedTotal: quote.totalCost,
