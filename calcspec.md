@@ -77,7 +77,7 @@ The current procedure applies the volume discount only when the selected unit is
 
 ```text
 volumeDiscount = calcVolumeDiscount(N, sqft)
-ratePerUnit    = B - volumeDiscount
+ratePerUnit    = max(55, B - volumeDiscount)   # S$55/module/month hard floor
 monthlyTotal   = ratePerUnit × N
 billableMonths = M - F
 ```
@@ -115,7 +115,7 @@ The current `getVolumeDiscountPct` helper is named as a percentage helper, but i
 | 1 | $0 per unit |
 | 2 | 1.67 per unit |
 | 3–4 | 3.33 per unit |
-| 5 or more | 5 per unit |
+| 5 or more | 5 per unit (floor: S$55 per unit per month; no discount goes lower) |
 
 The interface summarizes this as **“Save X% via Storage+”** using the returned value. The label is part of the current product behavior and should be reviewed if the backend value is redefined as a true currency discount rather than a percentage-like reduction.
 
