@@ -133,9 +133,12 @@ Rules that come from Novac:
   `/resources/zh`, `/zh` redirects to it. **They are machine translations and
   need a native-speaker review.**
 - Removed the public Sentry demo page. Fixed the cookie banner hydration error.
-- Owner-verified claims (24/7 monitored, fully insured pickups, 6,500+
+- Owner-verified claims (24/7 monitored, 6,500+
   customers, 13 locations, 8 years) are recorded in `PRODUCT.md`. Climate-controlled
   space is a real minority offering and may be mentioned.
+- Trust banner and shirt back now say "transparent pricing and clear communication at
+  every step" instead of "fully insured pickups" (owner decision, 2026-10-11). The live
+  `sections` row was updated directly; `fallback-content.ts` matches.
 
 **Not fixable in code:** all six library hero videos are 480p and look soft at
 full width (new footage of 1080p or better is needed), and the HIP guide image

@@ -26,7 +26,7 @@ export const FALLBACK_SECTIONS: Record<string, Record<string, SectionCopy>> = {
     },
     trust_banner: {
       heading: "Trusted by thousands of households and businesses",
-      body: "24/7 monitored facilities, fully insured pickups, and a team that treats your belongings like our own.",
+      body: "24/7 monitored facilities, transparent pricing and clear communication at every step, and a team that treats your belongings like our own.",
       stats: [
         { value: 13, suffix: "", label: "Islandwide locations" },
         { value: 6500, suffix: "+", label: "Happy customers" },
