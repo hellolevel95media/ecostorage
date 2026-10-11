@@ -60,3 +60,9 @@ backups/
 
 # Sentry Config File
 .env.sentry-build-plugin
+
+# Marketing collateral (local only)
+/Design/
+
+# Private Claude instructions (local only)
+/CLAUDE.local.md
