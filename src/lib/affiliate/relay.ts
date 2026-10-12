@@ -64,10 +64,12 @@ export async function relayInquiry(inquiry: RelayInquiry) {
   if (result && (result.status === 200 || result.status === 202)) {
     // 200: referral decided; 202: recorded as a lead, no referral.
     next = { relay: "sent", attempts, attributed: result.data.attributed === true };
-  } else if (result && result.status >= 400 && result.status < 500 && result.status !== 429) {
-    // Rejected input or signature: retrying won't help. Leave it visible as failed.
+  } else if (result && (result.status === 400 || result.status === 413)) {
+    // Rejected input: retrying won't help. Leave it visible as failed.
     next = { relay: "failed", attempts: MAX_RELAY_ATTEMPTS };
   } else {
+    // Unreachable, 5xx, or a setup problem (401 signature, 404 not deployed
+    // yet) that may be fixed within the retry window.
     next = { relay: "failed", attempts };
   }
   next.lastAttemptAt = new Date().toISOString();
