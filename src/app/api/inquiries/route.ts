@@ -6,7 +6,7 @@ import { clientIp } from "@/lib/rate-limit";
 import { verifyTurnstile } from "@/lib/turnstile";
 import { normalizeReferralCode } from "@/lib/affiliate/client";
 import { parseReferral, REFERRAL_COOKIE } from "@/lib/affiliate/referral-cookie";
-import { relayInquiry, type AffiliateMeta } from "@/lib/affiliate/relay";
+import { relayInquiry, type AffiliateMeta, type RelayMeta } from "@/lib/affiliate/relay";
 import { COMMITMENT_OPTIONS, VALET_OPTIONS, calculateQuote, referralCommitment, MODULE_SQFT } from "@/lib/calculator";
 import type { InquiryType, PartnerKind } from "@/types/database";
 
@@ -127,10 +127,13 @@ export async function POST(request: Request) {
       promoCode,
       refCode: ref?.code ?? null,
       linkClickedAt: ref?.clickedAt.toISOString() ?? null,
-      relay: "pending",
-      attempts: 0,
     };
     meta.affiliate = affiliate;
+  }
+  // Every customer enquiry goes to Novac (the CRM); /partner ones stay here.
+  if (type !== "partner") {
+    const novac: RelayMeta = { relay: "pending", attempts: 0 };
+    meta.novac = novac;
   }
 
   const inquiry = {
@@ -157,12 +160,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Could not save your message. Please try again." }, { status: 500 });
   }
 
-  // After the response: email the team and relay any referral, so the
-  // visitor never waits on (or sees failures from) either.
+  // After the response: email the team and relay to Novac, so the visitor
+  // never waits on (or sees failures from) either.
   after(async () => {
     await Promise.allSettled([
       sendInquiryNotification(inquiry),
-      meta.affiliate ? relayInquiry({ ...inquiry, ...saved }) : Promise.resolve(),
+      meta.novac ? relayInquiry({ ...inquiry, ...saved }) : Promise.resolve(),
     ]);
   });
 

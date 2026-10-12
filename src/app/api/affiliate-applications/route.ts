@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server";
 import { clientIp } from "@/lib/rate-limit";
+import { verifyTurnstile } from "@/lib/turnstile";
 import { postToAffiliate } from "@/lib/affiliate/client";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendInquiryNotification } from "@/lib/email";
 
 /**
- * /partner "Become an affiliate" form. Forwarded server-to-server (signed)
- * to the affiliate system, which verifies the Turnstile token itself (tokens
- * are single-use, so this route must NOT verify it) and owns the review
- * queue. If the affiliate system is unreachable, the application is kept as
+ * /partner "Become an affiliate" form. The bot check is verified here (the
+ * widget belongs to this site), then the application is forwarded
+ * server-to-server (signed) to Novac, which owns the review queue. If the affiliate system is unreachable, the application is kept as
  * a partner inquiry here so it isn't lost.
  */
 
@@ -46,11 +46,13 @@ export async function POST(request: Request) {
   }
 
   const ip = clientIp(request);
+  if (!(await verifyTurnstile(body.turnstile_token, ip))) {
+    return NextResponse.json({ error: "Security check failed. Please try again." }, { status: 403 });
+  }
   const result = await postToAffiliate("/api/applications", {
     ...application,
     phone: application.phone || undefined,
     promotion_plan: application.promotion_plan || undefined,
-    turnstile_token: field(body.turnstile_token, 2048),
     client_ip: ip === "unknown" ? undefined : ip,
   });
 
