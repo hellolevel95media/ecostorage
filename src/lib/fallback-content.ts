@@ -134,7 +134,7 @@ export const FALLBACK_SERVICES: FallbackService[] = [
     slug: "on-demand-delivery",
     title: "On-Demand Delivery",
     category: "personal",
-    description: "Request any item back and we'll deliver it to your door within 24 hours.",
+    description: "Request any item back and we'll schedule delivery to your door at a time that suits you. A few days' notice helps us plan it.",
     cta_text: "See pricing",
     cta_link: "/personal",
   },
