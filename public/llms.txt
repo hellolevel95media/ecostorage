@@ -1,6 +1,6 @@
 # EcoStorage
 
-> EcoStorage is a full-service pickup-and-delivery storage company serving personal and corporate customers across Singapore. The company collects, stores, and redelivers belongings on the customer's schedule — customers never visit a facility themselves — using recycled-pallet and wooden-crate storage methods that run at ambient (not air-conditioned) temperature for a lower carbon footprint than traditional 24/7 air-conditioned self-storage.
+> EcoStorage is a full-service storage and moving company serving personal and corporate customers across Singapore. One operations team collects, stores, and redelivers belongings on the customer's schedule — customers never visit a facility themselves — using recycled-pallet and wooden-crate storage methods that run at ambient (not air-conditioned) temperature for a lower carbon footprint than traditional 24/7 air-conditioned self-storage.
 
 EcoStorage operates 13 islandwide locations in Singapore and has served the market for 8 years. Facility/warehouse addresses are not published; the public contact address is 7030 Ang Mo Kio Ave 5, #08-94, Singapore 569880.
 
@@ -8,8 +8,9 @@ EcoStorage operates 13 islandwide locations in Singapore and has served the mark
 
 - [Personal storage](https://ecostorage.sg/personal): pickup, storage, and on-demand delivery for households — dorm move-outs, full-home decluttering, and life transitions.
 - [Corporate storage](https://ecostorage.sg/corporate): records/document archiving, inventory and pallet storage, and asset storage with account management.
-- [All services](https://ecostorage.sg/services): pickup & storage, on-demand delivery, records management, inventory storage.
-- [Storage pricing calculator](https://ecostorage.sg/): instant quotes by unit size, commitment period, and delivery add-ons, with environmental savings (CO2 and trees saved) shown alongside pricing.
+- [All services](https://ecostorage.sg/services): pickup & storage, on-demand delivery, home and office moving, packing, records management, inventory storage.
+- Moving and collection: S$330 per full 14ft truckload (with or without tailgate; roughly a 3-room HDB). Part loads and specialist items are quoted. Extras such as long push, stair carry, fragile packing or extra labour are always communicated in advance. The S$330 rate is guaranteed for Standard and Premium Valet customers.
+- [Storage pricing calculator](https://ecostorage.sg/): instant quotes by unit size, commitment period, and valet add-ons, with an option to request a moving quote, with environmental savings (CO2 and trees saved) shown alongside pricing.
 
 ## Company
 

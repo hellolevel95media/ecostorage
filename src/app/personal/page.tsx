@@ -2,6 +2,7 @@ import Link from "next/link";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import { TrustBanner } from "@/components/sections/TrustBanner";
 import { StorageCalculator } from "@/components/sections/StorageCalculator";
+import { MovingBanner } from "@/components/sections/MovingBanner";
 import { ServiceCard } from "@/components/sections/ServiceCard";
 import { ArticleCard } from "@/components/sections/ArticleCard";
 import { CardCarousel } from "@/components/ui/CardCarousel";
@@ -11,9 +12,9 @@ import { buildMetadata } from "@/lib/site";
 export const revalidate = 60;
 
 export const metadata = buildMetadata({
-  title: "Personal Storage Singapore | We Pick Up, Store & Deliver",
+  title: "Personal Storage & Moving Singapore | We Pick Up, Store & Deliver",
   description:
-    "Moving out, decluttering or between homes? We collect, carefully wrap and store your belongings, then deliver them back when ready. Flexible unit sizes.",
+    "Moving out, decluttering or between homes? One team collects, wraps and stores your belongings, then delivers them back. S$330 per full 14ft truckload.",
   path: "/personal",
 });
 
@@ -26,12 +27,14 @@ export default async function PersonalPage() {
 
   const hero = resolveSection(sections, "personal", "hero");
   const trust = resolveSection(sections, "personal", "trust_segment");
+  const moving = resolveSection(sections, "personal", "moving");
 
   return (
     <>
       <HeroBanner copy={hero} />
       <TrustBanner copy={trust} />
       <StorageCalculator />
+      <MovingBanner copy={moving} />
 
       <section className="snap-section-flow mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <h2 className="text-2xl font-bold sm:text-3xl">Personal storage services</h2>

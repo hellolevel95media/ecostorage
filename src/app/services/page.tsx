@@ -1,14 +1,15 @@
 import { TrustBanner } from "@/components/sections/TrustBanner";
 import { ServicesFilterGrid } from "@/components/sections/ServicesFilterGrid";
+import { MovingBanner } from "@/components/sections/MovingBanner";
 import { getPageSections, getServices, resolveSection } from "@/lib/content";
 import { buildMetadata } from "@/lib/site";
 
 export const revalidate = 60;
 
 export const metadata = buildMetadata({
-  title: "Storage Services Singapore | Pickup, Delivery & Records",
+  title: "Storage & Moving Services Singapore | Pickup, Delivery & Records",
   description:
-    "Pickup and storage, on-demand delivery, records management and inventory storage for households and businesses, with itemised quotes you can follow.",
+    "Storage and moving from one team: pickup, storage, delivery, home and office moves, records and inventory storage. S$330 per full 14ft truckload.",
   path: "/services",
 });
 
@@ -19,13 +20,14 @@ export default async function ServicesPage() {
   ]);
 
   const trust = resolveSection(sections, "services", "trust_segment");
+  const moving = resolveSection(sections, "services", "moving");
 
   return (
     <>
       <section className="snap-section-flow mx-auto max-w-7xl px-4 pt-10 sm:px-6 lg:px-8">
         <h1 className="text-3xl font-bold tracking-tight sm:text-5xl">Services</h1>
         <p className="mt-3 max-w-2xl text-foreground/70">
-          Personal and corporate storage solutions, tailored to how you work and live.
+          Personal and corporate storage, with collection and moving handled by the same team.
         </p>
       </section>
 
@@ -34,6 +36,8 @@ export default async function ServicesPage() {
       <section className="snap-section-flow mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <ServicesFilterGrid services={services} />
       </section>
+
+      <MovingBanner copy={moving} />
     </>
   );
 }

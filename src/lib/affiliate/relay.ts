@@ -56,7 +56,7 @@ export async function relayInquiry(inquiry: RelayInquiry) {
     promo_code: affiliate?.promoCode ?? null,
     ref_code: affiliate?.refCode ?? null,
     link_clicked_at: affiliate?.linkClickedAt ?? null,
-    quote: isCalculator ? (meta.quote ?? {}) : {},
+    quote: isCalculator ? (meta.quote ?? {}) : meta.movingQuote === true ? { movingQuote: true } : {},
   });
 
   const attempts = state.attempts + 1;

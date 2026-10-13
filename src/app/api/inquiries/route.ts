@@ -25,6 +25,7 @@ function sanitizeMetadata(input: unknown): Record<string, unknown> {
   if (typeof raw.partnerKind === "string" && PARTNER_KINDS.includes(raw.partnerKind as PartnerKind)) {
     metadata.partnerKind = raw.partnerKind;
   }
+  if (raw.movingQuote === true) metadata.movingQuote = true;
   return metadata;
 }
 
@@ -48,8 +49,10 @@ function calculatorMetadata(input: unknown, hasPromoCode: boolean): Record<strin
   if (!valet || !commitment) return null;
 
   const quote = calculateQuote({ numUnits, commitment, valet });
+  const movingQuote = raw.movingQuote === true;
   return {
     source: "storage_calculator",
+    ...(movingQuote ? { movingQuote } : {}),
     moduleSqft: MODULE_SQFT,
     numUnits,
     commitment: commitment.id,
@@ -69,6 +72,7 @@ function calculatorMetadata(input: unknown, hasPromoCode: boolean): Record<strin
       valet: valet.id,
       estimatedMonthly: quote.discountedMonthly,
       estimatedTotal: quote.totalCost,
+      ...(movingQuote ? { movingQuote } : {}),
     },
   };
 }

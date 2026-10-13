@@ -20,9 +20,15 @@ export const FALLBACK_SECTIONS: Record<string, Record<string, SectionCopy>> = {
     hero: {
       heading: "Storage that moves at the speed of your life.",
       subheading:
-        "Flexible personal and corporate storage space, on-demand pickup, and climate-controlled units across Singapore.",
+        "Storage and moving from one team. We collect, store and deliver back across Singapore, at a fixed S$330 per full 14ft truckload, with climate-controlled units when you need them.",
       cta_text: "Get a Free Quote",
       cta_link: "/contact",
+    },
+    moving: {
+      heading: "Storage and moving, handled by one team",
+      body: "We're not a lock-and-key facility, so getting your things to us is part of the job. Our operations team collects, wraps and stores your belongings, then brings them back when you're ready, backed by vetted partner movers for specialist items.\n- One fixed truck price: S$330 for a full 14ft truckload, with or without a tailgate. That's roughly a 3-room HDB, living room included.\n- Extras told to you first: Long push, stair carry, fragile packing or extra labour are always communicated in advance, never added afterwards.\n- Changes on the day, agreed on the spot: If you add items or want extra protection on moving day, our team leader confirms the price with you before we carry on.\n- One booking, one bill: Storage, collection and return delivery under one account, so you never have to coordinate a mover and a storage company yourself.",
+      cta_text: "Get a storage and moving quote",
+      cta_link: "/#quote",
     },
     trust_banner: {
       heading: "Trusted by thousands of households and businesses",
@@ -43,9 +49,15 @@ export const FALLBACK_SECTIONS: Record<string, Record<string, SectionCopy>> = {
     hero: {
       heading: "Personal storage, simplified.",
       subheading:
-        "From dorm move-outs to full-home decluttering, we pick up, store, and deliver back on your schedule.",
+        "From dorm move-outs to full-home moves, our operations team collects, stores and delivers back on your schedule, at S$330 per full 14ft truckload.",
       cta_text: "Start My Quote",
       cta_link: "/contact",
+    },
+    moving: {
+      heading: "Storage and moving, handled by one team",
+      body: "We're not a lock-and-key facility, so getting your things to us is part of the job. Our operations team collects, wraps and stores your belongings, then brings them back when you're ready, backed by vetted partner movers for specialist items.\n- One fixed truck price: S$330 for a full 14ft truckload, with or without a tailgate. That's roughly a 3-room HDB, living room included.\n- Extras told to you first: Long push, stair carry, fragile packing or extra labour are always communicated in advance, never added afterwards.\n- Changes on the day, agreed on the spot: If you add items or want extra protection on moving day, our team leader confirms the price with you before we carry on.\n- One booking, one bill: Storage, collection and return delivery under one account, so you never have to coordinate a mover and a storage company yourself.",
+      cta_text: "Get a storage and moving quote",
+      cta_link: "/#quote",
     },
   },
   corporate: {
@@ -75,7 +87,13 @@ export const FALLBACK_SECTIONS: Record<string, Record<string, SectionCopy>> = {
   services: {
     trust_segment: {
       heading: "Every service, handled with care",
-      body: "Whichever service you choose, the same standards apply, because your belongings matter to you.\n- Wrapped and protected: Pallets are shrink-wrapped, and sensitive items can move into enclosed crates for extra peace of mind.\n- Logged and tracked: Everything is recorded against your account, so partial returns are simple and nothing is left to memory.\n- Scheduling you can rely on: We will keep you updated if timings change, so you can plan your day with confidence.\n- Pricing that makes sense: Itemised quotes explain what you are paying for, with a friendly team to answer any question.",
+      body: "Whichever service you choose, the same standards apply, because your belongings matter to you.\n- Wrapped and protected: Pallets are shrink-wrapped, and sensitive items can move into enclosed crates for extra peace of mind.\n- Logged and tracked: Everything is recorded against your account, so partial returns are simple and nothing is left to memory.\n- Scheduling you can rely on: We will keep you updated if timings change, so you can plan your day with confidence.\n- Pricing that makes sense: A fixed S$330 per full 14ft truckload, itemised quotes for everything else, and any extra communicated before we do it.",
+    },
+    moving: {
+      heading: "Storage and moving, handled by one team",
+      body: "We're not a lock-and-key facility, so getting your things to us is part of the job. Our operations team collects, wraps and stores your belongings, then brings them back when you're ready, backed by vetted partner movers for specialist items.\n- One fixed truck price: S$330 for a full 14ft truckload, with or without a tailgate. That's roughly a 3-room HDB, living room included.\n- Extras told to you first: Long push, stair carry, fragile packing or extra labour are always communicated in advance, never added afterwards.\n- Changes on the day, agreed on the spot: If you add items or want extra protection on moving day, our team leader confirms the price with you before we carry on.\n- One booking, one bill: Storage, collection and return delivery under one account, so you never have to coordinate a mover and a storage company yourself.",
+      cta_text: "Get a storage and moving quote",
+      cta_link: "/#quote",
     },
   },
   resources: {
@@ -104,7 +122,7 @@ export const FALLBACK_SECTIONS: Record<string, Record<string, SectionCopy>> = {
   contact: {
     trust_segment: {
       heading: "We'd love to hear from you",
-      body: "Tell us a little about what you need stored. There is no pressure and no question is too small.\n- A real person replies: Our team responds within one business day.\n- Plain answers: We explain options and pricing simply, at your own pace.\n- We stay in touch: You will not be left wondering what happens next.",
+      body: "Tell us a little about what you need stored or moved. There is no pressure and no question is too small.\n- A real person replies: Our team responds within one business day.\n- Plain answers: We explain options and pricing simply, at your own pace.\n- We stay in touch: You will not be left wondering what happens next.",
     },
   },
 };

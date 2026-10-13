@@ -14,7 +14,7 @@ export function Footer() {
         <div>
           <Logo />
           <p className="mt-2 max-w-xs text-sm text-foreground/60">
-            Flexible personal and corporate storage, with pickup, delivery, and climate-controlled facilities across Singapore.
+            Personal and corporate storage and moving from one team, with pickup, delivery and climate-controlled facilities across Singapore.
           </p>
           <address className="mt-2 space-y-0.5 text-sm text-foreground/60 not-italic">
             <p>{COMPANY.address}</p>

@@ -5,6 +5,7 @@ import type { InquiryType } from "@/types/database";
 import { Button } from "@/components/ui/Button";
 import { PromoCodeInput, type AppliedPromo } from "@/components/ui/PromoCodeInput";
 import { Turnstile, turnstileEnabled } from "@/components/ui/Turnstile";
+import { MovingQuoteCheckbox } from "@/components/ui/MovingQuoteCheckbox";
 import { NETWORK_ERROR_MESSAGE, submitErrorMessage } from "@/lib/form-errors";
 import { showToast } from "@/lib/toast";
 
@@ -46,6 +47,7 @@ export function ContactForm({
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [captchaKey, setCaptchaKey] = useState(0);
   const showPromo = !compact && type !== "partner";
+  const showMoving = !compact && type !== "partner";
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -74,7 +76,7 @@ export function ContactForm({
       address: String(form.get("address") ?? "") || null,
       message: String(form.get("message") ?? "") || null,
       website: String(form.get("website") ?? ""),
-      metadata,
+      metadata: showMoving && form.get("moving_quote") ? { ...metadata, movingQuote: true } : metadata,
       promo_code: showPromo ? (promo?.code ?? null) : null,
       turnstile_token: captchaToken,
     };
@@ -177,6 +179,12 @@ export function ContactForm({
           )}
         </div>
       </div>
+
+      {showMoving && (
+        <div className="mt-3">
+          <MovingQuoteCheckbox name="moving_quote" />
+        </div>
+      )}
 
       {showPromo && (
         <div className="mt-3">

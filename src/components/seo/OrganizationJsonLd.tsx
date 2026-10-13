@@ -15,7 +15,7 @@ export function OrganizationJsonLd() {
     telephone: COMPANY.phone,
     email: COMPANY.email,
     description:
-      "Full-service pickup-and-delivery storage for personal and corporate customers across Singapore, with recycled-pallet and wooden-crate storage methods run at ambient temperature for a lower carbon footprint than traditional self-storage.",
+      "Full-service storage and moving for personal and corporate customers across Singapore, with collection and delivery by one operations team, with recycled-pallet and wooden-crate storage methods run at ambient temperature for a lower carbon footprint than traditional self-storage.",
     address: {
       "@type": "PostalAddress",
       streetAddress: COMPANY.address,

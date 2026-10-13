@@ -32,15 +32,15 @@ const appSC = Noto_Sans_SC({
 });
 
 const description =
-  "Skip the self-storage trips. We collect, wrap, track and return your belongings on your schedule, for Singapore homes and businesses. Free quote.";
+  "Storage and moving from one team. We collect, wrap, store and return your belongings on your schedule, at S$330 per full 14ft truckload. Free quote.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Pickup & Delivery Storage in Singapore for Homes & Business",
+  title: "Storage & Moving in Singapore | Pickup, Storage & Delivery",
   description,
   alternates: { canonical: SITE_URL },
   openGraph: {
-    title: "Pickup & Delivery Storage in Singapore for Homes & Business",
+    title: "Storage & Moving in Singapore | Pickup, Storage & Delivery",
     description,
     url: SITE_URL,
     siteName: "EcoStorage",
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Pickup & Delivery Storage in Singapore for Homes & Business",
+    title: "Storage & Moving in Singapore | Pickup, Storage & Delivery",
     description,
   },
 };

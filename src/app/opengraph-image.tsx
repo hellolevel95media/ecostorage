@@ -50,7 +50,7 @@ export default function OpengraphImage() {
           Storage that moves at the speed of your life.
         </div>
         <div style={{ display: "flex", marginTop: 24, fontSize: 24, color: "#00805f" }}>
-          Personal &amp; corporate storage, pickup to delivery — across Singapore.
+          Storage &amp; moving from one team — across Singapore.
         </div>
       </div>
     ),

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import { TrustStats } from "@/components/sections/TrustStats";
 import { StorageCalculator } from "@/components/sections/StorageCalculator";
+import { MovingBanner } from "@/components/sections/MovingBanner";
 import { ServiceCard } from "@/components/sections/ServiceCard";
 import { ArticleCard } from "@/components/sections/ArticleCard";
 import { CardCarousel } from "@/components/ui/CardCarousel";
@@ -18,12 +19,14 @@ export default async function HomePage() {
 
   const hero = resolveSection(sections, "home", "hero");
   const trust = resolveSection(sections, "home", "trust_banner");
+  const moving = resolveSection(sections, "home", "moving");
 
   return (
     <>
       <HeroBanner copy={hero} />
       <TrustStats copy={trust} />
       <StorageCalculator />
+      <MovingBanner copy={moving} />
 
       <section className="snap-section-flow mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="flex items-end justify-between">

@@ -7,9 +7,9 @@ import { buildMetadata } from "@/lib/site";
 export const revalidate = 60;
 
 export const metadata = buildMetadata({
-  title: "Get a Storage Quote in Singapore | Pickup & Delivery",
+  title: "Get a Storage & Moving Quote in Singapore | Pickup & Delivery",
   description:
-    "Tell us what you need to store and get a pickup-and-delivery quote in Singapore. Every enquiry gets a reply within one business day.",
+    "Tell us what you need stored or moved and get a storage and moving quote in Singapore. Every enquiry gets a reply within one business day.",
   path: "/contact",
 });
 
@@ -42,7 +42,7 @@ export default async function ContactPage() {
             </p>
           </address>
         </div>
-        <ContactForm type="contact" title="Send a message" description="Tell us a little about what you need stored. Fields marked * are required." />
+        <ContactForm type="contact" title="Send a message" description="Tell us a little about what you need stored or moved. Fields marked * are required." />
       </section>
     </>
   );

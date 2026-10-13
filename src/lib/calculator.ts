@@ -3,6 +3,9 @@ export const MODULE_BASE_RATE = 60;
 /** Hard floor: no discount may take a 20 sqft module below this per month. */
 export const MODULE_MIN_RATE = 55;
 export const CO2_PER_MODULE_PER_MONTH_KG = 12;
+/** Collection or delivery by 14ft truck, per full truckload (with or without tailgate). Part loads are quoted.
+ * Guaranteed (never higher) for Standard and Premium Valet; the current public rate for everyone else. */
+export const TRUCKLOAD_14FT_RATE = 330;
 
 export interface SizeGuideOption {
   sqft: number;
@@ -119,17 +122,22 @@ export interface ValetOption {
 }
 
 export const VALET_OPTIONS: ValetOption[] = [
-  { id: "none", label: "No Valet", description: "Self-access only.", monthlyFee: 0 },
+  {
+    id: "none",
+    label: "No Valet",
+    description: `Storage only. Book collection or delivery whenever you need it, at our current rate of S$${TRUCKLOAD_14FT_RATE} per full 14ft truckload.`,
+    monthlyFee: 0,
+  },
   {
     id: "standard",
     label: "Standard Valet",
-    description: "Pickup and delivery at our preferential rate, plus complimentary partial extraction.",
+    description: `Collection and delivery at a guaranteed S$${TRUCKLOAD_14FT_RATE} per full 14ft truckload, plus complimentary partial extraction.`,
     monthlyFee: 15,
   },
   {
     id: "premium",
     label: "Premium Valet",
-    description: "Everything in Standard Valet, plus full inventory cataloging and box-level labeling on every item we receive.",
+    description: `Everything in Standard Valet, including the S$${TRUCKLOAD_14FT_RATE} truckload price guarantee, plus full inventory cataloging and box-level labeling on every item we receive.`,
     monthlyFee: 30,
   },
 ];

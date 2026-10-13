@@ -4,11 +4,13 @@ import { useId, useMemo, useState, useSyncExternalStore, type FormEvent, type Re
 import { Button } from "@/components/ui/Button";
 import { PromoCodeInput, type AppliedPromo } from "@/components/ui/PromoCodeInput";
 import { Turnstile, turnstileEnabled } from "@/components/ui/Turnstile";
+import { MovingQuoteCheckbox } from "@/components/ui/MovingQuoteCheckbox";
 import { showToast } from "@/lib/toast";
 import { NETWORK_ERROR_MESSAGE, submitErrorMessage } from "@/lib/form-errors";
 import {
   SIZE_GUIDE,
   formatDollars,
+  TRUCKLOAD_14FT_RATE,
   MODULE_SQFT,
   COMMITMENT_OPTIONS,
   VALET_OPTIONS,
@@ -61,6 +63,7 @@ export function StorageCalculator() {
   const [numUnits, setNumUnits] = useState(() => moduleCountFromSqft(20));
   const [commitmentId, setCommitmentId] = useState<CommitmentId>("monthly");
   const [valetId, setValetId] = useState<ValetId>("none");
+  const [wantsMoving, setWantsMoving] = useState(false);
   const [promo, setPromo] = useState<AppliedPromo>(null);
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [captchaKey, setCaptchaKey] = useState(0);
@@ -138,7 +141,7 @@ export function StorageCalculator() {
       phone: contact.phone,
       address: contact.address || null,
       // Selections only; the server recomputes the quote itself.
-      calculator: { numUnits, commitment: commitment.id, valet: valet.id },
+      calculator: { numUnits, commitment: commitment.id, valet: valet.id, movingQuote: wantsMoving },
       promo_code: promo?.code ?? null,
       turnstile_token: captchaToken,
     };
@@ -166,7 +169,9 @@ export function StorageCalculator() {
         <div className="rounded-3xl border border-brand/30 bg-brand/5 p-10 text-center shadow-card">
           <p className="text-2xl font-bold text-brand-ink">Request received!</p>
           <p className="mt-2 text-foreground/70">
-            Our team will follow up within one business day to confirm your pickup and finalise your quote.
+            {wantsMoving
+              ? "Our team will follow up within one business day with your storage and moving quote."
+              : "Our team will follow up within one business day to confirm your pickup and finalise your quote."}
           </p>
         </div>
       </section>
@@ -179,7 +184,7 @@ export function StorageCalculator() {
     // background on either side — the card itself was previously a near-white
     // bg-surface/60 sitting directly on the white page, which is why it read
     // as flat/low-contrast before.
-    <section className="snap-section-flow bg-surface py-16">
+    <section id="quote" className="snap-section-flow scroll-mt-20 bg-surface py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="rounded-3xl border-2 border-foreground/15 bg-card p-5 shadow-card sm:p-8 lg:p-10">
         <div className="text-center">
@@ -214,6 +219,7 @@ export function StorageCalculator() {
                 <CommitmentSelector options={commitmentOptions} selected={commitmentId} onSelect={setCommitmentId} />
                 <ValetSelector selected={valetId} onSelect={setValetId} />
                 <ValetNotice valet={valet} />
+                <MovingQuoteCheckbox checked={wantsMoving} onChange={setWantsMoving} />
                 <PromoCodeInput applied={promo} onApplied={applyPromo} />
                 <Button type="button" className="w-full" onClick={() => advanceStep("contact")}>
                   Next: Review &amp; contact
@@ -223,9 +229,9 @@ export function StorageCalculator() {
 
             {mobileStep === "contact" && (
               <div className="mt-6 space-y-6">
-                <RateDashboard quote={quote} numUnits={numUnits} />
+                <RateDashboard quote={quote} numUnits={numUnits} movingQuote={wantsMoving} />
                 <form noValidate onSubmit={handleSubmit} onFocusCapture={() => setEngaged(true)} className="space-y-3">
-                  <ContactFields contact={contact} errors={errors} onChange={setContact} />
+                  <ContactFields contact={contact} errors={errors} onChange={setContact} movingQuote={wantsMoving} />
                   {engaged && !isDesktop && <Turnstile onToken={setCaptchaToken} resetKey={captchaKey} />}
                   <Button type="submit" disabled={status === "submitting" || (turnstileEnabled && engaged && !captchaToken)} className="w-full">
                     {status === "submitting" ? "Sending your request..." : "Get My Quote"}
@@ -245,13 +251,14 @@ export function StorageCalculator() {
               <CommitmentSelector options={commitmentOptions} selected={commitmentId} onSelect={setCommitmentId} />
               <ValetSelector selected={valetId} onSelect={setValetId} />
               <ValetNotice valet={valet} />
+              <MovingQuoteCheckbox checked={wantsMoving} onChange={setWantsMoving} />
               <PromoCodeInput applied={promo} onApplied={applyPromo} />
             </div>
 
             <div className="space-y-6 rounded-2xl border-2 border-foreground/15 bg-card p-6 shadow-card">
-              <RateDashboard quote={quote} numUnits={numUnits} />
+              <RateDashboard quote={quote} numUnits={numUnits} movingQuote={wantsMoving} />
               <form noValidate onSubmit={handleSubmit} onFocusCapture={() => setEngaged(true)} className="space-y-3 border-t-2 border-foreground/15 pt-6">
-                <ContactFields contact={contact} errors={errors} onChange={setContact} />
+                <ContactFields contact={contact} errors={errors} onChange={setContact} movingQuote={wantsMoving} />
                 {engaged && isDesktop && <Turnstile onToken={setCaptchaToken} resetKey={captchaKey} />}
                 <Button type="submit" disabled={status === "submitting" || (turnstileEnabled && engaged && !captchaToken)} className="w-full">
                   {status === "submitting" ? "Sending your request..." : "Get My Quote"}
@@ -481,7 +488,7 @@ function ValetSelector({
           <RadioCard key={option.id} active={option.id === selected} onClick={() => onSelect(option.id)}>
             <span className="font-semibold">{option.label}</span>
             <span className="mt-0.5 block text-xs text-foreground/60">
-              {option.monthlyFee > 0 ? `+$${option.monthlyFee}/mo` : "Included"}
+              {option.monthlyFee > 0 ? `+$${option.monthlyFee}/mo` : "No monthly fee"}
             </span>
           </RadioCard>
         ))}
@@ -491,11 +498,11 @@ function ValetSelector({
 }
 
 function ValetNotice({ valet }: { valet: ValetOption }) {
-  if (valet.id === "none") return null;
   return (
     <div className="rounded-lg bg-brand/5 p-3 text-xs text-foreground/70">
       <span className="font-semibold text-brand-ink">
-        {valet.label} (+${valet.monthlyFee}/mo):
+        {valet.label}
+        {valet.monthlyFee > 0 ? ` (+$${valet.monthlyFee}/mo)` : ""}:
       </span>{" "}
       {valet.description}
     </div>
@@ -527,9 +534,11 @@ function RadioCard({
 function RateDashboard({
   quote,
   numUnits,
+  movingQuote,
 }: {
   quote: ReturnType<typeof calculateQuote>;
   numUnits: number;
+  movingQuote: boolean;
 }) {
   return (
     <div>
@@ -542,6 +551,11 @@ function RateDashboard({
         {quote.billedMonths} billed month{quote.billedMonths > 1 ? "s" : ""} · {numUnits} module
         {numUnits > 1 ? "s" : ""}
       </p>
+      {movingQuote && (
+        <p className="mt-2 text-sm font-medium text-brand-ink">
+          + Moving quote to follow (S${TRUCKLOAD_14FT_RATE} per full 14ft truckload)
+        </p>
+      )}
 
       <div className="mt-4 grid grid-cols-3 gap-3 text-center">
         <div className="rounded-lg bg-brand/5 p-3">
@@ -565,10 +579,12 @@ function ContactFields({
   contact,
   errors,
   onChange,
+  movingQuote,
 }: {
   contact: ContactState;
   errors: Partial<Record<keyof ContactState, string>>;
   onChange: (contact: ContactState) => void;
+  movingQuote: boolean;
 }) {
   function set<K extends keyof ContactState>(key: K, value: ContactState[K]) {
     onChange({ ...contact, [key]: value });
@@ -602,7 +618,7 @@ function ContactFields({
       />
       <div className="sm:col-span-2">
         <TextField
-          label="Delivery address (optional)"
+          label={movingQuote ? "Collection address (optional, helps us quote the move)" : "Delivery address (optional)"}
           value={contact.address}
           onChange={(v) => set("address", v)}
         />

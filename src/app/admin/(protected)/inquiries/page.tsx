@@ -71,7 +71,9 @@ export default async function AdminInquiriesPage({
                     {new Date(inquiry.created_at).toLocaleDateString()}
                   </td>
                   <td className="px-4 py-3 capitalize">{inquiry.type}</td>
-                  <td className="px-4 py-3 text-foreground/70">{kind ? PARTNER_KIND_LABELS[kind] : "—"}</td>
+                  <td className="px-4 py-3 text-foreground/70">
+                    {kind ? PARTNER_KIND_LABELS[kind] : inquiry.metadata?.movingQuote === true ? "Wants moving quote" : "—"}
+                  </td>
                   <td className="px-4 py-3 font-medium">{inquiry.name}</td>
                   <td className="px-4 py-3 text-foreground/70">{inquiry.email}</td>
                   <td className="max-w-xs truncate px-4 py-3 text-foreground/70">

@@ -46,6 +46,7 @@ export async function sendInquiryNotification(inquiry: InquiryPayload) {
     text: [
       `Type: ${INQUIRY_LABELS[inquiry.type]}`,
       partnerKind ? `Partner kind: ${PARTNER_KIND_LABELS[partnerKind]}` : null,
+      inquiry.metadata?.movingQuote === true ? "Wants a moving quote: yes" : null,
       `Name: ${inquiry.name}`,
       `Email: ${inquiry.email}`,
       inquiry.phone ? `Phone: ${inquiry.phone}` : null,

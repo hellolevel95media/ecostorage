@@ -27,6 +27,11 @@ const SECTION_CONFIG: Record<string, { name: string; help: string; fields: Field
     help: "A reassuring promise to visitors, shown as a short message with a few commitment cards.",
     fields: ["heading", "commitments", "button"],
   },
+  moving: {
+    name: "Storage + moving banner",
+    help: "Shows storage and moving as one service. The S$330 truck price card and the truck notes underneath are fixed in code.",
+    fields: ["heading", "commitments", "button"],
+  },
   intro: {
     name: "Page introduction",
     help: "The heading and one-line description at the top of this page.",
