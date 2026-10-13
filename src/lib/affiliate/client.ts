@@ -43,6 +43,9 @@ export async function postToAffiliate(
       cache: "no-store",
       signal: AbortSignal.timeout(timeoutMs),
     });
+    // Novac always answers in JSON. Anything else (e.g. a 200 HTML page from a
+    // deployment without this route yet) means Novac didn't receive it.
+    if (!res.headers.get("content-type")?.includes("application/json")) return null;
     const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
     return { status: res.status, data };
   } catch {
