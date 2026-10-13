@@ -125,7 +125,7 @@ export const VALET_OPTIONS: ValetOption[] = [
   {
     id: "none",
     label: "No Valet",
-    description: `Storage only. Book collection or delivery whenever you need it, at our current rate of S$${TRUCKLOAD_14FT_RATE} per full 14ft truckload.`,
+    description: `Storage only. Book a collection or delivery whenever you need it, at our current rate of S$${TRUCKLOAD_14FT_RATE} per full 14ft truckload.`,
     monthlyFee: 0,
   },
   {
