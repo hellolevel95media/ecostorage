@@ -66,3 +66,7 @@ backups/
 
 # Private Claude instructions (local only)
 /CLAUDE.local.md
+
+# Project notes for Claude (local only)
+/CLAUDE.md
+/HANDOFF.md
