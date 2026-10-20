@@ -1,6 +1,6 @@
-# Main site (C:\ecostorage) ↔ affiliate system integration — design
+# Main site (EcoStorage) ↔ affiliate system integration — design
 
-Status: design only, nothing in `C:\ecostorage` changed yet.
+Status: design only, nothing in `EcoStorage` changed yet.
 
 ## What exists today (main site)
 
@@ -41,7 +41,7 @@ affiliate system /api/webhooks/lead
   6. insert affiliate_signups row, status = lead
 ```
 
-## Changes needed in C:\ecostorage
+## Changes needed in EcoStorage
 
 1. **`src/proxy.ts`** — widen the matcher to public pages (excluding static
    assets) and set `eco_ref` when `?ref=` is present. Overwrites any older
