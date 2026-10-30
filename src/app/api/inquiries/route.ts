@@ -7,7 +7,7 @@ import { verifyTurnstile } from "@/lib/turnstile";
 import { normalizeReferralCode } from "@/lib/affiliate/client";
 import { parseReferral, REFERRAL_COOKIE } from "@/lib/affiliate/referral-cookie";
 import { relayInquiry, type AffiliateMeta, type RelayMeta } from "@/lib/affiliate/relay";
-import { COMMITMENT_OPTIONS, VALET_OPTIONS, calculateQuote, referralCommitment, MODULE_SQFT } from "@/lib/calculator";
+import { COMMITMENT_OPTIONS, VALET_OPTIONS, PREMIUM_CRATE, calculateQuote, referralCommitment, MODULE_SQFT } from "@/lib/calculator";
 import type { InquiryType, PartnerKind } from "@/types/database";
 
 const VALID_TYPES: InquiryType[] = ["contact", "personal", "corporate", "partner"];
@@ -50,9 +50,11 @@ function calculatorMetadata(input: unknown, hasPromoCode: boolean): Record<strin
 
   const quote = calculateQuote({ numUnits, commitment, valet });
   const movingQuote = raw.movingQuote === true;
+  const premiumCrate = raw.premiumCrate === true;
   return {
     source: "storage_calculator",
     ...(movingQuote ? { movingQuote } : {}),
+    ...(premiumCrate ? { premiumCrate, premiumCrateMonthly: PREMIUM_CRATE.monthlyRate } : {}),
     moduleSqft: MODULE_SQFT,
     numUnits,
     commitment: commitment.id,
@@ -73,6 +75,7 @@ function calculatorMetadata(input: unknown, hasPromoCode: boolean): Record<strin
       estimatedMonthly: quote.discountedMonthly,
       estimatedTotal: quote.totalCost,
       ...(movingQuote ? { movingQuote } : {}),
+      ...(premiumCrate ? { premiumCrate, premiumCrateMonthly: PREMIUM_CRATE.monthlyRate } : {}),
     },
   };
 }

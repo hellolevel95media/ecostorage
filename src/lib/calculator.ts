@@ -7,6 +7,24 @@ export const CO2_PER_MODULE_PER_MONTH_KG = 12;
  * Guaranteed (never higher) for Standard and Premium Valet; the current public rate for everyone else. */
 export const TRUCKLOAD_14FT_RATE = 330;
 
+/**
+ * Premium tier shown beside the calculator. It is a fixed-price enquiry, not
+ * part of calculateQuote: the standard estimate never includes it.
+ */
+export const PREMIUM_CRATE = {
+  label: "Premium Wooden Crate",
+  tagline: "Premium option",
+  sqft: 100,
+  monthlyRate: 500,
+  summary: "Your own enclosed, private space inside our warehouse, built for the belongings you cannot afford to risk.",
+  features: [
+    "Enclosed wooden crate, 100 sqft of your own",
+    "Private: your items stay in your crate, not on a shared pallet",
+    "Climate-safe environment inside our warehouse",
+    "Suited to fine furniture, antiques, collections and documents",
+  ],
+} as const;
+
 export interface SizeGuideOption {
   sqft: number;
   /** Month-to-month, no valet. Derived from the calculator so they never drift. */

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { PromoCodeInput, type AppliedPromo } from "@/components/ui/PromoCodeInput";
 import { Turnstile, turnstileEnabled } from "@/components/ui/Turnstile";
 import { MovingQuoteCheckbox } from "@/components/ui/MovingQuoteCheckbox";
+import { PremiumCrateOption } from "@/components/ui/PremiumCrateOption";
 import { showToast } from "@/lib/toast";
 import { NETWORK_ERROR_MESSAGE, submitErrorMessage } from "@/lib/form-errors";
 import {
@@ -64,6 +65,7 @@ export function StorageCalculator() {
   const [commitmentId, setCommitmentId] = useState<CommitmentId>("monthly");
   const [valetId, setValetId] = useState<ValetId>("none");
   const [wantsMoving, setWantsMoving] = useState(false);
+  const [wantsCrate, setWantsCrate] = useState(false);
   const [promo, setPromo] = useState<AppliedPromo>(null);
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [captchaKey, setCaptchaKey] = useState(0);
@@ -141,7 +143,7 @@ export function StorageCalculator() {
       phone: contact.phone,
       address: contact.address || null,
       // Selections only; the server recomputes the quote itself.
-      calculator: { numUnits, commitment: commitment.id, valet: valet.id, movingQuote: wantsMoving },
+      calculator: { numUnits, commitment: commitment.id, valet: valet.id, movingQuote: wantsMoving, premiumCrate: wantsCrate },
       promo_code: promo?.code ?? null,
       turnstile_token: captchaToken,
     };
@@ -172,6 +174,7 @@ export function StorageCalculator() {
             {wantsMoving
               ? "Our team will follow up within one business day with your storage and moving quote."
               : "Our team will follow up within one business day to confirm your pickup and finalise your quote."}
+            {wantsCrate && " We'll also send details on the Premium Wooden Crate."}
           </p>
         </div>
       </section>
@@ -221,6 +224,7 @@ export function StorageCalculator() {
                 <ValetNotice valet={valet} />
                 <MovingQuoteCheckbox checked={wantsMoving} onChange={setWantsMoving} />
                 <PromoCodeInput applied={promo} onApplied={applyPromo} />
+                <PremiumCrateOption checked={wantsCrate} onChange={setWantsCrate} />
                 <Button type="button" className="w-full" onClick={() => advanceStep("contact")}>
                   Next: Review &amp; contact
                 </Button>
@@ -253,6 +257,7 @@ export function StorageCalculator() {
               <ValetNotice valet={valet} />
               <MovingQuoteCheckbox checked={wantsMoving} onChange={setWantsMoving} />
               <PromoCodeInput applied={promo} onApplied={applyPromo} />
+              <PremiumCrateOption checked={wantsCrate} onChange={setWantsCrate} />
             </div>
 
             <div className="space-y-6 rounded-2xl border-2 border-foreground/15 bg-card p-6 shadow-card">
