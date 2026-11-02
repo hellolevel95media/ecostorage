@@ -29,7 +29,7 @@ const SECTION_CONFIG: Record<string, { name: string; help: string; fields: Field
   },
   moving: {
     name: "Storage + moving banner",
-    help: "Shows storage and moving as one service. The S$330 truck price card and the truck notes underneath are fixed in code.",
+    help: "Shows storage and moving as one service. The S$350 truck price card and the truck notes underneath are fixed in code.",
     fields: ["heading", "commitments", "button"],
   },
   intro: {

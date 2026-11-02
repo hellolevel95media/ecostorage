@@ -53,15 +53,15 @@ The calculator exposes three service choices:
 
 | Value | Label | Current description |
 |---|---|---|
-| `none` | No Valet | Storage only (EcoStorage is never self-access). Collection or delivery booked when needed at the current rate of S$330 per full 14ft truckload. |
-| `standard` | Standard Valet | Adds $15 per month: collection and delivery at a guaranteed S$330 per full 14ft truckload, plus complimentary partial extraction. |
-| `premium` | Premium Valet | Adds $30 per month: everything in Standard (including the S$330 guarantee), plus full inventory cataloguing and box-level labelling. |
+| `none` | No Valet | Storage only (EcoStorage is never self-access). Collection or delivery booked when needed at the current rate of S$350 per full 14ft truckload. |
+| `standard` | Standard Valet | Adds $15 per month: collection and delivery at a guaranteed S$350 per full 14ft truckload, plus complimentary partial extraction. |
+| `premium` | Premium Valet | Adds $30 per month: everything in Standard (including the S$350 guarantee), plus full inventory cataloguing and box-level labelling. |
 
 The current frontend records the selected valet option in the submission payload. The backend calculation procedure shown in `server/routers.ts` calculates the storage price from the unit size, quantity, duration, and promo code. Any valet-price adjustment should therefore remain synchronized with the active backend or WordPress pricing contract if it is introduced into the server calculation later.
 
 ### 4.1 Moving quote request
 
-Moving is quoted, not calculated. `TRUCKLOAD_14FT_RATE` (S$330, `src/lib/calculator.ts`) is shown for a full 14ft
+Moving is quoted, not calculated. `TRUCKLOAD_14FT_RATE` (S$350, `src/lib/calculator.ts`) is shown for a full 14ft
 truckload (with or without tailgate, roughly a 3-room HDB, 4 to 6 pallets depending on what is stored). Part loads are
 custom quotes, not half price. A large tick box, "Give me a quote for moving services for my storage needs", sits on
 the calculator and the contact forms; it sends `movingQuote: true` (calculator: inside `quote`; contact form: in

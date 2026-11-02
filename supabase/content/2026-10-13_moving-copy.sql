@@ -7,12 +7,12 @@
 begin;
 
 update public.sections set subheading =
-  'Storage and moving from one team. We collect, store and deliver back across Singapore, at a fixed S$330 per full 14ft truckload, with climate-controlled units when you need them.',
+  'Storage and moving from one team. We collect, store and deliver back across Singapore, at a fixed S$350 per full 14ft truckload, with climate-controlled units when you need them.',
   updated_at = now()
 where section_key = 'hero' and page_id = (select id from public.pages where slug = 'home');
 
 update public.sections set subheading =
-  'From dorm move-outs to full-home moves, our operations team collects, stores and delivers back on your schedule, at S$330 per full 14ft truckload.',
+  'From dorm move-outs to full-home moves, our operations team collects, stores and delivers back on your schedule, at S$350 per full 14ft truckload.',
   updated_at = now()
 where section_key = 'hero' and page_id = (select id from public.pages where slug = 'personal');
 
@@ -21,17 +21,17 @@ update public.sections set body =
   '- Wrapped and protected: Pallets are shrink-wrapped, and sensitive items can move into enclosed crates for extra peace of mind.\n'
   '- Logged and tracked: Everything is recorded against your account, so partial returns are simple and nothing is left to memory.\n'
   '- Scheduling you can rely on: We will keep you updated if timings change, so you can plan your day with confidence.\n'
-  '- Pricing that makes sense: A fixed S$330 per full 14ft truckload, itemised quotes for everything else, and any extra communicated before we do it.',
+  '- Pricing that makes sense: A fixed S$350 per full 14ft truckload, itemised quotes for everything else, and any extra communicated before we do it.',
   updated_at = now()
 where section_key = 'trust_segment' and page_id = (select id from public.pages where slug = 'services');
 
 update public.services set description =
-  'Collection and delivery at a guaranteed S$330 per full 14ft truckload, with complimentary partial extraction so you only get back what you need. Upgrade to Premium Valet for full inventory cataloging and box-level labeling on everything we receive.',
+  'Collection and delivery at a guaranteed S$350 per full 14ft truckload, with complimentary partial extraction so you only get back what you need. Upgrade to Premium Valet for full inventory cataloging and box-level labeling on everything we receive.',
   updated_at = now()
 where slug = 'valet-storage';
 
 update public.services set description =
-  'Full-service home moves by our operations team, at S$330 per full 14ft truckload. We pack, transport and set up at your new address, and can store anything you don''t need right away. Any extras are communicated in advance.',
+  'Full-service home moves by our operations team, at S$350 per full 14ft truckload. We pack, transport and set up at your new address, and can store anything you don''t need right away. Any extras are communicated in advance.',
   updated_at = now()
 where slug = 'home-moving';
 

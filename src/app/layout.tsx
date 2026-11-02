@@ -32,7 +32,7 @@ const appSC = Noto_Sans_SC({
 });
 
 const description =
-  "Storage and moving from one team. We collect, wrap, store and return your belongings on your schedule, at S$330 per full 14ft truckload. Free quote.";
+  "Storage and moving from one team. We collect, wrap, store and return your belongings on your schedule, at S$350 per full 14ft truckload. Free quote.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

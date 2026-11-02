@@ -5,7 +5,7 @@ export const MODULE_MIN_RATE = 55;
 export const CO2_PER_MODULE_PER_MONTH_KG = 12;
 /** Collection or delivery by 14ft truck, per full truckload (with or without tailgate). Part loads are quoted.
  * Guaranteed (never higher) for Standard and Premium Valet; the current public rate for everyone else. */
-export const TRUCKLOAD_14FT_RATE = 330;
+export const TRUCKLOAD_14FT_RATE = 350;
 
 /**
  * Premium tier shown beside the calculator. It is a fixed-price enquiry, not

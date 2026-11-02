@@ -9,7 +9,7 @@ export const revalidate = 60;
 export const metadata = buildMetadata({
   title: "Storage & Moving Services Singapore | Pickup, Delivery & Records",
   description:
-    "Storage and moving from one team: pickup, storage, delivery, home and office moves, records and inventory storage. S$330 per full 14ft truckload.",
+    "Storage and moving from one team: pickup, storage, delivery, home and office moves, records and inventory storage. S$350 per full 14ft truckload.",
   path: "/services",
 });
 
