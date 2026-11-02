@@ -24,6 +24,6 @@ export const COMPANY = {
   name: "EcoStorage",
   address: "7030 Ang Mo Kio Ave 5, #08-94, Singapore 569880",
   email: "hello@ecostorage.sg",
-  phone: "+65 8899 7017",
+  phone: "+65 8899 1184",
   googleReviewUrl: "#",
 };
