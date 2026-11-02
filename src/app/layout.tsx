@@ -7,6 +7,7 @@ import { Footer } from "@/components/layout/Footer";
 import { WhatsAppWidget } from "@/components/ui/WhatsAppWidget";
 import { CookieConsent } from "@/components/ui/CookieConsent";
 import { AnalyticsBeacon } from "@/components/ui/AnalyticsBeacon";
+import { GoogleAnalytics } from "@/components/ui/GoogleAnalytics";
 import { ToastHost } from "@/components/ui/ToastHost";
 import { OrganizationJsonLd } from "@/components/seo/OrganizationJsonLd";
 import { SITE_URL } from "@/lib/site";
@@ -76,6 +77,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <WhatsAppWidget />
         <CookieConsent />
         <AnalyticsBeacon />
+        <GoogleAnalytics />
         <ToastHost />
         <Analytics />
         <SpeedInsights />
