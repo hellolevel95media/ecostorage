@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { isoDaysAgo } from "@/lib/date-range";
 import { ga4Configured, runReport } from "@/lib/ga4";
+import { AutoRefresh } from "@/components/admin/AutoRefresh";
 
 export const dynamic = "force-dynamic";
 
@@ -124,7 +125,15 @@ export default async function AdminAnalyticsPage(props: PageProps<"/admin/analyt
         </nav>
       </div>
 
-      {ga4Configured() ? <Ga4Dashboard days={days} /> : <SetupNotice />}
+      {ga4Configured() ? (
+        <>
+          <AutoRefresh seconds={60} />
+          <LiveNow />
+          <Ga4Dashboard days={days} />
+        </>
+      ) : (
+        <SetupNotice />
+      )}
 
       <BuiltInCounter />
     </div>
@@ -250,6 +259,68 @@ async function Ga4Dashboard({ days }: { days: Range }) {
         />
       </div>
     </>
+  );
+}
+
+/** Live visitors from Google's Realtime API (last 30 minutes). Shows activity
+ *  straight away, while the standard reports above can lag by a day. */
+async function LiveNow() {
+  let live: { total: number; pages: [string, number][]; countries: [string, number][] };
+  try {
+    const [pages, countries] = await Promise.all([
+      runReport({ realtime: true, startDate: "", dimensions: ["unifiedScreenName"], metrics: ["activeUsers"], orderByMetric: "activeUsers", limit: 5 }),
+      runReport({ realtime: true, startDate: "", dimensions: ["country"], metrics: ["activeUsers"], orderByMetric: "activeUsers", limit: 3 }),
+    ]);
+    live = {
+      total: pages.totals[0] ?? pages.rows.reduce((sum, r) => sum + r.mets[0], 0),
+      pages: pages.rows.map((r) => [r.dims[0], r.mets[0]]),
+      countries: countries.rows.map((r) => [r.dims[0], r.mets[0]]),
+    };
+  } catch (error) {
+    return (
+      <p className="mt-6 rounded-xl border border-border bg-card p-4 text-sm text-foreground/60">
+        Live visitors unavailable: {error instanceof Error ? error.message : "unknown error"}
+      </p>
+    );
+  }
+
+  return (
+    <div className="mt-6 flex flex-col gap-4 rounded-xl border border-border bg-card p-5 sm:flex-row sm:items-start">
+      <div className="sm:w-48 sm:shrink-0">
+        <p className="flex items-center gap-2 text-xs font-semibold tracking-wide text-foreground/50 uppercase">
+          <span className={`inline-block h-2 w-2 rounded-full ${live.total ? "animate-pulse bg-brand" : "bg-foreground/25"}`} />
+          Visitors right now
+        </p>
+        <p className="mt-1 text-3xl font-bold tabular-nums">{fmtInt(live.total)}</p>
+        <p className="mt-1 text-xs text-foreground/50">Last 30 minutes. Updates every minute.</p>
+      </div>
+      {live.total > 0 && (
+        <div className="grid min-w-0 flex-1 gap-4 text-sm sm:grid-cols-2">
+          <div className="min-w-0">
+            <p className="text-xs font-semibold text-foreground/50">Looking at</p>
+            <ul className="mt-1 space-y-1">
+              {live.pages.map(([name, n]) => (
+                <li key={name} className="flex justify-between gap-3">
+                  <span className="truncate">{name || "(untitled page)"}</span>
+                  <span className="tabular-nums">{n}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="min-w-0">
+            <p className="text-xs font-semibold text-foreground/50">From</p>
+            <ul className="mt-1 space-y-1">
+              {live.countries.map(([name, n]) => (
+                <li key={name} className="flex justify-between gap-3">
+                  <span className="truncate">{name}</span>
+                  <span className="tabular-nums">{n}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 

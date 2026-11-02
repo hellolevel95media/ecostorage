@@ -23,6 +23,8 @@ type ReportRequest = {
   orderByMetric?: string;
   orderByDimension?: string;
   dimensionFilter?: unknown;
+  /** Live data (last 30 minutes) from the Realtime API; startDate/endDate are ignored. */
+  realtime?: boolean;
 };
 
 export function ga4Configured() {
@@ -69,7 +71,7 @@ async function accessToken(): Promise<string> {
 export async function runReport(req: ReportRequest): Promise<Ga4Report> {
   const token = await accessToken();
   const body: Record<string, unknown> = {
-    dateRanges: [{ startDate: req.startDate, endDate: req.endDate ?? "today" }],
+    ...(req.realtime ? {} : { dateRanges: [{ startDate: req.startDate, endDate: req.endDate ?? "today" }] }),
     dimensions: (req.dimensions ?? []).map((name) => ({ name })),
     metrics: req.metrics.map((name) => ({ name })),
     limit: req.limit ?? 10,
@@ -80,7 +82,7 @@ export async function runReport(req: ReportRequest): Promise<Ga4Report> {
   if (req.dimensionFilter) body.dimensionFilter = req.dimensionFilter;
 
   const res = await fetch(
-    `https://analyticsdata.googleapis.com/v1beta/properties/${process.env.GA4_PROPERTY_ID}:runReport`,
+    `https://analyticsdata.googleapis.com/v1beta/properties/${process.env.GA4_PROPERTY_ID}:${req.realtime ? "runRealtimeReport" : "runReport"}`,
     {
       method: "POST",
       headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
