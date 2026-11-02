@@ -39,11 +39,14 @@ export default function CookiesPage() {
           <h2 className="font-semibold text-foreground">Analytics cookies</h2>
           <p className="mt-1">
             With your consent, we record anonymous page-visit data (the page path, referring
-            page, and browser type) so we can understand which pages are useful. We never
-            collect IP addresses, names, or other personal identifiers through this system, and
-            it only runs after you accept cookies in the banner shown on your first visit. You
-            can withdraw consent at any time by clearing your browser&apos;s local storage for
-            this site.
+            page, and browser type) so we can understand which pages are useful. We also use
+            Google Analytics, which sets cookies (named <code>_ga</code> and{" "}
+            <code>_ga_&lt;ID&gt;</code>, kept for up to 2 years) to measure visits, time spent on
+            the site and how visitors found us, such as which search engine. Google processes
+            this data on our behalf; it is not used for advertising. We never collect names or
+            other personal identifiers through these tools, and they only run after you accept
+            cookies in the banner shown on your first visit. You can withdraw consent at any
+            time by clearing your browser&apos;s cookies and local storage for this site.
           </p>
         </div>
         <p>Contact hello@ecostorage.sg with any cookie or privacy questions.</p>
