@@ -24,8 +24,10 @@ export function CookieConsent() {
 
   if (!visible) return null;
 
+  // Centred, and raised above the WhatsApp button (bottom-right) until the
+  // screen is wide enough for the two to sit side by side.
   return (
-    <div className="fixed inset-x-4 bottom-4 z-50 mx-auto max-w-xl rounded-2xl border border-border bg-card p-4 shadow-card sm:inset-x-auto sm:right-6 sm:bottom-6">
+    <div className="fixed inset-x-4 bottom-24 z-50 mx-auto max-w-xl rounded-2xl border border-border bg-card p-4 shadow-card lg:bottom-6">
       <p className="text-sm text-foreground/80">
         We use essential cookies to run this site and, with your consent, anonymous analytics
         cookies to understand traffic. See our{" "}

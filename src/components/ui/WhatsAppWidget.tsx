@@ -1,4 +1,4 @@
-const WHATSAPP_NUMBER = "6588997017";
+const WHATSAPP_NUMBER = "6588991184";
 const WHATSAPP_MESSAGE =
   "Hi EcoStorage! I'd like to find out more about your storage plans.";
 
