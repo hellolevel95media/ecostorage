@@ -27,7 +27,7 @@ Main warehousing runs at 100% ambient temperature (not air-conditioned); only ~1
 ## Operating Context
 
 - Market: fully Singapore-based, island-wide, with 13 locations.
-- Warehouse/facility addresses are confidential and must never be disclosed publicly (security/operational policy). The public-facing contact address is: **7030 Ang Mo Kio Ave 5, #08-94, Singapore 569880**.
+- Warehouse/facility addresses are confidential and must never be disclosed publicly (security/operational policy). The public-facing contact address is: **621 Aljunied Road, #03-06, Lipo Building, Singapore 389834**.
 - Primary domain: `ecostorage.sg`.
 - Contact details in `src/lib/nav.ts` (`COMPANY`) are correct: office address above, `hello@ecostorage.sg`, +65 8899 1184.
 

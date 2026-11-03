@@ -179,4 +179,4 @@ No real images or video are hardcoded anywhere in the codebase by project rule; 
 - **Don't** hardcode stock photography, illustrations, or video — media slots stay empty placeholders until populated via the admin CMS.
 - **Don't** apply `shadow-card` universally as an always-on ambient shadow; it's reserved for panels that are meant to read as already-raised, and hover-lift is earned, not default.
 - **Don't** introduce a second display typeface or serif pairing — Geist Sans carries the entire hierarchy.
-- **Don't** disclose specific warehouse/facility locations in any UI copy or design artifact — only the public office address (7030 Ang Mo Kio Ave 5, #08-94, Singapore 569880) may appear.
+- **Don't** disclose specific warehouse/facility locations in any UI copy or design artifact — only the public office address (621 Aljunied Road, #03-06, Lipo Building, Singapore 389834) may appear.
