@@ -117,10 +117,7 @@ migration.
   at most one overdue draft per run, and revalidates `/resources`, the slug, `/`, `/personal`,
   `/sitemap.xml`. Hobby plan timing is only accurate to the hour. Scheduled drafts are drafts with a
   future `published_at`; `ArticleForm.tsx` now keeps that date when saving a draft.
-- **CHECK FIRST NEXT SESSION (2026-11-07 evening):** on 2026-11-06 the 17:00 SGT run had not published by 17:10 (article 01 still 404). `CRON_SECRET` was then saved in Vercel Prod (same as .env.local) and the site redeployed after the window. Owner chose to let the automation run unaided to test it. Check `curl -s -o /dev/null -w "%{http_code}" https://ecostorage.sg/resources/bed-wardrobe-mattress-during-hip` after 18:00 SGT on 7 Nov: 200 means working (the cron publishes one overdue draft per run, so article 02 is due 8 Nov). If still 404, check Vercel cron logs / a 401, then trigger the route manually with the secret.
-- **Owner to confirm:** `CRON_SECRET` is set in Vercel Production (else 401 and nothing publishes) and
-  the deploy is Ready. After the first run, confirm `/resources/bed-wardrobe-mattress-during-hip`
-  is live.
+- **Cron confirmed working (2026-11-06):** article 01 published by the cron at 09:39 UTC (17:39 SGT) and is live (200). Article 02 is due 2026-11-08 17:00 SGT (`published_at` 08:50 UTC); expect 200 on `/resources/protect-electronics-during-hip` after ~18:00 SGT 8 Nov (404 before). 401 from the cron = `CRON_SECRET` missing.
 - Queue order: 01 bed-wardrobe-mattress-during-hip, 02 protect-electronics-during-hip, 03 staying-home-
   during-hip-one-livable-room, 04 renovation-delay-what-to-do-with-belongings, 05 bto-key-collection-to-
   move-in-storage, 06 moving-out-of-rental-deposit-checklist, 07 student-belongings-storage-long-break,
@@ -201,3 +198,14 @@ Zoho). On another PC rebuild or copy the folder.
 Never paste real keys/passwords in chat. The user enters them into `.env.local` (gitignored) or
 dashboards. Claude may fix key names in an existing `.env.local` but never prints or introduces secret
 values. Check env with key names only: `grep -o '^[A-Z_]*=' .env.local`.
+
+## 11. Session 2026-11-06 (evening): sitemap + LLM visibility
+
+- **Sitemap bug fixed (`c80d287`):** `sitemap.xml` was statically cached at deploy time, so new articles never appeared (`revalidatePath` didn't refresh it). Now `export const revalidate = 3600` in `src/app/sitemap.ts`. Verify article 02 appears in the sitemap within ~1h of publishing.
+- **`/llms.txt` is now a live route (`a2fd901`):** `src/app/llms.txt/route.ts` appends all published English articles (title, URL, excerpt) to the hand-written text in `src/lib/llms-base.ts`. **Edit company facts in `llms-base.ts`; `public/llms.txt` no longer exists.** Hourly revalidate; the cron also revalidates it.
+- **IndexNow (Bing/others):** key file `public/50dd87de68f43f546fca12543e76daeb.txt` (public by design), `src/lib/indexnow.ts`, called from the publish cron. All 34 URLs submitted once (HTTP 202). Reason: ChatGPT search leans on Bing's index.
+- **robots.txt:** unchanged. `Allow: /` already admits AI crawlers; explicit GPTBot/PerplexityBot/ClaudeBot rules judged unnecessary.
+- **Owner to do:** Bing Webmaster Tools, sign in with Google and import the site from Search Console (~2 min).
+- **Not done (next):** (a) rankings ledger: read Search Console Performance > Queries via owner's Chrome window, save dated CSV snapshots in the repo (data thin at first; owner's analytics show visitors mostly on resource pages); (b) LLM-visibility baseline: re-check in 2-4 weeks, Perplexity via Playwright (no login). Don't scrape Google results (against their terms, CAPTCHAs). (c) Optional: FAQPage JSON-LD on Q&A-style articles.
+- **Git setup:** repo-local `credential.https://github.com.username=hellolevel95media` and origin URL includes the username, so pushes shouldn't prompt for an account. Per-PC setting; set it again on a fresh clone.
+- Lint: 7 errors are all in git-ignored `Design/_build/*.js`; `tsc` and `src/` are clean.
