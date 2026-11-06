@@ -2,6 +2,7 @@ import { timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { pingIndexNow } from "@/lib/indexnow";
 
 /**
  * Daily article queue. Scheduled articles are `draft` rows whose
@@ -43,9 +44,10 @@ export async function GET(request: Request) {
   if (updateError) return NextResponse.json({ error: "Update failed" }, { status: 500 });
   if (!updated?.length) return NextResponse.json({ published: null });
 
-  const paths = ["/", "/personal", "/resources", `/resources/${article.slug}`, "/sitemap.xml"];
+  const paths = ["/", "/personal", "/resources", `/resources/${article.slug}`, "/sitemap.xml", "/llms.txt"];
   if (article.locale === "zh") paths.push("/resources/zh");
   paths.forEach((p) => revalidatePath(p));
+  await pingIndexNow([`/resources/${article.slug}`, "/resources", "/sitemap.xml"]);
 
   return NextResponse.json({ published: article.slug });
 }
