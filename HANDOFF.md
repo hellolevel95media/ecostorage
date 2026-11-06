@@ -117,6 +117,7 @@ migration.
   at most one overdue draft per run, and revalidates `/resources`, the slug, `/`, `/personal`,
   `/sitemap.xml`. Hobby plan timing is only accurate to the hour. Scheduled drafts are drafts with a
   future `published_at`; `ArticleForm.tsx` now keeps that date when saving a draft.
+- **CHECK FIRST NEXT SESSION (2026-11-07 evening):** on 2026-11-06 the 17:00 SGT run had not published by 17:10 (article 01 still 404). `CRON_SECRET` was then saved in Vercel Prod (same as .env.local) and the site redeployed after the window. Owner chose to let the automation run unaided to test it. Check `curl -s -o /dev/null -w "%{http_code}" https://ecostorage.sg/resources/bed-wardrobe-mattress-during-hip` after 18:00 SGT on 7 Nov: 200 means working (the cron publishes one overdue draft per run, so article 02 is due 8 Nov). If still 404, check Vercel cron logs / a 401, then trigger the route manually with the secret.
 - **Owner to confirm:** `CRON_SECRET` is set in Vercel Production (else 401 and nothing publishes) and
   the deploy is Ready. After the first run, confirm `/resources/bed-wardrobe-mattress-during-hip`
   is live.
