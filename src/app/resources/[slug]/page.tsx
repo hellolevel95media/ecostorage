@@ -7,7 +7,8 @@ import { ArticleCard } from "@/components/sections/ArticleCard";
 import { formatDate } from "@/lib/format";
 import { buildMetadata } from "@/lib/site";
 import { ArticleJsonLd } from "@/components/seo/ArticleJsonLd";
-import { parseArticleBody } from "@/lib/article-body";
+import { extractFaq, parseArticleBody } from "@/lib/article-body";
+import { InlineText } from "@/components/ui/InlineText";
 import { inferMediaKind } from "@/lib/media";
 
 export const revalidate = 60;
@@ -61,6 +62,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     ...others.filter((a) => a.category === article.category),
     ...others.filter((a) => a.category !== article.category),
   ].slice(0, 3);
+  const blocks = article.body ? parseArticleBody(article.body) : [];
+  const faq = extractFaq(blocks);
 
   return (
     <article lang={article.locale} className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
@@ -71,6 +74,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         publishedAt={article.published_at}
         updatedAt={article.updated_at}
         author={article.author}
+        faq={faq}
       />
       <Link href="/resources" className="text-sm font-semibold text-brand-ink hover:underline">
         ← Back to resources
@@ -108,11 +112,11 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           over 100 characters per line. */}
       <div className="mt-8 max-w-prose space-y-4 text-foreground/80">
         {article.excerpt && <p className="text-lg text-foreground">{article.excerpt}</p>}
-        {article.body ? (
-          parseArticleBody(article.body).map((block, i) =>
+        {blocks.length ? (
+          blocks.map((block, i) =>
             block.type === "media" ? (
               inferMediaKind(block.url) === "video" ? (
-                <video key={i} src={block.url} controls className="w-full rounded-xl" />
+                <video key={i} src={block.url} controls muted playsInline className="w-full rounded-xl" />
               ) : (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img key={i} src={block.url} alt="" className="w-full rounded-xl" />
@@ -121,14 +125,22 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               <h2 key={i} className="pt-4 text-xl font-semibold text-foreground">
                 {block.text}
               </h2>
+            ) : block.type === "subheading" ? (
+              <h3 key={i} className="pt-2 text-lg font-semibold text-foreground">
+                {block.text}
+              </h3>
             ) : block.type === "list" ? (
               <ul key={i} className="list-disc space-y-1 pl-5">
                 {block.items.map((item, j) => (
-                  <li key={j}>{item}</li>
+                  <li key={j}>
+                    <InlineText text={item} />
+                  </li>
                 ))}
               </ul>
             ) : (
-              <p key={i}>{block.text}</p>
+              <p key={i}>
+                <InlineText text={block.text} />
+              </p>
             )
           )
         ) : (

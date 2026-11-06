@@ -1,4 +1,5 @@
 import { SITE_URL } from "@/lib/site";
+import type { FaqItem } from "@/lib/article-body";
 
 interface ArticleJsonLdProps {
   title: string;
@@ -7,12 +8,13 @@ interface ArticleJsonLdProps {
   publishedAt: string | null;
   updatedAt: string;
   author: string | null;
+  faq?: FaqItem[];
 }
 
 /** schema.org Article structured data — helps both traditional search rich
  * results and AI/LLM crawlers correctly attribute and date this content, and
  * to see edits (dateModified) as a freshness signal, not just publish date. */
-export function ArticleJsonLd({ title, description, slug, publishedAt, updatedAt, author }: ArticleJsonLdProps) {
+export function ArticleJsonLd({ title, description, slug, publishedAt, updatedAt, author, faq = [] }: ArticleJsonLdProps) {
   const breadcrumbs = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -46,10 +48,26 @@ export function ArticleJsonLd({ title, description, slug, publishedAt, updatedAt
     },
   };
 
+  // Built from an "## Frequently asked questions" section in the body.
+  // Google only shows FAQ rich results for a few authoritative sites now,
+  // but the markup still gives search and AI crawlers clean Q&A pairs.
+  const faqLd = faq.length
+    ? {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: faq.map((item) => ({
+          "@type": "Question",
+          name: item.question,
+          acceptedAnswer: { "@type": "Answer", text: item.answer },
+        })),
+      }
+    : null;
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }} />
+      {faqLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd).replace(/</g, "\\u003c") }} />}
     </>
   );
 }

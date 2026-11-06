@@ -80,9 +80,7 @@ migration.
 
 ## 5. Needs checking / open items
 
-1. `supabase/migrations/05_inquiries_server_only_insert.sql` — was NOT applied as of 2026-10-16
-   (public "insert inquiries" policy still on). Server-side saving is confirmed working, so it can
-   be applied; verify current state first and ask the owner.
+1. ~~Migration 05~~ DONE: confirmed applied 2026-11-06 (no public insert policy on `inquiries`; see section 12).
 2. **Turnstile** not enabled live: set `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`, and
    `CRON_SECRET` in Vercel when ready.
 3. **Resend** (inquiry alert emails) not set up; enquiries only appear in `/admin` → Inquiries.
@@ -209,3 +207,49 @@ values. Check env with key names only: `grep -o '^[A-Z_]*=' .env.local`.
 - **Not done (next):** (a) rankings ledger: read Search Console Performance > Queries via owner's Chrome window, save dated CSV snapshots in the repo (data thin at first; owner's analytics show visitors mostly on resource pages); (b) LLM-visibility baseline: re-check in 2-4 weeks, Perplexity via Playwright (no login). Don't scrape Google results (against their terms, CAPTCHAs). (c) Optional: FAQPage JSON-LD on Q&A-style articles.
 - **Git setup:** repo-local `credential.https://github.com.username=hellolevel95media` and origin URL includes the username, so pushes shouldn't prompt for an account. Per-PC setting; set it again on a fresh clone.
 - Lint: 7 errors are all in git-ignored `Design/_build/*.js`; `tsc` and `src/` are clean.
+
+## 12. Session 2026-11-06 (night): SEO + LLM visibility pass
+
+**Search Console baseline (28 days to 3 Nov):** 13 clicks, 1.34K impressions, avg position 24.7. 28 pages
+indexed, 7 not. Top zero-click query groups: "aircon / air conditioned storage (singapore/unit/facility/space)"
+(~330 impr, pos 20-30, landing on `ambient-storage-vs-air-conditioned`) and "long term storage (singapore/
+solutions) / how to budget for long-term storage" (~170 impr, pos 30-58, landing on
+`long-term-storage-singapore-guide`). Best performer: `hip-timeline-week-by-week` (5 clicks).
+"Page with redirect" = `http://ecostorage.sg/` (fine). "Discovered - not indexed" (6):
+`how-much-storage-space-do-you-need` (+`-zh`), `how-to-pack-fragile-valuable-items`,
+`long-term-storage-singapore-guide-zh`, `storage-for-home-renovations-singapore`, `/services`.
+
+**Done:**
+- Article body syntax extended (`src/lib/article-body.ts`): `[text](/path)` inline links (internal paths or
+  https only; rendered by `src/components/ui/InlineText.tsx`) and `### Question?` subheadings (h3). Bodies
+  previously had no internal links at all.
+- FAQPage JSON-LD: an `## Frequently asked questions` section with `### Question?` + answer paragraphs
+  is auto-emitted as FAQPage schema (`ArticleJsonLd.tsx`, `<` escaped). Google rarely shows FAQ rich
+  results now; the value is clean Q&A for AI answer engines. Article videos now `muted playsInline`.
+- Live DB content (updated_at bumped): `ambient-storage-vs-air-conditioned` retitled "Air-Conditioned vs
+  Ambient Storage in Singapore: What Your Items Need", new excerpt, H2 sections, 4-question FAQ, links.
+  `long-term-storage-singapore-guide` retitled "Long-Term Storage in Singapore: How to Plan and Budget",
+  new budget section (no prices), FAQ, links (incl. `/personal#quote`). Added one contextual link
+  paragraph to `hip-timeline-week-by-week`, `what-is-hdb-hip-guide`, `store-furniture-during-hip`
+  pointing to the not-indexed articles. Claims used: ~15% AC space only (PRODUCT.md).
+- Security diagnostic (rest of section 4) run, all pass: live HSTS/CSP/XFO/nosniff/referrer/permissions
+  headers; `/admin` logged out -> 307 `/admin/login`; anon key reads `inquiries`/`page_views`/`profiles`
+  return `[]`, anon insert `inquiries` 401; `/api/inquiries` empty POST 400; cron without auth 401;
+  `media` bucket MIME list excludes SVG. **Migration 05 IS applied** (section 5 item 1 resolved).
+  Not tested: rate limiting (would mean spamming the live form).
+- Supabase advisors: `is_admin()` executable by anon/authenticated (left as-is, RLS depends on it, returns
+  only the caller's own boolean); **Leaked password protection off** - owner to enable in Supabase
+  Dashboard > Auth > Passwords.
+
+**Owner to-do (free tools, need your sign-in):**
+1. Bing Webmaster Tools: sign in, "Import from Google Search Console", confirm sitemap. ChatGPT search
+   leans on Bing's index; IndexNow is already wired.
+2. Validate schema once: Rich Results Test / validator.schema.org on the two rewritten articles.
+3. Monthly manual LLM check: ask ChatGPT, Perplexity, Gemini "aircon storage Singapore", "long term storage
+   Singapore", "HIP storage"; log whether ecostorage.sg is cited.
+
+**Next SEO ideas (not done):** recheck the two rewritten pages' position/CTR in GSC ~4 weeks out (early
+Dec 2026); expand zh articles (bodies ~800-1000 chars vs 2-7K EN, likely why zh pages aren't indexed);
+consider a dedicated "document / archive storage Singapore" article (queries at pos 67-90, corporate page);
+add FAQ sections to `what-is-hdb-hip-guide` (219 impr, 2 clicks) and HIP articles ("hip contact number",
+"hdb hip schedule" queries).
