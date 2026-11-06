@@ -1,0 +1,3 @@
+#!/bin/sh
+# After every git pull that brings changes: file-hygiene report (read-only).
+node "$(git rev-parse --show-toplevel)/scripts/git-tidy.mjs" || true
