@@ -12,6 +12,13 @@ import { inferMediaKind } from "@/lib/media";
 
 export const revalidate = 60;
 
+// Pre-build every published article so it is served from the cache; slugs
+// published later are rendered on first visit, then cached too.
+export async function generateStaticParams() {
+  const articles = await getPublishedArticles(undefined, "all");
+  return articles.map((a) => ({ slug: a.slug }));
+}
+
 interface ArticlePageProps {
   params: Promise<{ slug: string }>;
 }

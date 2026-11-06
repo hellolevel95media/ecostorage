@@ -1,4 +1,4 @@
-import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { createPublicSupabaseClient } from "@/lib/supabase/public";
 import { FALLBACK_SECTIONS, FALLBACK_SERVICES, type SectionCopy } from "@/lib/fallback-content";
 import type { Article, Section, Service } from "@/types/database";
 
@@ -28,7 +28,7 @@ function fallbackServicesAsRows(category?: "personal" | "corporate"): Service[] 
 
 export async function getPageSections(pageSlug: string): Promise<Section[]> {
   try {
-    const supabase = await createServerSupabaseClient();
+    const supabase = createPublicSupabaseClient();
     const { data: page } = await supabase
       .from("pages")
       .select("id")
@@ -82,7 +82,7 @@ export async function getPublishedArticles(
   locale: "en" | "zh" | "all" = "en"
 ): Promise<Article[]> {
   try {
-    const supabase = await createServerSupabaseClient();
+    const supabase = createPublicSupabaseClient();
     let query = supabase
       .from("articles")
       .select("*")
@@ -109,7 +109,7 @@ export async function getPublishedArticles(
 
 export async function getArticleBySlug(slug: string): Promise<Article | null> {
   try {
-    const supabase = await createServerSupabaseClient();
+    const supabase = createPublicSupabaseClient();
     const { data, error } = await supabase
       .from("articles")
       .select("*")
@@ -126,7 +126,7 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
 
 export async function getServices(category?: "personal" | "corporate"): Promise<Service[]> {
   try {
-    const supabase = await createServerSupabaseClient();
+    const supabase = createPublicSupabaseClient();
     let query = supabase.from("services").select("*").order("sort_order", { ascending: true });
     if (category) query = query.eq("category", category);
 
