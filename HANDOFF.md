@@ -241,6 +241,10 @@ solutions) / how to budget for long-term storage" (~170 impr, pos 30-58, landing
   only the caller's own boolean); **Leaked password protection off** - owner to enable in Supabase
   Dashboard > Auth > Passwords.
 
+- GSC "Request indexing" sent 2026-11-06 for: `how-to-pack-fragile-valuable-items`, `how-much-storage-space-do-you-need`,
+  `storage-for-home-renovations-singapore`, `/services`, and recrawl of the two rewritten articles. zh pages not
+  requested (thin content; expand first). Check Pages report ~mid Nov.
+
 **Owner to-do (free tools, need your sign-in):**
 1. Bing Webmaster Tools: sign in, "Import from Google Search Console", confirm sitemap. ChatGPT search
    leans on Bing's index; IndexNow is already wired.
