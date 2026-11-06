@@ -238,18 +238,17 @@ solutions) / how to budget for long-term storage" (~170 impr, pos 30-58, landing
   `media` bucket MIME list excludes SVG. **Migration 05 IS applied** (section 5 item 1 resolved).
   Not tested: rate limiting (would mean spamming the live form).
 - Supabase advisors: `is_admin()` executable by anon/authenticated (left as-is, RLS depends on it, returns
-  only the caller's own boolean); **Leaked password protection off** - owner to enable in Supabase
-  Dashboard > Auth > Passwords.
+  only the caller's own boolean); Leaked password protection off: Pro-plan only, owner chose to ignore (admin-only sign-in).
 
 - GSC "Request indexing" sent 2026-11-06 for: `how-to-pack-fragile-valuable-items`, `how-much-storage-space-do-you-need`,
   `storage-for-home-renovations-singapore`, `/services`, and recrawl of the two rewritten articles. zh pages not
   requested (thin content; expand first). Check Pages report ~mid Nov.
 
 **Owner to-do (free tools, need your sign-in):**
-1. Bing Webmaster Tools: sign in, "Import from Google Search Console", confirm sitemap. ChatGPT search
+1. DONE 2026-11-06: Bing Webmaster Tools set up (imported from GSC). Was: "Import from Google Search Console", confirm sitemap. ChatGPT search
    leans on Bing's index; IndexNow is already wired.
 2. Validate schema once: Rich Results Test / validator.schema.org on the two rewritten articles.
-3. Monthly manual LLM check: ask ChatGPT, Perplexity, Gemini "aircon storage Singapore", "long term storage
+3. Owner declined automation/reminders. **When the owner next asks about SEO or LLM visibility (expected early 2027), run this check yourself** (WebSearch + live-site checks) and compare to the GSC baseline above. Was: monthly manual LLM check: ask ChatGPT, Perplexity, Gemini "aircon storage Singapore", "long term storage
    Singapore", "HIP storage"; log whether ecostorage.sg is cited.
 
 **Next SEO ideas (not done):** recheck the two rewritten pages' position/CTR in GSC ~4 weeks out (early
