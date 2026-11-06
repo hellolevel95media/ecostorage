@@ -16,6 +16,11 @@ const STATIC_ROUTES = [
   "/cookies",
 ];
 
+// Hourly refresh. The sitemap reads articles through the cookie-free public
+// client, so it is statically cached; without this it stays frozen at the last
+// deploy and new articles never appear (revalidatePath alone proved unreliable).
+export const revalidate = 3600;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // "all" — the sitemap should list every published page regardless of
   // language, unlike page-level article queries which default to "en" only.
