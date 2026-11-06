@@ -69,10 +69,8 @@ backups/
 
 # Project notes for Claude (local only)
 /CLAUDE.md
-/HANDOFF.md
 
 # Social profile pictures (local only)
 /profile-pics/
 
 # Local-only handoff (security diagnostic)
-/HANDOFF-security-diagnostic.md
