@@ -55,10 +55,14 @@ export function ArticleForm({ article }: { article?: Article }) {
       status: form.get("status") as ArticleStatus,
       locale: form.get("locale") as ArticleLocale,
       author: String(form.get("author") ?? "") || null,
+      // A draft keeps any scheduled publish date (the daily publish cron uses
+      // it as the queue); un-publishing a live article clears it.
       published_at:
         form.get("status") === "published"
           ? (article?.published_at ?? new Date().toISOString())
-          : null,
+          : article?.status === "draft"
+            ? article.published_at
+            : null,
     };
 
     const supabase = createClient();
