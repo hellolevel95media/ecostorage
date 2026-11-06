@@ -71,7 +71,8 @@ if (tidy && quiet) process.exit(0);
 
 const repo = path.basename(root);
 const lines = [];
-lines.push(`\n── Tidy check: ${repo} ${last ? `(last check ${ago(now - last)} ago)` : "(first check)"} ──`);
+const lastText = !last ? "first check" : now - last < DAY ? "last check earlier today" : `last check ${ago(now - last)} ago`;
+lines.push(`\n── Tidy check: ${repo} (${lastText}) ──`);
 if (tidy) {
   lines.push("All tidy: nothing uncommitted, nothing untracked, nothing waiting to push.");
 } else {
