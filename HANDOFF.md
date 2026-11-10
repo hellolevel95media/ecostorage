@@ -57,8 +57,7 @@ means Novac.
   communication at every step"); no testimonials, stats, crew sizes or warehouse locations in
   articles. **14ft full truckload is S$350** (`TRUCKLOAD_14FT_RATE` in `src/lib/calculator.ts`).
 - **Address: 621 Aljunied Road, #03-06, Lipo Building, Singapore 389834**, now on the site, llms.txt
-  and PRODUCT.md (commit `8e85829`). **Email signatures (Zoho) still need the new address and
-  re-pasting.**
+  and PRODUCT.md (commit `8e85829`). **Email signatures (Zoho) DONE (owner confirmed 2026-11-10).**
 - **Contact number +65 8899 1184 is the only front-facing number** (site, WhatsApp button
   `wa.me/6588991184`, cards, flyers). +65 8899 7017 is the WhatsApp Cloud API number only (Novac's
   automated messages); never publish it.
@@ -81,7 +80,7 @@ migration.
 ## 5. Needs checking / open items
 
 1. ~~Migration 05~~ DONE: confirmed applied 2026-11-06 (no public insert policy on `inquiries`; see section 12).
-2. **Turnstile** not enabled live: set `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`, and
+2. **EARMARKED 2026-11-10 (owner doesn't want to keep re-checking; don't raise unless asked).** Status unknown: keys exist in local `.env.local`, unconfirmed in Vercel; live JS bundle didn't contain the Turnstile site key. Turnstile = free Cloudflare anti-spam check on the forms. Resend = emails hello@ whenever an enquiry arrives. **Turnstile** not enabled live: set `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`, and
    `CRON_SECRET` in Vercel when ready.
 3. **Resend** (inquiry alert emails) not set up; enquiries only appear in `/admin` → Inquiries.
    Plan: Resend account under jonnylim@ecostorage.sg, domain `ecostorage.sg` shared with Novac
@@ -93,16 +92,15 @@ migration.
    Vercel. Admin 2FA: enrol in `/admin` → Security.
 6. Sentry: DSN saved; wizard step/test error unconfirmed. UptimeRobot on `/api/health` not set up.
 7. GitHub Actions secrets for the daily DB backup (`SUPABASE_PROJECT_REF`, `SUPABASE_DB_PASSWORD`).
-8. `COMPANY.googleReviewUrl` in `src/lib/nav.ts` is still `#` (needs Google Business Profile first).
+8. DONE 2026-11-10: Google Business Profile claimed; `COMPANY.googleReviewUrl` in `src/lib/nav.ts` = `https://share.google/f53pS8XPez2zUlP2H` (profile share link, kgmid `/g/11_02skym0`; swap for a direct write-review link if wanted). Still to do from marketing plan: QR on collateral.
 9. Article "What to Expect on Moving Day" and `corporate-storage-singapore-businesses` are drafts the
    owner is reviewing (`published_at` null, cron ignores them).
-10. 8 Mandarin articles (`locale='zh'`, slugs end `-zh`, hub `/resources/zh`) are machine
-    translations; need native review before promotion. No more Mandarin until sorted.
+10. DONE (owner confirmed 2026-11-10): Mandarin articles reviewed.
 11. GA4 dashboard `/admin/analytics`: check daily numbers populate (Realtime works); set GA event
     data retention to 14 months; optional Search Console integration.
 12. Not fixable in code: library hero videos are 480p; HIP guide image has seams; older articles lack
     subheadings.
-13. Reprint the renovation flyer (S$350, 8899 1184). Jonny Lim's job title on the name card is blank.
+13. DONE (owner confirmed 2026-11-10): renovation flyer reprinted. Jonny Lim's job title on the name card is blank.
     Confirm `https://ecostorage.sg/brand/logo-icon.png` returns 200 before pasting signatures.
 
 ## 6. Daily article publishing (pushed in `964180f`, live)
@@ -117,7 +115,7 @@ migration.
   future `published_at`; `ArticleForm.tsx` now keeps that date when saving a draft.
 - **Cron confirmed working (2026-11-06):** article 01 published by the cron at 09:39 UTC (17:39 SGT) and is live (200). Article 02 is due 2026-11-08 17:00 SGT (`published_at` 08:50 UTC); expect 200 on `/resources/protect-electronics-during-hip` after ~18:00 SGT 8 Nov (404 before). 401 from the cron = `CRON_SECRET` missing.
 - **2026-11-10 update:** articles 01 and 02 confirmed live (cron works, drifts within the hour). GA4 review: 9 sessions/28 days, only organic landing = hip-timeline article, so HIP prioritised. Five new HIP articles (17-21, slugs hip-announced-what-happens-next, hip-cost-what-hdb-residents-pay, hip-optional-improvements-which-to-choose, hip-with-seniors-children-pets, hip-move-out-or-stay-home) scheduled 12/14/16/18/20 Nov; original 04-16 pushed back to 22 Nov - 16 Dec. H1s/titles/metas shortened (page titles in code, hero headings in DB sections + fallback-content.ts, 7 article titles in DB). HIP facts sourced from HDB HIP booklet (owner may want to re-verify figures). GA4 property id 561860842. Sitemap lacked protect-electronics-during-hip on 10 Nov: recheck.
-- **GA MCP server (set up 2026-11-10, work PC only so far):** project-scoped `.mcp.json` runs Google's read-only `analytics-mcp` (installed with pipx at ~/.local/bin). Credentials: service-account key for `website-dashboard@striking-domain-513504-p4` (Cloud project `striking-domain-513504-p4`, number 636389913156; the `ecostorage-analytics` project is unused) copied to `%USERPROFILE%/.config/ecostorage/ga-service-account.json` (outside the repo, never commit). GA4 property 561860842. Data API verified (returns sessions); Analytics Admin API was enabled by the owner afterwards. NEXT: restart Claude Code, approve the google-analytics server, test a landing-page report. Home PC needs: pip install --user pipx, pipx install analytics-mcp, and the key file copied to the same path. The original key still sits in C:/Google Chrome Downloads: move/delete once confirmed working. `.mcp.json` is uncommitted unless pushed below.
+- **GA MCP server (set up 2026-11-10, work PC only so far):** project-scoped `.mcp.json` runs Google's read-only `analytics-mcp` (installed with pipx at ~/.local/bin). Credentials: service-account key for `website-dashboard@striking-domain-513504-p4` (Cloud project `striking-domain-513504-p4`, number 636389913156; the `ecostorage-analytics` project is unused) copied to `%USERPROFILE%/.config/ecostorage/ga-service-account.json` (outside the repo, never commit). GA4 property 561860842. Data API verified (returns sessions); Analytics Admin API was enabled by the owner afterwards. VERIFIED 2026-11-10: server approved and landing-page report works (28d: 11 sessions; only organic landing still hip-timeline-week-by-week). Sitemap now lists protect-electronics-during-hip (fixed). Home PC needs: pip install --user pipx, pipx install analytics-mcp, and the key file copied to the same path. The original key still sits in C:/Google Chrome Downloads: move/delete once confirmed working. `.mcp.json` is uncommitted unless pushed below.
 - Queue order: 01 bed-wardrobe-mattress-during-hip, 02 protect-electronics-during-hip, 03 staying-home-
   during-hip-one-livable-room, 04 renovation-delay-what-to-do-with-belongings, 05 bto-key-collection-to-
   move-in-storage, 06 moving-out-of-rental-deposit-checklist, 07 student-belongings-storage-long-break,
