@@ -25,5 +25,5 @@ export const COMPANY = {
   address: "621 Aljunied Road, #03-06, Lipo Building, Singapore 389834",
   email: "hello@ecostorage.sg",
   phone: "+65 8899 1184",
-  googleReviewUrl: "https://share.google/f53pS8XPez2zUlP2H",
+  googleReviewUrl: "https://g.page/r/CaLiAkVhgH3ZEAI/review",
 };

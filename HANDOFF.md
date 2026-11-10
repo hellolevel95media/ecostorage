@@ -92,7 +92,7 @@ migration.
    Vercel. Admin 2FA: enrol in `/admin` → Security.
 6. Sentry: DSN saved; wizard step/test error unconfirmed. UptimeRobot on `/api/health` not set up.
 7. GitHub Actions secrets for the daily DB backup (`SUPABASE_PROJECT_REF`, `SUPABASE_DB_PASSWORD`).
-8. DONE 2026-11-10: Google Business Profile claimed; `COMPANY.googleReviewUrl` in `src/lib/nav.ts` = `https://share.google/f53pS8XPez2zUlP2H` (profile share link, kgmid `/g/11_02skym0`; swap for a direct write-review link if wanted). Still to do from marketing plan: QR on collateral.
+8. DONE 2026-11-10: Google Business Profile claimed; `COMPANY.googleReviewUrl` in `src/lib/nav.ts` = `https://g.page/r/CaLiAkVhgH3ZEAI/review` (direct write-review link). Still to do from marketing plan: QR on collateral.
 9. Article "What to Expect on Moving Day" and `corporate-storage-singapore-businesses` are drafts the
    owner is reviewing (`published_at` null, cron ignores them).
 10. DONE (owner confirmed 2026-11-10): Mandarin articles reviewed.
