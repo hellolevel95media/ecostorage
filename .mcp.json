@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "google-analytics": {
+      "command": "analytics-mcp",
+      "args": [],
+      "env": {
+        "GOOGLE_APPLICATION_CREDENTIALS": "${USERPROFILE}/.config/ecostorage/ga-service-account.json",
+        "GOOGLE_PROJECT_ID": "striking-domain-513504-p4"
+      }
+    }
+  }
+}
