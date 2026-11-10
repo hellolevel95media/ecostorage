@@ -7,7 +7,7 @@ import { buildMetadata } from "@/lib/site";
 export const revalidate = 60;
 
 export const metadata = buildMetadata({
-  title: "Get a Storage & Moving Quote in Singapore | Pickup & Delivery",
+  title: "Get a Storage & Moving Quote in Singapore",
   description:
     "Tell us what you need stored or moved and get a storage and moving quote in Singapore. Every enquiry gets a reply within one business day.",
   path: "/contact",
@@ -20,7 +20,7 @@ export default async function ContactPage() {
   return (
     <>
       <section className="snap-section-flow mx-auto max-w-7xl px-4 pt-10 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold tracking-tight sm:text-5xl">Contact us</h1>
+        <h1 className="text-3xl font-bold tracking-tight sm:text-5xl">Get a Storage &amp; Moving Quote in Singapore</h1>
       </section>
 
       <TrustBanner copy={trust} showCta={false} />

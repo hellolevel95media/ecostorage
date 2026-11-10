@@ -7,7 +7,7 @@ import { buildMetadata } from "@/lib/site";
 export const revalidate = 60;
 
 export const metadata = buildMetadata({
-  title: "Storage & Moving Services Singapore | Pickup, Delivery & Records",
+  title: "Storage & Moving Services Singapore | Pickup & Delivery",
   description:
     "Storage and moving from one team: pickup, storage, delivery, home and office moves, records and inventory storage. S$350 per full 14ft truckload.",
   path: "/services",
@@ -25,7 +25,7 @@ export default async function ServicesPage() {
   return (
     <>
       <section className="snap-section-flow mx-auto max-w-7xl px-4 pt-10 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold tracking-tight sm:text-5xl">Services</h1>
+        <h1 className="text-3xl font-bold tracking-tight sm:text-5xl">Storage &amp; Moving Services in Singapore</h1>
         <p className="mt-3 max-w-2xl text-foreground/70">
           Personal and corporate storage, with collection and moving handled by the same team.
         </p>

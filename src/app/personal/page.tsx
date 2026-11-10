@@ -12,7 +12,7 @@ import { buildMetadata } from "@/lib/site";
 export const revalidate = 60;
 
 export const metadata = buildMetadata({
-  title: "Personal Storage & Moving Singapore | We Pick Up, Store & Deliver",
+  title: "Personal Storage & Moving in Singapore | Pickup & Delivery",
   description:
     "Moving out, decluttering or between homes? One team collects, wraps and stores your belongings, then delivers them back. S$350 per full 14ft truckload.",
   path: "/personal",
