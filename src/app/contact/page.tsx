@@ -1,5 +1,6 @@
 import { TrustBanner } from "@/components/sections/TrustBanner";
 import { ContactForm } from "@/components/sections/ContactForm";
+import { TrackedLink } from "@/components/ui/TrackedLink";
 import { getPageSections, resolveSection } from "@/lib/content";
 import { COMPANY } from "@/lib/nav";
 import { buildMetadata } from "@/lib/site";
@@ -31,14 +32,14 @@ export default async function ContactPage() {
           <address className="mt-4 space-y-2 text-sm text-foreground/70 not-italic">
             <p>{COMPANY.address}</p>
             <p>
-              <a href={`mailto:${COMPANY.email}`} className="inline-flex min-h-11 items-center lg:min-h-0 lg:py-1 hover:text-brand-ink hover:underline">
+              <TrackedLink href={`mailto:${COMPANY.email}`} event="email_click" location="contact_page" className="inline-flex min-h-11 items-center lg:min-h-0 lg:py-1 hover:text-brand-ink hover:underline">
                 {COMPANY.email}
-              </a>
+              </TrackedLink>
             </p>
             <p>
-              <a href={`tel:${COMPANY.phone.replace(/\s/g, "")}`} className="inline-flex min-h-11 items-center lg:min-h-0 lg:py-1 hover:text-brand-ink hover:underline">
+              <TrackedLink href={`tel:${COMPANY.phone.replace(/\s/g, "")}`} event="phone_click" location="contact_page" className="inline-flex min-h-11 items-center lg:min-h-0 lg:py-1 hover:text-brand-ink hover:underline">
                 {COMPANY.phone}
-              </a>
+              </TrackedLink>
             </p>
           </address>
         </div>

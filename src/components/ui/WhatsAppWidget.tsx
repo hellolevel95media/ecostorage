@@ -1,3 +1,5 @@
+import { TrackedLink } from "@/components/ui/TrackedLink";
+
 const WHATSAPP_NUMBER = "6588991184";
 const WHATSAPP_MESSAGE =
   "Hi EcoStorage! I'd like to find out more about your storage plans.";
@@ -7,8 +9,10 @@ export function WhatsAppWidget() {
 
   return (
     <aside aria-label="Chat with us">
-      <a
+      <TrackedLink
         href={href}
+        event="whatsapp_click"
+        location="floating_widget"
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Chat with EcoStorage on WhatsApp"
@@ -19,7 +23,7 @@ export function WhatsAppWidget() {
         }}
       >
         <WhatsAppIcon />
-      </a>
+      </TrackedLink>
     </aside>
   );
 }

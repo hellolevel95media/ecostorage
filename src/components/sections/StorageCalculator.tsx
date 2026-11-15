@@ -8,6 +8,7 @@ import { MovingQuoteCheckbox } from "@/components/ui/MovingQuoteCheckbox";
 import { PremiumCrateOption } from "@/components/ui/PremiumCrateOption";
 import { showToast } from "@/lib/toast";
 import { NETWORK_ERROR_MESSAGE, submitErrorMessage } from "@/lib/form-errors";
+import { trackEvent } from "@/lib/analytics";
 import {
   SIZE_GUIDE,
   formatDollars,
@@ -95,9 +96,28 @@ export function StorageCalculator() {
     else if (commitmentId === "referral") setCommitmentId("monthly");
   }
 
+  // One calculator_start per page view, whatever the visitor touches first.
+  const [started, setStarted] = useState(false);
+  function markStarted(trigger: "size_guide" | "units" | "contact") {
+    if (started) return;
+    setStarted(true);
+    trackEvent("calculator_start", { trigger });
+  }
+
   function selectGuide(sqft: number) {
+    markStarted("size_guide");
     setSelectedGuideSqft(sqft);
     setNumUnits(moduleCountFromSqft(sqft));
+  }
+
+  function changeUnits(n: number) {
+    markStarted("units");
+    setNumUnits(n);
+  }
+
+  function engageContact() {
+    markStarted("contact");
+    setEngaged(true);
   }
 
   function goToStep(step: MobileStep) {
@@ -106,6 +126,7 @@ export function StorageCalculator() {
   }
 
   function advanceStep(step: MobileStep) {
+    trackEvent("calculator_step", { step });
     setMobileStep(step);
     const order = MOBILE_STEPS.map((s) => s.id);
     if (order.indexOf(step) > order.indexOf(maxMobileStep)) setMaxMobileStep(step);
@@ -156,10 +177,21 @@ export function StorageCalculator() {
       });
       if (!res.ok) throw new Error(submitErrorMessage(res.status));
       setStatus("success");
+      trackEvent("generate_lead", {
+        form_type: "calculator",
+        has_moving_quote: wantsMoving,
+        has_promo: Boolean(promo),
+        num_units: numUnits,
+        commitment: commitment.id,
+        valet: valet.id,
+        premium_crate: wantsCrate,
+      });
       showToast("Thanks — we've got your request!");
     } catch (err) {
-      setErrorMessage(err instanceof Error && err.message !== "Failed to fetch" ? err.message : NETWORK_ERROR_MESSAGE);
+      const isNetwork = !(err instanceof Error) || err.message === "Failed to fetch";
+      setErrorMessage(!isNetwork && err instanceof Error ? err.message : NETWORK_ERROR_MESSAGE);
       setStatus("error");
+      trackEvent("form_error", { form_type: "calculator", reason: isNetwork ? "network" : "http" });
       // Turnstile tokens are single-use; get a fresh one for the retry.
       setCaptchaKey((k) => k + 1);
     }
@@ -210,7 +242,7 @@ export function StorageCalculator() {
 
             {mobileStep === "items" && (
               <div className="mt-6 space-y-6">
-                <UnitStepper numUnits={numUnits} onChange={setNumUnits} />
+                <UnitStepper numUnits={numUnits} onChange={changeUnits} />
                 <Button type="button" className="w-full" onClick={() => advanceStep("plan")}>
                   Next: Choose a plan
                 </Button>
@@ -234,7 +266,7 @@ export function StorageCalculator() {
             {mobileStep === "contact" && (
               <div className="mt-6 space-y-6">
                 <RateDashboard quote={quote} numUnits={numUnits} movingQuote={wantsMoving} />
-                <form noValidate onSubmit={handleSubmit} onFocusCapture={() => setEngaged(true)} className="space-y-3">
+                <form noValidate onSubmit={handleSubmit} onFocusCapture={engageContact} className="space-y-3">
                   <ContactFields contact={contact} errors={errors} onChange={setContact} movingQuote={wantsMoving} />
                   {engaged && !isDesktop && <Turnstile onToken={setCaptchaToken} resetKey={captchaKey} />}
                   <Button type="submit" disabled={status === "submitting" || (turnstileEnabled && engaged && !captchaToken)} className="w-full">
@@ -251,7 +283,7 @@ export function StorageCalculator() {
           {/* Desktop two-column layout */}
           <div className="hidden lg:grid lg:grid-cols-2 lg:gap-10">
             <div className="space-y-8">
-              <UnitStepper numUnits={numUnits} onChange={setNumUnits} />
+              <UnitStepper numUnits={numUnits} onChange={changeUnits} />
               <CommitmentSelector options={commitmentOptions} selected={commitmentId} onSelect={setCommitmentId} />
               <ValetSelector selected={valetId} onSelect={setValetId} />
               <ValetNotice valet={valet} />
@@ -262,7 +294,7 @@ export function StorageCalculator() {
 
             <div className="space-y-6 rounded-2xl border-2 border-foreground/15 bg-card p-6 shadow-card">
               <RateDashboard quote={quote} numUnits={numUnits} movingQuote={wantsMoving} />
-              <form noValidate onSubmit={handleSubmit} onFocusCapture={() => setEngaged(true)} className="space-y-3 border-t-2 border-foreground/15 pt-6">
+              <form noValidate onSubmit={handleSubmit} onFocusCapture={engageContact} className="space-y-3 border-t-2 border-foreground/15 pt-6">
                 <ContactFields contact={contact} errors={errors} onChange={setContact} movingQuote={wantsMoving} />
                 {engaged && isDesktop && <Turnstile onToken={setCaptchaToken} resetKey={captchaKey} />}
                 <Button type="submit" disabled={status === "submitting" || (turnstileEnabled && engaged && !captchaToken)} className="w-full">

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { ReferralOffer } from "@/lib/calculator";
+import { trackEvent } from "@/lib/analytics";
 
 export type AppliedPromo = { code: string; offer: ReferralOffer } | null;
 
@@ -36,6 +37,8 @@ export function PromoCodeInput({
       if (!res.ok) return setState({ kind: "error", message: data.error ?? "Couldn't check the code. Try again." });
       if (data.valid && data.code && data.offer) {
         setState({ kind: "idle" });
+        // Offer terms only; the code itself stays out of analytics.
+        trackEvent("promo_applied", { free_months: data.offer.free_months, commitment_months: data.offer.commitment_months });
         onApplied({ code: data.code, offer: data.offer });
       } else {
         setState({ kind: "invalid" });

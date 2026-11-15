@@ -3,6 +3,7 @@
 import { useId, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
 import { Turnstile, turnstileEnabled } from "@/components/ui/Turnstile";
+import { trackEvent } from "@/lib/analytics";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -77,9 +78,11 @@ export function AffiliateApplicationForm() {
         turnstileToken: captchaToken,
       });
       setStatus("success");
+      trackEvent("affiliate_apply", {});
       formEl.reset();
     } catch (err) {
       setErrorMessage(err instanceof Error ? err.message : null);
+      trackEvent("form_error", { form_type: "affiliate", reason: err instanceof Error ? "http" : "network" });
       setStatus("error");
       setCaptchaKey((k) => k + 1);
     }

@@ -8,6 +8,7 @@ import { Turnstile, turnstileEnabled } from "@/components/ui/Turnstile";
 import { MovingQuoteCheckbox } from "@/components/ui/MovingQuoteCheckbox";
 import { NETWORK_ERROR_MESSAGE, submitErrorMessage } from "@/lib/form-errors";
 import { showToast } from "@/lib/toast";
+import { trackEvent } from "@/lib/analytics";
 
 interface ContactFormProps {
   type: InquiryType;
@@ -90,16 +91,23 @@ export function ContactForm({
       if (!res.ok) {
         setErrorMessage(submitErrorMessage(res.status));
         setStatus("error");
+        trackEvent("form_error", { form_type: type, reason: `http_${res.status}` });
         // Turnstile tokens are single-use; get a fresh one for the retry.
         setCaptchaKey((k) => k + 1);
         return;
       }
       setStatus("success");
+      trackEvent("generate_lead", {
+        form_type: type,
+        has_moving_quote: Boolean(payload.metadata && "movingQuote" in payload.metadata),
+        has_promo: Boolean(payload.promo_code),
+      });
       showToast("Thanks — we've got your message!");
       formEl.reset();
     } catch {
       setErrorMessage(NETWORK_ERROR_MESSAGE);
       setStatus("error");
+      trackEvent("form_error", { form_type: type, reason: "network" });
       setCaptchaKey((k) => k + 1);
     }
   }
