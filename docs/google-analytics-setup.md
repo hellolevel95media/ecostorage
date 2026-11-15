@@ -71,6 +71,6 @@ effect on a new build). For local testing, the same four go in `.env.local`.
   Paid Google Ads clicks show under "Paid Search" in "How visitors found the
   site". Search keywords are not in GA4; for those, connect Google Search
   Console (search.google.com/search-console) to the site separately.
-- Only visitors who accept cookies are counted, so the true totals are higher.
+- Visitors who opt out of analytics cookies are not counted (the banner is opt-out; everyone else is).
   The "Built-in page counter" at the bottom is the site's own counter, also
   consent-only, for cross-checking.
