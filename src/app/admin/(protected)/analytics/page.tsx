@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { isoDaysAgo } from "@/lib/date-range";
-import { ga4Configured, runReport } from "@/lib/ga4";
+import { ga4Configured, runReport, type Ga4Report } from "@/lib/ga4";
 import { AutoRefresh } from "@/components/admin/AutoRefresh";
 
 export const dynamic = "force-dynamic";
@@ -106,7 +106,7 @@ export default async function AdminAnalyticsPage(props: PageProps<"/admin/analyt
         <div>
           <h2 className="text-xl font-semibold">Website traffic</h2>
           <p className="mt-1 text-sm text-foreground/60">
-            From Google Analytics. Only visitors who accept cookies are counted, so real numbers are higher.
+            From Google Analytics. Visitors who switch analytics off in cookie settings are not counted.
           </p>
         </div>
         <nav className="flex gap-1 rounded-lg border border-border bg-card p-1 text-sm" aria-label="Date range">
@@ -129,6 +129,7 @@ export default async function AdminAnalyticsPage(props: PageProps<"/admin/analyt
         <>
           <AutoRefresh seconds={60} />
           <LiveNow />
+          <LeadsPanel days={days} />
           <Ga4Dashboard days={days} />
         </>
       ) : (
@@ -259,6 +260,82 @@ async function Ga4Dashboard({ days }: { days: Range }) {
         />
       </div>
     </>
+  );
+}
+
+/** Actions visitors took, from the site's own GA4 events (src/lib/analytics.ts). */
+const ACTION_LABELS: [event: string, label: string, note: string][] = [
+  ["generate_lead", "Enquiries sent", "Contact, quote calculator, corporate and partner forms"],
+  ["whatsapp_click", "WhatsApp taps", "Green chat button"],
+  ["phone_click", "Phone taps", "Number on the contact page"],
+  ["email_click", "Email taps", "Address on the contact page"],
+  ["calculator_start", "Started the quote calculator", "Picked a size or touched the form"],
+  ["promo_applied", "Promo codes applied", "Valid codes only"],
+  ["affiliate_apply", "Affiliate applications", "Partner page form"],
+  ["form_error", "Form errors", "Sends that failed; worth a look if this climbs"],
+];
+
+const eventFilter = (names: string[]) => ({ filter: { fieldName: "eventName", inListFilter: { values: names } } });
+
+async function LeadsPanel({ days }: { days: Range }) {
+  const startDate = `${days - 1}daysAgo`;
+  const contactEvents = ["generate_lead", "whatsapp_click", "phone_click", "email_click"];
+  let counts: Ga4Report, byPage: Ga4Report, byChannel: Ga4Report, visits: Ga4Report;
+  try {
+    [counts, byPage, byChannel, visits] = await Promise.all([
+      runReport({ startDate, dimensions: ["eventName"], metrics: ["eventCount"], dimensionFilter: eventFilter(ACTION_LABELS.map((a) => a[0])), limit: 20 }),
+      runReport({ startDate, dimensions: ["pagePath"], metrics: ["eventCount"], dimensionFilter: eventFilter(contactEvents), orderByMetric: "eventCount", limit: 8 }),
+      runReport({ startDate, dimensions: ["sessionDefaultChannelGroup"], metrics: ["eventCount"], dimensionFilter: eventFilter(contactEvents), orderByMetric: "eventCount", limit: 8 }),
+      runReport({ startDate, metrics: ["sessions"], limit: 1 }),
+    ]);
+  } catch (error) {
+    return (
+      <p className="mt-6 rounded-xl border border-border bg-card p-4 text-sm text-foreground/60">
+        Leads unavailable: {error instanceof Error ? error.message : "unknown error"}
+      </p>
+    );
+  }
+
+  const count = new Map(counts.rows.map((r) => [r.dims[0], r.mets[0]]));
+  const contacts = contactEvents.reduce((sum, e) => sum + (count.get(e) ?? 0), 0);
+  const sessions = visits.totals[0] ?? visits.rows[0]?.mets[0] ?? 0;
+
+  return (
+    <section className="mt-6 rounded-xl border border-brand/30 bg-card p-5">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <p className="text-sm font-semibold">Leads and actions</p>
+        <p className="text-xs text-foreground/50">
+          {fmtInt(contacts)} ways people reached out, about {fmtInt(sessions ? (contacts / sessions) * 100 : 0)} per 100 visits
+        </p>
+      </div>
+      <div className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
+        {ACTION_LABELS.map(([event, label, note]) => (
+          <div key={event} className="rounded-lg border border-border p-3">
+            <p className="text-xs font-semibold text-foreground/50">{label}</p>
+            <p className="mt-1 text-2xl font-bold tabular-nums">{fmtInt(count.get(event) ?? 0)}</p>
+            <p className="mt-1 text-[11px] leading-4 text-foreground/50">{note}</p>
+          </div>
+        ))}
+      </div>
+      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+        <Table
+          title="Pages where people reached out"
+          subtitle="Enquiries plus WhatsApp, phone and email taps"
+          head={["Page", "Actions"]}
+          rows={byPage.rows.map((r) => [
+            <span key="p" className="font-mono text-xs break-all">{r.dims[0]}</span>,
+            fmtInt(r.mets[0]),
+          ])}
+          empty="Nothing yet. Counts start from 15 Nov 2026."
+        />
+        <Table
+          title="Where those visitors came from"
+          head={["Source", "Actions"]}
+          rows={byChannel.rows.map((r) => [r.dims[0] === "Unassigned" ? "Unknown" : r.dims[0], fmtInt(r.mets[0])])}
+          empty="Nothing yet."
+        />
+      </div>
+    </section>
   );
 }
 
