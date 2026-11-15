@@ -5,19 +5,31 @@ import { useSyncExternalStore } from "react";
 
 export const COOKIE_CONSENT_KEY = "ecostorage-cookie-consent";
 
+/**
+ * accepted  = full analytics (cookies allowed), the default for undecided visitors
+ * anonymous = analytics without cookies (anonymous event pings only)
+ * declined  = analytics off
+ */
+export type ConsentLevel = "accepted" | "anonymous" | "declined";
+
 function subscribe(onChange: () => void) {
   window.addEventListener("cookie-consent-change", onChange);
   return () => window.removeEventListener("cookie-consent-change", onChange);
 }
 
-export function setCookieConsent(value: "accepted" | "declined") {
+export function readConsentLevel(): ConsentLevel | null {
+  const v = localStorage.getItem(COOKIE_CONSENT_KEY);
+  return v === "accepted" || v === "anonymous" || v === "declined" ? v : null;
+}
+
+export function setCookieConsent(value: ConsentLevel) {
   localStorage.setItem(COOKIE_CONSENT_KEY, value);
   window.dispatchEvent(new Event("cookie-consent-change"));
 }
 
 /**
  * Opt-out notice. Analytics runs by default (see GoogleAnalytics.tsx); the
- * banner lets visitors switch it off and records that they have seen it.
+ * banner informs and points to /cookies, where visitors can change the level.
  */
 export function CookieConsent() {
   const visible = useSyncExternalStore(
@@ -33,34 +45,27 @@ export function CookieConsent() {
   return (
     <div className="fixed inset-x-4 bottom-24 z-50 mx-auto max-w-xl rounded-2xl border border-border bg-card p-4 shadow-card lg:bottom-6">
       <p className="text-sm text-foreground/80">
-        We use essential cookies to run this site and anonymous analytics cookies to understand
-        traffic. You can opt out here or at any time on our{" "}
+        We use essential cookies to run this site and anonymous analytics to see which pages help
+        visitors. You can change this any time in{" "}
         <Link href="/cookies" className="font-medium text-brand-ink hover:underline">
-          Cookie Policy
-        </Link>{" "}
-        page.
+          cookie settings
+        </Link>
+        .
       </p>
-      <div className="mt-3 flex justify-end gap-2">
-        <button
-          type="button"
-          onClick={() => setCookieConsent("declined")}
-          className="rounded-lg px-3 py-1.5 text-sm font-medium text-foreground/60 hover:text-foreground"
-        >
-          Opt out
-        </button>
+      <div className="mt-3 flex justify-end">
         <button
           type="button"
           onClick={() => setCookieConsent("accepted")}
-          className="rounded-lg bg-brand px-3 py-1.5 text-sm font-medium text-brand-foreground"
+          className="rounded-lg bg-brand px-4 py-1.5 text-sm font-medium text-brand-foreground"
         >
-          OK
+          Got it
         </button>
       </div>
     </div>
   );
 }
 
-/** True unless the visitor has opted out. Undecided visitors are counted. */
+/** True unless the visitor has switched analytics off. Undecided visitors are counted. */
 export function hasAnalyticsConsent() {
   return typeof window !== "undefined" && localStorage.getItem(COOKIE_CONSENT_KEY) !== "declined";
 }

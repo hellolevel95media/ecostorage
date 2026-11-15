@@ -15,7 +15,7 @@ export default function CookiesPage() {
       <div className="mt-6 space-y-4 text-sm text-foreground/70">
         <p>
           EcoStorage uses a small number of cookies to run this site. We split them into three
-          categories. Analytics cookies are anonymous and you can switch them off at any time.
+          categories. Analytics is anonymous, and you choose how much of it runs below.
         </p>
         <CookiePreference />
         <div>
@@ -40,15 +40,20 @@ export default function CookiesPage() {
         <div>
           <h2 className="font-semibold text-foreground">Analytics cookies</h2>
           <p className="mt-1">
-            Unless you opt out, we record anonymous page-visit data (the page path, referring
-            page, and browser type) so we can understand which pages are useful. We also use
-            Google Analytics, which sets cookies (named <code>_ga</code> and{" "}
-            <code>_ga_&lt;ID&gt;</code>, kept for up to 2 years) to measure visits, time spent on
-            the site and how visitors found us, such as which search engine. Google processes
-            this data on our behalf; it is not used for advertising. We never collect names or
-            other personal identifiers through these tools. They run by default; choose
-            &quot;Opt out&quot; in the banner on your first visit, or use the button at the top of
-            this page, and they stop immediately on this device.
+            We record anonymous page-visit data (the page path, referring page, and browser
+            type) so we can understand which pages are useful. We also use Google Analytics to
+            measure visits, time spent on the site, how visitors found us, and actions such as
+            opening the enquiry form. Google processes this data on our behalf; it is not used
+            for advertising. We never collect names or other personal identifiers through these
+            tools.
+          </p>
+          <p className="mt-2">
+            You have three levels, set at the top of this page. <strong>Full analytics</strong>{" "}
+            (the default) lets Google Analytics set cookies named <code>_ga</code> and{" "}
+            <code>_ga_&lt;ID&gt;</code>, kept for up to 2 years, so returning visitors are
+            recognised. <strong>Anonymous analytics</strong> sets no cookies at all; events are
+            counted without any identifier, so repeat visits cannot be linked. <strong>Off</strong>{" "}
+            stops analytics entirely. Changes take effect immediately on this device.
           </p>
         </div>
         <p>Contact hello@ecostorage.sg with any cookie or privacy questions.</p>

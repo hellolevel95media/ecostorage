@@ -3,7 +3,7 @@
 import Script from "next/script";
 import { usePathname } from "next/navigation";
 import { useEffect, useSyncExternalStore } from "react";
-import { COOKIE_CONSENT_KEY } from "@/components/ui/CookieConsent";
+import { readConsentLevel, type ConsentLevel } from "@/components/ui/CookieConsent";
 
 const RAW_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID?.trim();
 // Only a well-formed G- ID is ever written into the inline script.
@@ -14,33 +14,36 @@ function subscribe(onChange: () => void) {
   return () => window.removeEventListener("cookie-consent-change", onChange);
 }
 
-// "pending" only during SSR/hydration; on the client it is the stored choice or null (undecided).
-function readConsent() {
-  return localStorage.getItem(COOKIE_CONSENT_KEY);
+// "pending" only during SSR/hydration; on the client it is the stored level or "accepted" (undecided).
+function readLevel(): ConsentLevel | "pending" {
+  return readConsentLevel() ?? "accepted";
 }
 
 /**
- * Google Analytics 4 with Consent Mode v2 ("basic" opt-out model).
+ * Google Analytics 4 with Consent Mode v2 (opt-out model, three levels).
  *
- * Analytics storage is granted by default and the tag loads for every visitor
- * except on /admin; ad storage stays denied because the site runs no ads.
- * Choosing "Opt out" in the banner (or on /cookies) denies analytics storage
- * and sets Google's `ga-disable-<ID>` flag, which silences page views and
- * custom events immediately. Singapore's PDPA allows anonymous analytics on
- * an opt-out basis, unlike the GDPR opt-in model this replaced.
+ * - accepted (default): tag loads, analytics_storage granted, cookies set.
+ * - anonymous: tag loads with analytics_storage denied. Consent Mode then
+ *   sends cookieless, unidentified pings, so page views and custom events are
+ *   still counted (modelled in some reports) without any cookie.
+ * - declined: tag does not load; if it already has, `ga-disable-<ID>` silences it.
+ *
+ * Ad storage is always denied because the site runs no ads. Never loads on
+ * /admin. Singapore's PDPA allows anonymous analytics on an opt-out basis.
  */
 export function GoogleAnalytics() {
   const pathname = usePathname();
-  const consent = useSyncExternalStore(subscribe, readConsent, () => "pending");
-  const declined = consent === "declined";
-  const load = Boolean(GA_ID) && consent !== "pending" && !declined && !pathname.startsWith("/admin");
+  const level = useSyncExternalStore(subscribe, readLevel, () => "pending" as const);
+  const declined = level === "declined";
+  const storage = level === "accepted" ? "granted" : "denied";
+  const load = Boolean(GA_ID) && level !== "pending" && !declined && !pathname.startsWith("/admin");
 
-  // Visitor changed their mind after the tag was already on the page.
+  // Visitor changed the level after the tag was already on the page.
   useEffect(() => {
     if (!GA_ID || typeof window.gtag !== "function") return;
     (window as unknown as Record<string, boolean>)[`ga-disable-${GA_ID}`] = declined;
-    window.gtag("consent", "update", { analytics_storage: declined ? "denied" : "granted" });
-  }, [declined]);
+    window.gtag("consent", "update", { analytics_storage: storage });
+  }, [declined, storage]);
 
   if (!load || !GA_ID) return null;
 
@@ -48,7 +51,7 @@ export function GoogleAnalytics() {
     <>
       <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
       <Script id="ga4-init" strategy="afterInteractive">
-        {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{analytics_storage:'granted',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','${GA_ID}',{anonymize_ip:true});`}
+        {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{analytics_storage:'${storage}',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','${GA_ID}',{anonymize_ip:true});`}
       </Script>
     </>
   );
