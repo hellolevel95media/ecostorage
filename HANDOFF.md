@@ -2,22 +2,45 @@
 
 Tracked in git so both PCs share it. Read it first, once per session; update only when the owner asks.
 Public repo: no secrets, keys, scraped reviews or reviewer data in any doc. Last full rewrite
-2026-11-10 (older session logs compressed; git history has the originals).
+2026-11-10; tidied 2026-11-15 (completed items removed; git history has the originals).
 
-## 0. Where we are (end of session 2026-11-10)
+## 0. Where we are (end of session 2026-11-15)
 
-- **Article queue:** all drafts auto-publish by `published_at` (5pm SG = 08:50 UTC). HIP articles go
-  out **daily 12-20 Nov**, then non-HIP **every 2 days 22 Nov to 20 Dec**. See section 6.
-- **New standard (owner):** every article ends with `## Frequently asked questions` then `## Summary`.
-  Done on `what-is-hdb-hip-guide`, all 9 HIP drafts and 3 non-HIP drafts. Still to do: section 6.
-- **Verify on 12 Nov (~18:00 SG):** `/resources/hip-announced-what-happens-next` returns 200 with FAQ + Summary.
-- **Owner to-do now:** (a) tell Claude which of the "accounts and settings" in section 5 are already
-  done so they can be ticked off; (b) add thumbnails to the 4 newest HIP articles in `/admin`;
-  (c) **rotate secrets**: on 2026-11-10 a Claude check printed the Turnstile secret, Resend API key and
-  `CRON_SECRET` values into chat. Rotate all three (update Vercel after rotating `CRON_SECRET`, or the
-  publish cron returns 401).
-- **Done and closed 2026-11-10:** GA MCP verified, sitemap fixed, Google Business Profile + review link
-  live, Zoho signatures, renovation flyer reprint, Mandarin article review, FAQ/Summary standard.
+**NEXT CHECK-IN: MON 17 NOV 2026. Start with GA4, using `TODO.txt` (repo root, tracked) at step 4.**
+Keep GA4 instructions click-by-click: the owner found GA4's UI confusing. **Never send the owner to
+"Create event"** (it builds a new event and asks for a URL; ours already exist).
+
+- **GA4 event tracking shipped 15 Nov** (commits f5ca662, f19d343, ddbff0f, bf9c892; deploys Ready).
+  `src/lib/analytics.ts` `trackEvent()` + `src/components/ui/TrackedLink.tsx`. Events:
+  `generate_lead` (form_type contact/personal/corporate/partner/calculator), `whatsapp_click`,
+  `phone_click`, `email_click` (location), `calculator_start` (trigger), `calculator_step` (step),
+  `promo_applied`, `affiliate_apply`, `form_error` (form_type, reason). Verified by Playwright and by the
+  owner in GA4 Realtime (`email_click` not spotted there; Claude confirmed the live site fires it).
+  `/admin/analytics` has a "Leads and actions" panel reading these via the GA4 Data API.
+- **Consent = opt-out (PDPA).** Banner: "Got it" + "cookie settings" link only. `/cookies` offers Full
+  analytics (default) / Anonymous, no cookies (Consent Mode v2, analytics_storage denied) / Off.
+  localStorage `ecostorage-cookie-consent` = accepted | anonymous | declined.
+- **Owner done in GA4 on 15 Nov:** 5 event-scoped custom dimensions (form_type, location, step, trigger,
+  reason); live test passed; data retention 14 months; Search Console linked + collection published;
+  internal-traffic IP rule created (filter left on Testing); cross-domain list set to `ecostorage.sg`
+  (tag quality now "Excellent"; stray `*.vercel.app` hits dismissed). Key events tab holds only GA4's
+  placeholders `close_convert_lead`, `qualify_lead` (never fire, leave) and `purchase`.
+- **17 Nov to-do (TODO.txt steps 4 and 8):** Admin > Events > "Recent events" tab, star `generate_lead`,
+  `whatsapp_click`, `phone_click`; confirm `email_click` is listed; switch the Internal Traffic data
+  filter to Active; check the admin Leads panel shows the 15 Nov tests; Claude adds the first real row
+  to `docs/analytics-ledger.md`.
+- **Enquiry emails work in production:** Resend notification to hello@ arrived on the 15 Nov test.
+- **Vercel CLI works** via `npx vercel <cmd>` from the repo root (user hello-76246995, linked
+  level95/ecostorage, writes `VERCEL_OIDC_TOKEN` to `.env.local`). Production env has all four GA vars,
+  RESEND_API_KEY, CRON_SECRET, INQUIRY_NOTIFICATION_*; the two Turnstile keys are NOT in Vercel.
+- **Owner to-do, still open:** (a) rotate `RESEND_API_KEY` and `CRON_SECRET` (printed in chat
+  2026-11-10; update both in Vercel and redeploy, or the publish cron returns 401) and the local
+  Turnstile secret; (b) thumbnails for hip-when-nobody-is-home-all-day (17 Nov),
+  hip-defects-damaged-belongings (18), hip-toilet-water-test-opt-out (19), hip-voting-75-percent-how-it-works
+  (20) and corporate-storage-singapore-businesses (20 Dec); (c) confirm which "accounts and settings"
+  in section 5 are done.
+- **Articles:** queue healthy; owner parked the non-HIP FAQ + Summary retrofit for now. The first one
+  without it publishes 28 Nov (student-belongings-storage-long-break): raise it before ~25 Nov.
 
 ## 1. What this is
 
@@ -91,7 +114,8 @@ on forms) and Resend (emails hello@ when an enquiry arrives). Status unknown: ke
 enabling: Vercel vars `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`, `RESEND_API_KEY`,
 `INQUIRY_NOTIFICATION_EMAIL` (hello@), `INQUIRY_NOTIFICATION_FROM` (`EcoStorage <notifications@ecostorage.sg>`);
 Resend domain `ecostorage.sg` shared with Novac (`send.` + `resend._domainkey`, Zoho MX/SPF untouched).
-Code `src/lib/email.ts`. Until then enquiries appear only in `/admin` → Inquiries.
+Code `src/lib/email.ts`. Status 15 Nov: Resend + notification vars are in Vercel and the
+notification email works; Turnstile keys are local only, so Turnstile is still off in production.
 
 **Accounts and settings (owner to confirm which are done):**
 1. Supabase Auth → "Allow new users to sign up" off.
@@ -101,7 +125,7 @@ Code `src/lib/email.ts`. Until then enquiries appear only in `/admin` → Inquir
 5. UptimeRobot monitor on `/api/health`, alerts to hello@.
 6. GitHub Actions secrets for the daily DB backup: `SUPABASE_PROJECT_REF` (`dqmuuszmuyixjxonwjpv`),
    `SUPABASE_DB_PASSWORD` (owner enters it, never chat).
-7. GA4: event data retention 14 months; check `/admin/analytics` fills daily.
+7. ~~GA4 retention~~ done 15 Nov.
 8. Spot-check live quotes after the 2026-10-10 pricing changes (`fc939e3`, `543722e`).
 
 **Other:**
@@ -135,10 +159,9 @@ approves, then write to the DB (`update articles set body = rtrim(body) || $$...
 Never write to live DB without the owner's OK; drafts are safe until their date.
 
 **Queue now (all `draft`):**
-- HIP daily: 12 hip-announced-what-happens-next, 13 hip-cost-what-hdb-residents-pay, 14
-  hip-optional-improvements-which-to-choose, 15 hip-with-seniors-children-pets, 16 hip-move-out-or-stay-home,
+- HIP daily: 15 hip-with-seniors-children-pets, 16 hip-move-out-or-stay-home,
   17 hip-when-nobody-is-home-all-day, 18 hip-defects-damaged-belongings, 19 hip-toilet-water-test-opt-out,
-  20 Nov hip-voting-75-percent-how-it-works.
+  20 Nov hip-voting-75-percent-how-it-works. All 6 have FAQ + Summary.
 - Non-HIP every 2 days: 22 Nov renovation-delay-what-to-do-with-belongings, 24 bto-key-collection-to-move-in-
   storage, 26 moving-out-of-rental-deposit-checklist, 28 student-belongings-storage-long-break, 30
   storage-contract-questions-before-you-sign, 2 Dec pallet-storage-vs-crate-storage, 4
@@ -147,7 +170,8 @@ Never write to live DB without the owner's OK; drafts are safe until their date.
   storing-belongings-overseas-posting, 14 packing-boxes-weight-labelling, 16
   small-business-ecommerce-inventory-storage, 18 what-to-expect-on-moving-day, 20 Dec
   corporate-storage-singapore-businesses.
-- Already published (EN): bed-wardrobe-mattress-during-hip, protect-electronics-during-hip,
+- Already published (EN): hip-announced-what-happens-next, hip-cost-what-hdb-residents-pay,
+  hip-optional-improvements-which-to-choose (12-14 Nov, verified 200 with FAQ + Summary), bed-wardrobe-mattress-during-hip, protect-electronics-during-hip,
   staying-home-during-hip-one-livable-room, hip-timeline-week-by-week, hip-prep-checklist,
   what-is-hdb-hip-guide, store-furniture-during-hip, how-much-dust-hip-generates, diy-plastic-covering-hip,
   decluttering-before-a-move, storage-for-home-renovations-singapore, how-much-storage-space-do-you-need,
@@ -162,7 +186,7 @@ Never write to live DB without the owner's OK; drafts are safe until their date.
   EN articles; priority hip-timeline-week-by-week, hip-prep-checklist, store-furniture-during-hip,
   how-much-dust-hip-generates, diy-plastic-covering-hip, staying-home-during-hip-one-livable-room,
   bed-wardrobe-mattress-during-hip, protect-electronics-during-hip. Retrofit one at a time with owner approval.
-- The 4 newest HIP articles (when-nobody-is-home, defects, water-test, voting) have no thumbnail.
+- No thumbnail yet: the 4 newest HIP drafts (17-20 Nov) and corporate-storage-singapore-businesses.
 
 **HIP content notes.** Source facts from HDB's HIP information booklet
 (`hdb.gov.sg/-/media/managing-my-home/upgrading-and-redevelopment/home-improvement-programme-hip/HIP-Info-BookletJun-2025-InfoWEB-Jan-2026.pdf`)
@@ -216,6 +240,19 @@ confirm real terms). No legal/tenancy advice in rental articles.
 - **Next SEO ideas:** recheck the two rewritten pages in GSC ~early Dec 2026; expand zh articles (bodies
   ~800-1000 chars vs 2-7K EN, likely why zh isn't indexed); "document / archive storage Singapore" article
   (queries at pos 67-90, corporate page); rankings ledger from GSC Queries (dated CSV snapshots).
+
+### 7a. Analytics follow-ups (tracking setup itself: see section 0)
+
+- Snapshots live in `docs/analytics-ledger.md` (13 Nov GA4 baseline: 9 users, 14 sessions, 0 key events;
+  Direct 7, Organic Search 3 with the best engagement, AI Assistant 3 at ~2s). Add a row each session.
+- **GA MCP server** still fails (CONNECTION_CLOSED). Work-PC only; needs pipx `analytics-mcp` and the
+  service-account key at the stated path, Analytics Data/Admin API enabled, Viewer on 561860842.
+- **Compound what works:** more HIP-timeline-style articles; push Organic Search via the GSC zero-click
+  targets above; find out why AI Assistant visits last ~2s (check `llms.txt` and cited URLs).
+- **UTM tags** on every owner-shared link (exact links at the bottom of `TODO.txt`); rebuild name card
+  and flyer QR codes with UTM before the next print run.
+- Optional code tweak offered, not done: load GA only on the `ecostorage.sg` host so dashboard visits to
+  `*.vercel.app` URLs don't count.
 
 ## 8. Marketing plan (planning only; budget very tight, no paid ads)
 
