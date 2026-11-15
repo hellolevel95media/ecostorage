@@ -75,5 +75,3 @@ backups/
 
 # Local-only handoff (security diagnostic)
 
-# Session todo list (local only)
-/TODO.txt

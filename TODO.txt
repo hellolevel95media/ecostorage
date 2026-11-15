@@ -1,0 +1,105 @@
+ECOSTORAGE - GA4 EVENT TRACKING SETUP  >>> TODAY: STEPS 5, 6, 7.  MON 17 NOV: STEPS 4 AND 8 <<<
+=====================================================================
+Follow each line in order. One action per line. Tick [x] as you go.
+GA4 = https://analytics.google.com, property "EcoStorage website" (561860842).
+
+[x] 1. Custom dimensions registered.
+[x] 2. Live test done. All events arrived except email_click (site checked by
+       Claude: it fires correctly; most likely hidden on page 2 of the Realtime
+       card). Enquiry email arrived. Test enquiry deleted.
+
+
+[x] 3. Key events checked 15 Nov. Nothing to remove:
+       - close_convert_lead and qualify_lead are GA4's built-in placeholders for
+         lead businesses. The site never sends them, so they stay at 0. Leave them.
+       - purchase is a GA4 default, not starred. Leave it.
+       - form_start is only in "Recent events", not a key event. Leave it.
+
+
+[ ] 4. MARK THE THREE KEY EVENTS  >>> DO THIS MON 17 NOV <<<
+    On 15 Nov the "Recent events" tab didn't list our events yet. GA4 adds new
+    event names there within 24-48 h. Skip to step 5 now.
+---------------------------------------------------------------------
+Why this way: the site already sends these events. You are only ticking them,
+not creating anything. If any screen asks you for a URL, you are in the wrong
+place: close it and go back to 4.1.
+
+  [ ] 4.1  Click "Admin".
+  [ ] 4.2  Under "Data display", click "Events", then the "Recent events" tab.
+  [ ] 4.3  You now see a table of event names (page_view, scroll, ...).
+           Do NOT click "Create event".
+  [ ] 4.4  Find the row "generate_lead".
+  [ ] 4.5  At the right end of that row there is a star under the column
+           "Mark as key event". Click the star so it turns blue/filled.
+  [ ] 4.6  Do the same for the row "whatsapp_click".
+  [ ] 4.7  Do the same for the row "phone_click".
+  [ ] 4.8  Do not star anything else.
+  [ ] 4.9  Check: click "Key events" (under "Data display"). The list shows
+           generate_lead, whatsapp_click and phone_click.
+
+  If a row is NOT in the Events table yet:
+    That's normal. GA4 takes up to 24 hours to add new event names to that
+    table, even though Realtime already showed them. Stop step 4 here and
+    finish it on 17 Nov (line 8.2 below). Carry on with step 5 now.
+
+
+[ ] 5. SET DATA RETENTION TO 14 MONTHS
+---------------------------------------------------------------------
+  [ ] 5.1  Click "Admin".
+  [ ] 5.2  Under "Data collection and modification", click "Data retention".
+  [ ] 5.3  "Event data retention": choose "14 months".
+  [ ] 5.4  Click "Save".
+
+
+[ ] 6. LINK SEARCH CONSOLE
+---------------------------------------------------------------------
+  [ ] 6.1  Click "Admin".
+  [ ] 6.2  Under "Product links", click "Search Console links".
+  [ ] 6.3  Click the blue "Link" button.
+  [ ] 6.4  Click "Choose accounts". Tick "sc-domain:ecostorage.sg". Click "Confirm".
+           (If it isn't listed, you're signed in with the wrong Google account.
+           Stop and tell Claude.)
+  [ ] 6.5  Click "Next".
+  [ ] 6.6  Click "Select", choose the web stream "ecostorage.sg". Click "Next".
+  [ ] 6.7  Click "Submit".
+  [ ] 6.8  In the left menu click "Reports", then "Library" (bottom of the menu).
+  [ ] 6.9  Find the card named "Search Console". Click its three dots > "Publish".
+           Data shows up in 1-2 days.
+
+
+[ ] 7. FILTER OUT YOUR OWN VISITS
+---------------------------------------------------------------------
+  [ ] 7.1  In a new tab, google "what is my ip". Copy the number shown.
+  [ ] 7.2  In GA4 click "Admin".
+  [ ] 7.3  Under "Data collection and modification", click "Data streams".
+  [ ] 7.4  Click the stream "ecostorage.sg".
+  [ ] 7.5  Scroll down, click "Configure tag settings".
+  [ ] 7.6  Click "Show more" (or "Show all"), then "Define internal traffic".
+  [ ] 7.7  Click "Create".
+  [ ] 7.8  Rule name: Home and office
+  [ ] 7.9  Leave "traffic_type value" as "internal".
+  [ ] 7.10 Match type: "IP address equals". Paste your IP from 7.1.
+  [ ] 7.11 Click "Create" (top right).
+  [ ] 7.12 Repeat 7.1-7.11 later from the work PC's network if it's a different place.
+  Leave the filter in "Testing" today. You switch it on 17 Nov (8.4).
+
+
+[ ] 8. MON 17 NOV
+---------------------------------------------------------------------
+  [ ] 8.1  GA4 > Reports > Engagement > Events. Confirm email_click is listed.
+           If not, tell Claude.
+  [ ] 8.2  Finish step 4 for any event that wasn't in the table yesterday.
+  [ ] 8.3  Open https://ecostorage.sg/admin/analytics. The "Leads and actions"
+           panel should show yesterday's test clicks.
+  [ ] 8.4  GA4 > Admin > Data collection and modification > Data filters >
+           "Internal Traffic" > change "Testing" to "Active" > Save.
+  [ ] 8.5  Tell Claude "GA done" so it can record the first ledger row.
+
+
+LATER (not today): tag the links you share so they stop showing as "Direct".
+Copy these exactly:
+  WhatsApp     https://ecostorage.sg/?utm_source=whatsapp&utm_medium=social&utm_campaign=broadcast
+  Instagram    https://ecostorage.sg/?utm_source=instagram&utm_medium=social&utm_campaign=bio
+  Facebook     https://ecostorage.sg/?utm_source=facebook&utm_medium=social&utm_campaign=page
+  Google Biz   https://ecostorage.sg/?utm_source=google&utm_medium=gbp
+  Email sig    https://ecostorage.sg/?utm_source=email&utm_medium=signature
