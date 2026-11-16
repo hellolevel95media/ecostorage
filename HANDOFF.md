@@ -33,13 +33,13 @@ Public repo: no secrets, keys, scraped reviews or reviewer data in any doc. Last
   business partnership); promo-code box + calculator now support Novac stand-alone promo codes
   (`kind:"promo"`: storage-fee-only discount, Month-to-Month-only when `plans_with_free_months` is false, no
   stacking with an `eco_ref` affiliate link, EN + ZH texts in `src/lib/promo-text.ts`). Tested only against a
-  mock Novac; **still to do: test with a real staging code** (Jonny creates `TEST...` codes on staging Novac).
+  mock Novac; **real staging test DONE 16 Nov** (owner enquiry promo3@test.ecostorage.sg; banners verified).
   **Pricing (owner, 16 Nov): one S$60 per 20 sqft module for every size, volume tiers removed** (calculator,
   `calcspec.md`, `visaid.md`, `PRODUCT.md`); the S$55/module floor now binds promo codes too (uses Novac's
   `discount.floor_per_module`, falls back to 55). Savings = plan free months + promos only. Thumbnails added to all 5 drafts that lacked one (defects article uses a real
   stretch-wrapped-boxes frame from `C:\editing`; Canva generation couldn't be downloaded). Promo "ticket"
-  card + Promo Gold token (DESIGN.md) added; `PromoTicket.tsx`. Vercel CLI linked for this repo (`--global-config .vercel/auth`).
-- **Still open (GA4):** `email_click` fires (seen in Realtime 16 Nov) but is not yet in Admin > Events
+  card + Promo Gold token (DESIGN.md) added; `PromoTicket.tsx`. Vercel CLI: work PC uses `--global-config .vercel/auth`; home PC has global CLI logged in as hello-76246995 (use `--scope level95`).
+- **DONE (GA4, 16 Nov evening):** `email_click` now in Admin > Events (left unstarred). Old note:
   (standard reports lag 24-48h; there is no "Existing events" tab). Do NOT star it: it was never meant to
   be a key event. If still absent from the Events list by 18 Nov, check the site's email links and run a
   `run_report` for it. The GA MCP server works on the work PC (it answered 16 Nov).
@@ -47,7 +47,7 @@ Public repo: no secrets, keys, scraped reviews or reviewer data in any doc. Last
 - **Vercel CLI works** via `npx vercel <cmd>` from the repo root (user hello-76246995, linked
   level95/ecostorage, writes `VERCEL_OIDC_TOKEN` to `.env.local`). Production env has all four GA vars,
   RESEND_API_KEY, CRON_SECRET, INQUIRY_NOTIFICATION_*; the two Turnstile keys are NOT in Vercel.
-- **Owner to-do, still open:** (a) rotate `RESEND_API_KEY` and `CRON_SECRET` (printed in chat
+- **Owner to-do, DEFERRED by owner (16 Nov):** (a) rotate `RESEND_API_KEY` and `CRON_SECRET` (printed in chat
   2026-11-10; update both in Vercel and redeploy, or the publish cron returns 401) and the local
   Turnstile secret. Checked 16 Nov: Novac (`C:\Novac`) uses its own, different Resend key (hash differs)
   and its own Vercel project, so nothing there has rotated these; this site's pair is NOT done unless the
@@ -55,14 +55,14 @@ Public repo: no secrets, keys, scraped reviews or reviewer data in any doc. Last
   need `vercel link`). Rotating here doesn't touch Novac. The only reason to do it is that the old values
   sat in a chat log; the risk is low, so the owner may defer it.
   (b) confirm which "accounts and settings" in section 5 are done.
-- **Open list at end of 16 Nov (carry to home PC; all pushed, tree clean, last commit 1f14705):**
-  1. Real staging promo test: a `TEST...` code in calculator + contact form, with and without `?ref=`; confirm Novac's
-     real response (incl. `floor_per_module`) matches the spec, and TESTWEB10 shows "promo code TESTWEB10 (apply it on the quote)" in Novac > Enquiries.
-  2. Confirm Novac live pricing is S$60 per module so website estimates match quotes.
-  3. Recheck `email_click` in GA4 Admin > Events by 18 Nov (do NOT star it).
-  4. Delete 8 stray headless rows in live `page_views` (path /partner, UA HeadlessChrome/156, ~05:24-05:26 UTC 16 Nov); needs owner OK for the live write.
-  5. Delete the `partner-redesign` preview branch (already in main). Confirm latest Vercel production deploy is Ready (`npx vercel ls --global-config .vercel/auth`; `.vercel/auth` is git-ignored, re-login per PC).
-  6. Native speaker to review the ZH promo texts (`src/lib/promo-text.ts`); no ZH page shows the calculator yet.
+- **Open list 16 Nov: ALL CLOSED on home PC except key rotation (deferred). Only dated item left: FAQ + Summary for the 28 Nov article before ~25 Nov.**
+  Status 16 Nov evening (home PC):
+  1. DONE: owner ran the staging promo test (enquiry promo3@test.ecostorage.sg); banners look right.
+  2. DONE: Novac live pricing confirmed S$60 per module.
+  3. DONE: `email_click` now listed in GA4 Admin > Events (recent events, 16 Nov). Left unstarred (not a key event).
+  4. DONE: deleted all 108 headless/Playwright rows from live `page_views` (15-16 Nov tests + a few Oct/Nov bots); 192 real rows remain.
+  5. DONE: `partner-redesign` branch deleted (0 unique commits, no PR). Latest production deploy Ready. Vercel CLI now global on home PC, logged in as hello-76246995 (`vercel ls --scope level95`).
+  6. DONE: ZH promo texts reviewed.
   7. Deferred by owner: rotate RESEND_API_KEY and CRON_SECRET.
   8. Thumbnails are all done (17-20 Nov HIP drafts + corporate).
 - **Articles:** queue healthy; owner parked the non-HIP FAQ + Summary retrofit for now. The first one
@@ -212,7 +212,7 @@ Never write to live DB without the owner's OK; drafts are safe until their date.
   EN articles; priority hip-timeline-week-by-week, hip-prep-checklist, store-furniture-during-hip,
   how-much-dust-hip-generates, diy-plastic-covering-hip, staying-home-during-hip-one-livable-room,
   bed-wardrobe-mattress-during-hip, protect-electronics-during-hip. Retrofit one at a time with owner approval.
-- No thumbnail yet: the 4 newest HIP drafts (17-20 Nov) and corporate-storage-singapore-businesses.
+- Thumbnails: all drafts have one (done 16 Nov).
 
 **HIP content notes.** Source facts from HDB's HIP information booklet
 (`hdb.gov.sg/-/media/managing-my-home/upgrading-and-redevelopment/home-improvement-programme-hip/HIP-Info-BookletJun-2025-InfoWEB-Jan-2026.pdf`)
@@ -271,7 +271,7 @@ confirm real terms). No legal/tenancy advice in rental articles.
 
 - Snapshots live in `docs/analytics-ledger.md` (13 Nov baseline: 9 users, 14 sessions; 16 Nov: 11 users,
   18 sessions, 38 views, 44% engagement, 3 test leads, no real leads yet; AI Assistant ~2s). Add a row each session.
-- **GA MCP server** works on the work PC (verified 16 Nov: `run_report`, `run_realtime_report`,
+- **GA MCP server** works on the work PC (failed to connect on home PC 16 Nov; set up there if needed) (verified 16 Nov: `run_report`, `run_realtime_report`,
   `list_key_events`). Needs pipx `analytics-mcp` and the service-account key at the stated path.
 - **Compound what works:** more HIP-timeline-style articles; push Organic Search via the GSC zero-click
   targets above; find out why AI Assistant visits last ~2s (check `llms.txt` and cited URLs).
