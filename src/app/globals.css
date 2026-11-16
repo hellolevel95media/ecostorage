@@ -11,6 +11,13 @@
      backgrounds — --brand itself is ~1.66:1 on white (fails WCAG AA's 3:1
      minimum even for large text), this variant is ~5:1. */
   --brand-ink: #007f55;
+  /* Promo Gold: reserved for an applied promo code and nothing else (see DESIGN.md).
+     --promo-gold-ink is 5.5:1 on white and 5.2:1 on --promo-gold-wash (WCAG AA 4.5:1). */
+  --promo-gold-light: #f5d27a;
+  --promo-gold: #d4a437;
+  --promo-gold-dark: #b8862b;
+  --promo-gold-ink: #8a6212;
+  --promo-gold-wash: #fffaf0;
   --safe-t: env(safe-area-inset-top, 0px);
   --safe-r: env(safe-area-inset-right, 0px);
   --safe-b: env(safe-area-inset-bottom, 0px);
@@ -26,6 +33,9 @@
   --color-brand: var(--brand);
   --color-brand-ink: var(--brand-ink);
   --color-brand-foreground: #04140d;
+  --color-promo-gold: var(--promo-gold);
+  --color-promo-gold-ink: var(--promo-gold-ink);
+  --color-promo-gold-wash: var(--promo-gold-wash);
   --font-sans: var(--font-app-sans);
   --font-mono: var(--font-app-mono);
   --shadow-card: 0 1px 2px 0 rgba(15, 23, 42, 0.04), 0 18px 40px -22px rgba(15, 23, 42, 0.18);
@@ -117,6 +127,65 @@ a {
 
 .toast-pop {
   animation: toast-pop 0.2s ease-out;
+}
+
+/* Promo Gold surfaces. Only for an applied promo code. */
+.promo-gold-gradient {
+  background-image: linear-gradient(135deg, var(--promo-gold-light) 0%, var(--promo-gold) 52%, var(--promo-gold-dark) 100%);
+}
+
+/* The ticket's border is a gold gradient ring around a light wash. */
+.promo-ticket {
+  position: relative;
+  overflow: hidden;
+  border: 2px solid transparent;
+  background:
+    linear-gradient(var(--promo-gold-wash), var(--promo-gold-wash)) padding-box,
+    linear-gradient(135deg, var(--promo-gold-light), var(--promo-gold) 52%, var(--promo-gold-dark)) border-box;
+}
+
+/* One short shimmer sweep across the card when the code is accepted. */
+.promo-ticket-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.75) 50%, transparent 65%);
+  transform: translateX(-120%);
+  animation: promo-sweep 0.9s ease-out 0.1s 1 forwards;
+}
+
+@keyframes promo-sweep {
+  to {
+    transform: translateX(120%);
+  }
+}
+
+/* The "Savings" tile glows gold for a moment when a promo is part of it. */
+.promo-glow {
+  box-shadow: 0 0 0 1px var(--promo-gold);
+  animation: promo-glow 1.4s ease-out 1;
+}
+
+@keyframes promo-glow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(212, 164, 55, 0.75), 0 0 0 1px var(--promo-gold);
+  }
+  60% {
+    box-shadow: 0 0 22px 6px rgba(245, 210, 122, 0.7), 0 0 0 1px var(--promo-gold);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(212, 164, 55, 0), 0 0 0 1px var(--promo-gold);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .promo-ticket-shimmer::after {
+    display: none;
+  }
+  .promo-glow {
+    animation: none;
+  }
 }
 
 /* ==========================================================================

@@ -9,6 +9,11 @@ colors:
   surface: "#f4f6f8"
   card: "#ffffff"
   border: "#e5e8ec"
+  promo-gold-light: "#f5d27a"
+  promo-gold: "#d4a437"
+  promo-gold-dark: "#b8862b"
+  promo-gold-ink: "#8a6212"
+  promo-gold-wash: "#fffaf0"
 typography:
   display:
     fontFamily: "var(--font-geist-sans), Arial, Helvetica, sans-serif"
@@ -96,7 +101,13 @@ A near-monochrome white/slate base carries the content; the single brand green d
 - **Soft Surface** (`#f4f6f8` / `--surface`): secondary panel background (e.g. TrustBanner container, size-guide backdrop) — one step off white for gentle separation without a border.
 - **Hairline Border** (`#e5e8ec` / `--border`): all borders, dividers, input strokes.
 
+### Promo Gold (reserved)
+- **Promo Gold** (`#f5d27a` → `#d4a437` → `#b8862b` / `--promo-gold-light`, `--promo-gold`, `--promo-gold-dark`): a warm metallic gradient for the surfaces and badges of an *applied promo code* only: the promo ticket's border ring, the code pill, the brief glow on the calculator's "Savings" tile while a promo is part of it.
+- **Promo Gold Ink** (`#8a6212` / `--promo-gold-ink`): text on white or on the ticket's wash (`#fffaf0` / `--promo-gold-wash`). Contrast 5.5:1 on white and 5.2:1 on the wash (WCAG AA 4.5:1). Text on the gold gradient itself is `#2b2108`.
+
 ### Named Rules
+**The Promo Gold Rule.** Gold appears for an applied promo code and nothing else: no buttons, links, icons, headings or decoration. Normal savings, the "Savings" counter's numbers, CO₂ and trees stay Signal Mint. The ticket carries its own light surface and dark text so it reads the same on white, grey or dark backgrounds. Its shimmer and the count-up run once and are switched off under `prefers-reduced-motion`.
+
 **The Recurring Signal Rule.** Unlike a typical "rare accent" system, Signal Mint is allowed to repeat across a single screen (a stat, a CTA, an active tab, a divider) because the color itself carries meaning (trust + sustainability) — the repetition reinforces the message rather than diluting it. It should still never become the dominant surface color; white/slate remain the base.
 
 ## Typography

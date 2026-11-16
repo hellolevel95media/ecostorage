@@ -37,8 +37,9 @@ Public repo: no secrets, keys, scraped reviews or reviewer data in any doc. Last
   mock Novac; **still to do: test with a real staging code** (Jonny creates `TEST...` codes on staging Novac).
   **Pricing (owner, 16 Nov): one S$60 per 20 sqft module for every size, volume tiers removed** (calculator,
   `calcspec.md`, `visaid.md`, `PRODUCT.md`); the S$55/module floor now binds promo codes too (uses Novac's
-  `discount.floor_per_module`, falls back to 55). Savings = plan free months + promos only. Thumbnails added to 4 drafts (defects
-  article, 18 Nov, still has none). Vercel CLI linked for this repo (`--global-config .vercel/auth`).
+  `discount.floor_per_module`, falls back to 55). Savings = plan free months + promos only. Thumbnails added to all 5 drafts that lacked one (defects article uses a real
+  stretch-wrapped-boxes frame from `C:\editing`; Canva generation couldn't be downloaded). Promo "ticket"
+  card + Promo Gold token (DESIGN.md) added; `PromoTicket.tsx`. Vercel CLI linked for this repo (`--global-config .vercel/auth`).
 - **Still open (GA4):** `email_click` fires (seen in Realtime 16 Nov) but is not yet in Admin > Events
   (standard reports lag 24-48h; there is no "Existing events" tab). Do NOT star it: it was never meant to
   be a key event. If still absent from the Events list by 18 Nov, check the site's email links and run a

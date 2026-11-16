@@ -3,13 +3,13 @@
 import { useId, useMemo, useState, useSyncExternalStore, type FormEvent, type ReactNode } from "react";
 import { Button } from "@/components/ui/Button";
 import { PromoCodeInput, type AppliedPromo } from "@/components/ui/PromoCodeInput";
+import { PromoTicket } from "@/components/ui/PromoTicket";
 import { Turnstile, turnstileEnabled } from "@/components/ui/Turnstile";
 import { MovingQuoteCheckbox } from "@/components/ui/MovingQuoteCheckbox";
 import { PremiumCrateOption } from "@/components/ui/PremiumCrateOption";
 import { showToast } from "@/lib/toast";
 import { NETWORK_ERROR_MESSAGE, submitErrorMessage } from "@/lib/form-errors";
 import { trackEvent } from "@/lib/analytics";
-import { usePromoText } from "@/lib/promo-text";
 import {
   SIZE_GUIDE,
   formatDollars,
@@ -100,6 +100,21 @@ export function StorageCalculator() {
     [numUnits, commitment, valet, promoOffer]
   );
   const promoPlanOk = promoOffer ? promoAppliesToPlan(promoOffer.conditions, commitment) : true;
+  const renderPromoTicket = (a: Extract<NonNullable<AppliedPromo>, { kind: "promo" }>, remove: () => void) => (
+    <PromoTicket
+      key={a.code}
+      code={a.code}
+      discount={a.discount}
+      conditions={a.conditions}
+      applicable={promoPlanOk}
+      amount={quote.promoPerMonth}
+      totalAfter={quote.totalAfterPromo}
+      billedMonths={quote.billedMonths}
+      floorLimited={quote.promoFloorLimited}
+      onSwitchToMonthly={() => setCommitmentId("monthly")}
+      onRemove={remove}
+    />
+  );
 
   // One promotion per order: the box holds a single code and a new one replaces it.
   function applyPromo(next: AppliedPromo) {
@@ -267,7 +282,7 @@ export function StorageCalculator() {
                 <ValetSelector selected={valetId} onSelect={setValetId} />
                 <ValetNotice valet={valet} />
                 <MovingQuoteCheckbox checked={wantsMoving} onChange={setWantsMoving} />
-                <PromoCodeInput applied={promo} onApplied={applyPromo} />
+                <PromoCodeInput applied={promo} onApplied={applyPromo} renderPromo={renderPromoTicket} />
                 <PremiumCrateOption checked={wantsCrate} onChange={setWantsCrate} />
                 <Button type="button" className="w-full" onClick={() => advanceStep("contact")}>
                   Next: Review &amp; contact
@@ -300,7 +315,7 @@ export function StorageCalculator() {
               <ValetSelector selected={valetId} onSelect={setValetId} />
               <ValetNotice valet={valet} />
               <MovingQuoteCheckbox checked={wantsMoving} onChange={setWantsMoving} />
-              <PromoCodeInput applied={promo} onApplied={applyPromo} />
+              <PromoCodeInput applied={promo} onApplied={applyPromo} renderPromo={renderPromoTicket} />
               <PremiumCrateOption checked={wantsCrate} onChange={setWantsCrate} />
             </div>
 
@@ -593,7 +608,6 @@ function RateDashboard({
   promo: AppliedPromo;
   promoPlanOk: boolean;
 }) {
-  const t = usePromoText();
   return (
     <div>
       <p className="text-xs font-semibold tracking-wide text-foreground/60 uppercase">Estimated monthly rate</p>
@@ -612,29 +626,24 @@ function RateDashboard({
       )}
 
       {promo?.kind === "promo" && (
-        <div className="mt-3 rounded-lg border border-brand/40 bg-brand/5 p-3 text-sm">
-          <p className="font-semibold text-brand-ink">
-            {t.promoLine(promo.code)}: {promo.discount.label}
-          </p>
-          {promoPlanOk && quote.promoSavings > 0 ? (
-            <>
-              <p className="mt-1 text-foreground/80 tabular-nums">{t.promoSaving(formatDollars(quote.promoSavings), quote.promoMonths)}</p>
-              <p className="mt-1 font-semibold tabular-nums">
-                {t.totalWithPromo}: ${quote.totalAfterPromo.toFixed(2)}{" "}
-                <span className="text-xs font-normal text-foreground/60">{t.subjectTo}</span>
-              </p>
-              {quote.promoFloorLimited && <p className="mt-1 text-xs text-foreground/70">{t.floorLimited}</p>}
-              {promo.conditions.new_customers_only && <p className="mt-1 text-xs text-foreground/70">{t.newCustomersOnly}</p>}
-            </>
-          ) : (
-            !promoPlanOk && <p className="mt-1 text-xs text-foreground/70">{t.notOnThisPlan}</p>
-          )}
+        <div className="mt-3">
+          <PromoTicket
+            compact
+            code={promo.code}
+            discount={promo.discount}
+            conditions={promo.conditions}
+            applicable={promoPlanOk}
+            amount={quote.promoPerMonth}
+            totalAfter={quote.totalAfterPromo}
+            billedMonths={quote.billedMonths}
+            floorLimited={quote.promoFloorLimited}
+          />
         </div>
       )}
 
       <div className="mt-4 grid grid-cols-3 gap-3 text-center">
-        <div className="rounded-lg bg-brand/5 p-3">
-          <p className="text-lg font-bold text-brand-ink tabular-nums">${quote.savings.toFixed(0)}</p>
+        <div key={quote.promoSavings} className={`rounded-lg bg-brand/5 p-3 ${quote.promoSavings > 0 ? "promo-glow" : ""}`}>
+          <p className="text-lg font-bold text-brand-ink tabular-nums">${(quote.savings + quote.promoSavings).toFixed(0)}</p>
           <p className="text-xs text-foreground/60">Savings</p>
         </div>
         <div className="rounded-lg bg-brand/5 p-3">

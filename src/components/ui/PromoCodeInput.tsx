@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import type { PromoConditions, PromoDiscount, ReferralOffer } from "@/lib/calculator";
 import { trackEvent } from "@/lib/analytics";
 import { usePromoText } from "@/lib/promo-text";
@@ -38,10 +38,13 @@ export function PromoCodeInput({
   applied,
   onApplied,
   compact = false,
+  renderPromo,
 }: {
   applied: AppliedPromo;
   onApplied: (promo: AppliedPromo) => void;
   compact?: boolean;
+  /** Replaces the plain text box for an accepted promo code (the calculator shows its ticket here). */
+  renderPromo?: (applied: Extract<NonNullable<AppliedPromo>, { kind: "promo" }>, remove: () => void) => ReactNode;
 }) {
   const t = usePromoText();
   const [value, setValue] = useState("");
@@ -78,9 +81,16 @@ export function PromoCodeInput({
     }
   }
 
+  function remove() {
+    onApplied(null);
+    setValue("");
+    setState({ kind: "idle" });
+  }
+
   return (
     <div>
-      {applied && (
+      {applied?.kind === "promo" && renderPromo && <div className="mb-3">{renderPromo(applied, remove)}</div>}
+      {applied && !(applied.kind === "promo" && renderPromo) && (
         <div className="mb-3 rounded-lg border border-brand/40 bg-brand/5 p-3 text-sm">
           <p>
             <span className="font-semibold text-brand-ink">{applied.code}</span> {t.applied}:{" "}
@@ -97,11 +107,7 @@ export function PromoCodeInput({
           )}
           <button
             type="button"
-            onClick={() => {
-              onApplied(null);
-              setValue("");
-              setState({ kind: "idle" });
-            }}
+            onClick={remove}
             className="mt-1 text-xs text-foreground/60 underline hover:text-foreground"
           >
             {t.remove}

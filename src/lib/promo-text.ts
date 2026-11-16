@@ -32,6 +32,21 @@ const EN = {
   totalWithPromo: "Estimated total with promo",
   subjectTo: "(subject to confirmation)",
   floorLimited: "The saving is limited so storage never drops below S$55 per module a month.",
+  ticketTag: "Promo applied",
+  /** Headline split around the animated amount: "−S$" + 25 + " off your first month". */
+  headline: (d: { duration: "first_month" | "months" | "contract"; months: number | null }) => ({
+    before: "−S$",
+    after:
+      d.duration === "contract"
+        ? " off every month"
+        : d.duration === "months" && (d.months ?? 1) > 1
+          ? ` off your first ${d.months} months`
+          : " off your first month",
+  }),
+  totalShort: "Total with promo",
+  billedMonths: (n: number) => `for ${n} billed month${n > 1 ? "s" : ""}`,
+  monthlyOnlyTitle: "Applies to Month-to-Month only",
+  switchToMonthly: "Switch to Month-to-Month",
 };
 
 const ZH: typeof EN = {
@@ -57,6 +72,20 @@ const ZH: typeof EN = {
   totalWithPromo: "使用优惠码后的预估总额",
   subjectTo: "（需经确认）",
   floorLimited: "减免额已设上限，确保存储费用每个模块每月不低于 S$55。",
+  ticketTag: "已使用优惠码",
+  headline: (d) => ({
+    before:
+      d.duration === "contract"
+        ? "每月立减 S$"
+        : d.duration === "months" && (d.months ?? 1) > 1
+          ? `前${d.months}个月每月立减 S$`
+          : "首月立减 S$",
+    after: "",
+  }),
+  totalShort: "使用优惠码后总额",
+  billedMonths: (n) => `共${n}个月计费`,
+  monthlyOnlyTitle: "仅适用于按月计划",
+  switchToMonthly: "切换到按月计划",
 };
 
 export type PromoText = typeof EN;
