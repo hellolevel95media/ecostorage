@@ -7,8 +7,7 @@ Public repo: no secrets, keys, scraped reviews or reviewer data in any doc. Last
 
 ## 0. Where we are (end of session 2026-11-16, work PC)
 
-**GA4 check-in done 16 Nov** (started a day early; the system date was 16 Nov). Next: confirm `email_click`
-(see below), then thumbnails and key rotation. Keep GA4 instructions click-by-click: the owner found GA4's UI confusing. **Never send the owner to
+**GA4 check-in done 16 Nov** (started a day early; the system date was 16 Nov). Next: see the open list below. Keep GA4 instructions click-by-click: the owner found GA4's UI confusing. **Never send the owner to
 "Create event"** (it builds a new event and asks for a URL; ours already exist).
 
 - **GA4 event tracking shipped 15 Nov** (commits f5ca662, f19d343, ddbff0f, bf9c892; deploys Ready).
@@ -55,17 +54,17 @@ Public repo: no secrets, keys, scraped reviews or reviewer data in any doc. Last
   owner did it in the Vercel dashboard (can't tell: Vercel CLI isn't linked on the work PC, link would
   need `vercel link`). Rotating here doesn't touch Novac. The only reason to do it is that the old values
   sat in a chat log; the risk is low, so the owner may defer it.
-  (b) thumbnails (site format 1200x800 webp, uploaded via the admin MediaPicker; drafts, so safe to
-  do before the date) for hip-when-nobody-is-home-all-day (17 Nov), hip-defects-damaged-belongings (18),
-  hip-toilet-water-test-opt-out (19), hip-voting-75-percent-how-it-works (20) and
-  corporate-storage-singapore-businesses (20 Dec). 16 Nov: Claude built a contact sheet from
-  `C:\editing` graded proxies. Poor fit for HIP topics (no bathroom or HDB-exterior footage; many frames
-  show faces or sideways phone footage). Best candidates: corporate = open-plan office with boxes
-  (`2025-11-20_b2b...` clip 53730_0048, 10-37s); defects = hands wrapping furniture in plastic
-  (`2025-08-26_hdb-3room...` clip 42917_0057, 0-2s); nobody-home = boxes on trolley in empty HDB room
-  (clip 42307_0055). Footage is EZ Storage branded; confirm brand before using any frame with a logo or
-  shirt. Alternatives: Canva generated images or a plain branded graphic.
-  (c) confirm which "accounts and settings" in section 5 are done.
+  (b) confirm which "accounts and settings" in section 5 are done.
+- **Open list at end of 16 Nov (carry to home PC; all pushed, tree clean, last commit 1f14705):**
+  1. Real staging promo test: a `TEST...` code in calculator + contact form, with and without `?ref=`; confirm Novac's
+     real response (incl. `floor_per_module`) matches the spec, and TESTWEB10 shows "promo code TESTWEB10 (apply it on the quote)" in Novac > Enquiries.
+  2. Confirm Novac live pricing is S$60 per module so website estimates match quotes.
+  3. Recheck `email_click` in GA4 Admin > Events by 18 Nov (do NOT star it).
+  4. Delete 8 stray headless rows in live `page_views` (path /partner, UA HeadlessChrome/156, ~05:24-05:26 UTC 16 Nov); needs owner OK for the live write.
+  5. Delete the `partner-redesign` preview branch (already in main). Confirm latest Vercel production deploy is Ready (`npx vercel ls --global-config .vercel/auth`; `.vercel/auth` is git-ignored, re-login per PC).
+  6. Native speaker to review the ZH promo texts (`src/lib/promo-text.ts`); no ZH page shows the calculator yet.
+  7. Deferred by owner: rotate RESEND_API_KEY and CRON_SECRET.
+  8. Thumbnails are all done (17-20 Nov HIP drafts + corporate).
 - **Articles:** queue healthy; owner parked the non-HIP FAQ + Summary retrofit for now. The first one
   without it publishes 28 Nov (student-belongings-storage-long-break): raise it before ~25 Nov.
 
