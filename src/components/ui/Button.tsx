@@ -1,12 +1,13 @@
 import Link from "next/link";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 
-type Variant = "primary" | "secondary" | "ghost";
+type Variant = "primary" | "secondary" | "ghost" | "dark";
 
 const VARIANT_CLASS: Record<Variant, string> = {
   primary: "bg-brand text-brand-foreground shadow-glow hover:bg-brand/90",
   secondary: "bg-card text-foreground border border-border hover:border-brand/50",
   ghost: "text-foreground hover:text-brand-ink",
+  dark: "bg-foreground text-background hover:bg-foreground/85",
 };
 
 const BASE_CLASS =

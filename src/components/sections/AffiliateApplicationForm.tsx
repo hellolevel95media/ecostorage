@@ -41,15 +41,7 @@ async function submitAffiliateApplication(payload: AffiliateApplicationPayload) 
   if (!res.ok) throw new Error(data.error ?? "Something went wrong — please try again.");
 }
 
-const BENEFITS = [
-  "Earn rewards for every customer you refer",
-  "Tiered rewards that grow with your referrals",
-  "Your referrals get an exclusive welcome offer",
-  "Every application is personally reviewed",
-  "Full programme details and terms are shared once approved",
-];
-
-export function AffiliateApplicationForm() {
+export function AffiliateApplicationForm({ bare = false }: { bare?: boolean }) {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [engaged, setEngaged] = useState(false);
@@ -89,25 +81,13 @@ export function AffiliateApplicationForm() {
   }
 
   return (
-    <div className="rounded-xl border border-border bg-card p-6">
-      <h3 className="text-xl font-semibold">Affiliate application</h3>
-      <ul className="mt-3 space-y-1.5 text-sm text-foreground/70">
-        {BENEFITS.map((benefit) => (
-          <li key={benefit} className="flex gap-2">
-            <span aria-hidden className="text-brand-ink">
-              ✓
-            </span>
-            {benefit}
-          </li>
-        ))}
-      </ul>
-
+    <div className={bare ? "" : "rounded-xl border border-border bg-card p-6"}>
       {status === "success" ? (
-        <div className="mt-4 rounded-lg border border-brand/30 bg-background p-4">
+        <div className="rounded-lg border border-brand/30 bg-background p-4">
           <p className="font-semibold text-brand-ink">Thanks, we review every application personally and will be in touch.</p>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} onFocusCapture={() => setEngaged(true)} className="mt-4">
+        <form onSubmit={handleSubmit} onFocusCapture={() => setEngaged(true)}>
           <input
             type="text"
             name="website"
@@ -156,7 +136,7 @@ export function AffiliateApplicationForm() {
             disabled={status === "submitting" || (turnstileEnabled && engaged && !captchaToken)}
             className="mt-3 w-full sm:w-auto"
           >
-            {status === "submitting" ? "Sending..." : "Apply"}
+            {status === "submitting" ? "Sending..." : "Apply as an affiliate"}
           </Button>
 
           {status === "error" && (

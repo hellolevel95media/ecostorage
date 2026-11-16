@@ -20,6 +20,10 @@ interface ContactFormProps {
   /** Extra allow-listed fields merged into the submitted payload, e.g.
    * { partnerKind: "business" } on the /partner page. */
   metadata?: Record<string, unknown>;
+  /** Drop the form's own card border and padding when it sits inside another card. */
+  bare?: boolean;
+  submitLabel?: string;
+  submitVariant?: "primary" | "dark";
 }
 
 type Status = "idle" | "submitting" | "success" | "error";
@@ -35,6 +39,9 @@ export function ContactForm({
   compact = false,
   headingAs: Heading = "h3",
   metadata,
+  bare = false,
+  submitLabel = "Submit",
+  submitVariant = "primary",
 }: ContactFormProps) {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
@@ -125,7 +132,7 @@ export function ContactForm({
     <form
       onSubmit={handleSubmit}
       onFocusCapture={() => setEngaged(true)}
-      className={compact ? "" : "rounded-xl border border-border bg-card p-6"}
+      className={compact || bare ? "" : "rounded-xl border border-border bg-card p-6"}
     >
       <input
         type="text"
@@ -218,10 +225,11 @@ export function ContactForm({
 
       <Button
         type="submit"
+        variant={submitVariant}
         disabled={status === "submitting" || (turnstileEnabled && engaged && !captchaToken)}
         className={compact ? "mt-2 w-full sm:w-auto" : "mt-3 w-full sm:w-auto"}
       >
-        {status === "submitting" ? "Sending..." : "Submit"}
+        {status === "submitting" ? "Sending..." : submitLabel}
       </Button>
 
       {status === "error" && (
