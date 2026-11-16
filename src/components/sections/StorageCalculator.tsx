@@ -9,6 +9,7 @@ import { PremiumCrateOption } from "@/components/ui/PremiumCrateOption";
 import { showToast } from "@/lib/toast";
 import { NETWORK_ERROR_MESSAGE, submitErrorMessage } from "@/lib/form-errors";
 import { trackEvent } from "@/lib/analytics";
+import { usePromoText } from "@/lib/promo-text";
 import {
   SIZE_GUIDE,
   formatDollars,
@@ -19,6 +20,7 @@ import {
   moduleCountFromSqft,
   calculateQuote,
   referralCommitment,
+  promoAppliesToPlan,
   isValidEmail,
   isValidMobile,
   type CommitmentId,
@@ -81,18 +83,28 @@ export function StorageCalculator() {
   const [errorMessage, setErrorMessage] = useState("");
 
   const guide = SIZE_GUIDE.find((g) => g.sqft === selectedGuideSqft) ?? SIZE_GUIDE[0];
-  // A valid referral code unlocks one extra plan (e.g. 1 month free on 4).
+  // A valid affiliate code unlocks one extra plan (e.g. 1 month free on 4).
+  // A stand-alone promo code adds no plan; it discounts the storage fee.
   const commitmentOptions = useMemo<CommitmentOption[]>(
-    () => (promo ? [...COMMITMENT_OPTIONS, referralCommitment(promo.offer)] : COMMITMENT_OPTIONS),
+    () => (promo?.kind === "affiliate" ? [...COMMITMENT_OPTIONS, referralCommitment(promo.offer)] : COMMITMENT_OPTIONS),
     [promo]
   );
   const commitment = commitmentOptions.find((c) => c.id === commitmentId) ?? COMMITMENT_OPTIONS[0];
   const valet = VALET_OPTIONS.find((v) => v.id === valetId)!;
-  const quote = useMemo(() => calculateQuote({ numUnits, commitment, valet }), [numUnits, commitment, valet]);
+  const promoOffer = useMemo(
+    () => (promo?.kind === "promo" ? { discount: promo.discount, conditions: promo.conditions } : null),
+    [promo]
+  );
+  const quote = useMemo(
+    () => calculateQuote({ numUnits, commitment, valet, promo: promoOffer }),
+    [numUnits, commitment, valet, promoOffer]
+  );
+  const promoPlanOk = promoOffer ? promoAppliesToPlan(promoOffer.conditions, commitment) : true;
 
+  // One promotion per order: the box holds a single code and a new one replaces it.
   function applyPromo(next: AppliedPromo) {
     setPromo(next);
-    if (next) setCommitmentId("referral");
+    if (next?.kind === "affiliate") setCommitmentId("referral");
     else if (commitmentId === "referral") setCommitmentId("monthly");
   }
 
@@ -265,7 +277,7 @@ export function StorageCalculator() {
 
             {mobileStep === "contact" && (
               <div className="mt-6 space-y-6">
-                <RateDashboard quote={quote} numUnits={numUnits} movingQuote={wantsMoving} />
+                <RateDashboard quote={quote} numUnits={numUnits} movingQuote={wantsMoving} promo={promo} promoPlanOk={promoPlanOk} />
                 <form noValidate onSubmit={handleSubmit} onFocusCapture={engageContact} className="space-y-3">
                   <ContactFields contact={contact} errors={errors} onChange={setContact} movingQuote={wantsMoving} />
                   {engaged && !isDesktop && <Turnstile onToken={setCaptchaToken} resetKey={captchaKey} />}
@@ -293,7 +305,7 @@ export function StorageCalculator() {
             </div>
 
             <div className="space-y-6 rounded-2xl border-2 border-foreground/15 bg-card p-6 shadow-card">
-              <RateDashboard quote={quote} numUnits={numUnits} movingQuote={wantsMoving} />
+              <RateDashboard quote={quote} numUnits={numUnits} movingQuote={wantsMoving} promo={promo} promoPlanOk={promoPlanOk} />
               <form noValidate onSubmit={handleSubmit} onFocusCapture={engageContact} className="space-y-3 border-t-2 border-foreground/15 pt-6">
                 <ContactFields contact={contact} errors={errors} onChange={setContact} movingQuote={wantsMoving} />
                 {engaged && isDesktop && <Turnstile onToken={setCaptchaToken} resetKey={captchaKey} />}
@@ -572,11 +584,16 @@ function RateDashboard({
   quote,
   numUnits,
   movingQuote,
+  promo,
+  promoPlanOk,
 }: {
   quote: ReturnType<typeof calculateQuote>;
   numUnits: number;
   movingQuote: boolean;
+  promo: AppliedPromo;
+  promoPlanOk: boolean;
 }) {
+  const t = usePromoText();
   return (
     <div>
       <p className="text-xs font-semibold tracking-wide text-foreground/60 uppercase">Estimated monthly rate</p>
@@ -592,6 +609,26 @@ function RateDashboard({
         <p className="mt-2 text-sm font-medium text-brand-ink">
           + Moving quote to follow (S${TRUCKLOAD_14FT_RATE} per full 14ft truckload)
         </p>
+      )}
+
+      {promo?.kind === "promo" && (
+        <div className="mt-3 rounded-lg border border-brand/40 bg-brand/5 p-3 text-sm">
+          <p className="font-semibold text-brand-ink">
+            {t.promoLine(promo.code)}: {promo.discount.label}
+          </p>
+          {promoPlanOk && quote.promoSavings > 0 ? (
+            <>
+              <p className="mt-1 text-foreground/80 tabular-nums">{t.promoSaving(formatDollars(quote.promoSavings), quote.promoMonths)}</p>
+              <p className="mt-1 font-semibold tabular-nums">
+                {t.totalWithPromo}: ${quote.totalAfterPromo.toFixed(2)}{" "}
+                <span className="text-xs font-normal text-foreground/60">{t.subjectTo}</span>
+              </p>
+              {promo.conditions.new_customers_only && <p className="mt-1 text-xs text-foreground/70">{t.newCustomersOnly}</p>}
+            </>
+          ) : (
+            !promoPlanOk && <p className="mt-1 text-xs text-foreground/70">{t.notOnThisPlan}</p>
+          )}
+        </div>
       )}
 
       <div className="mt-4 grid grid-cols-3 gap-3 text-center">

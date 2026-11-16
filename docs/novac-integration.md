@@ -166,3 +166,16 @@ Response: `{ valid: false }` or
 Use `offer` to show "1 month free on a 4-month plan" and to unlock the
 4-month option. `429` after 10 checks per 10 minutes per visitor. The
 response never identifies the affiliate.
+
+### Stand-alone promo codes (kind "promo")
+
+The same endpoint also answers promo codes (4-20 letters/digits, e.g. `XMAS10`):
+`{ valid: true, kind: "promo", code, discount: { type: "percent"|"amount", value, max_per_month|null,
+duration: "first_month"|"months"|"contract", months|null, label }, conditions: { new_customers_only,
+plans_with_free_months, not_with_referral: true } }`. A missing `kind` means an affiliate code (older
+Novac). The website (`src/app/api/promo/route.ts`) passes `discount` and `conditions` through after
+checking their shape, and refuses a promo code when the visitor has the `eco_ref` cookie (the
+affiliate link wins; one offer per order). The calculator applies the discount to the monthly storage
+fee only (never valet, deposit or admin fee), respects `max_per_month` and the duration, and when
+`plans_with_free_months` is false shows the code on Month-to-Month only. Quotes with a promo are
+"subject to confirmation"; the typed code is still sent as `promo_code` on the enquiry for staff.

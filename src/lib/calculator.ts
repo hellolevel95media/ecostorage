@@ -179,10 +179,56 @@ export function monthlyStorageRate(numUnits: number): number {
   return roundUpTo10Cents(ratePerUnit * numUnits);
 }
 
+/**
+ * Stand-alone promo code, as answered by the affiliate system (Novac) for
+ * a code that isn't an affiliate referral code. Discounts apply to the monthly
+ * storage fee only, never valet, deposit or admin fee.
+ */
+export interface PromoDiscount {
+  type: "percent" | "amount";
+  value: number;
+  max_per_month: number | null;
+  duration: "first_month" | "months" | "contract";
+  months: number | null;
+  label: string;
+}
+
+export interface PromoConditions {
+  new_customers_only: boolean;
+  /** False: the code only works on Month-to-Month (plans with free months are excluded). */
+  plans_with_free_months: boolean;
+  not_with_referral: boolean;
+}
+
+export interface PromoOffer {
+  discount: PromoDiscount;
+  conditions: PromoConditions;
+}
+
+/** Whether a promo code can be used on this commitment plan. */
+export function promoAppliesToPlan(conditions: PromoConditions, commitment: CommitmentOption): boolean {
+  return conditions.plans_with_free_months || commitment.freeMonths === 0;
+}
+
+const round2 = (n: number) => Math.round(n * 100) / 100;
+
+/** Saving from a promo on the storage fee, over the billed months the quote covers. */
+export function promoSaving(storageMonthly: number, billedMonths: number, discount: PromoDiscount) {
+  const raw = discount.type === "percent" ? (storageMonthly * discount.value) / 100 : discount.value;
+  const capped = Math.min(raw, discount.max_per_month ?? Infinity, storageMonthly);
+  const perMonth = round2(Math.max(0, capped));
+  const lasts =
+    discount.duration === "first_month" ? 1 : discount.duration === "months" ? Math.max(1, discount.months ?? 1) : billedMonths;
+  const months = Math.min(lasts, billedMonths);
+  return { perMonth, months, total: round2(perMonth * months) };
+}
+
 export interface QuoteInput {
   numUnits: number;
   commitment: CommitmentOption;
   valet: ValetOption;
+  /** A validated stand-alone promo code; ignored if it doesn't apply to the chosen plan. */
+  promo?: PromoOffer | null;
 }
 
 export interface QuoteResult {
@@ -196,9 +242,14 @@ export interface QuoteResult {
   volumeDiscountPct: number;
   co2SavedKg: number;
   treesSaved: number;
+  /** Promo saving per discounted month, months it lasts, total, and the total after it. 0 when no promo applies. */
+  promoPerMonth: number;
+  promoMonths: number;
+  promoSavings: number;
+  totalAfterPromo: number;
 }
 
-export function calculateQuote({ numUnits, commitment, valet }: QuoteInput): QuoteResult {
+export function calculateQuote({ numUnits, commitment, valet, promo }: QuoteInput): QuoteResult {
   const volumeDiscount = volumeDiscountPerUnit(numUnits);
   const ratePerUnit = Math.max(MODULE_MIN_RATE, MODULE_BASE_RATE - volumeDiscount);
   const monthlyTotal = monthlyStorageRate(numUnits);
@@ -211,6 +262,9 @@ export function calculateQuote({ numUnits, commitment, valet }: QuoteInput): Quo
   const co2SavedKg = CO2_PER_MODULE_PER_MONTH_KG * numUnits * commitment.months;
   const treesSaved = Math.max(1, Math.round(co2SavedKg / 21));
 
+  const promoApplies = promo ? promoAppliesToPlan(promo.conditions, commitment) : false;
+  const saving = promo && promoApplies ? promoSaving(monthlyTotal, billedMonths, promo.discount) : { perMonth: 0, months: 0, total: 0 };
+
   return {
     ratePerUnit,
     monthlyTotal,
@@ -222,6 +276,10 @@ export function calculateQuote({ numUnits, commitment, valet }: QuoteInput): Quo
     volumeDiscountPct: volumeDiscount,
     co2SavedKg,
     treesSaved,
+    promoPerMonth: saving.perMonth,
+    promoMonths: saving.months,
+    promoSavings: saving.total,
+    totalAfterPromo: round2(totalCost - saving.total),
   };
 }
 

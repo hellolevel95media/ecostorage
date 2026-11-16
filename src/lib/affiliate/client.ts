@@ -53,8 +53,12 @@ export async function postToAffiliate(
   }
 }
 
-/** Referral codes: 8 chars, no look-alike letters (I, O, 0, 1). */
-const CODE = /^[A-HJ-NP-Z2-9]{8}$/;
+/**
+ * Codes typed into the promo box: affiliate referral codes (8 chars, no I/O/0/1)
+ * and stand-alone promo codes (4-20 letters/digits, e.g. XMAS10). Which kind a
+ * code is gets decided by the affiliate system, not by its shape.
+ */
+const CODE = /^[A-Z0-9]{4,20}$/;
 
 export function normalizeReferralCode(value: unknown): string | null {
   if (typeof value !== "string") return null;

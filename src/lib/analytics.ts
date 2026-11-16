@@ -25,7 +25,7 @@ export type AnalyticsEvent =
   | { name: "whatsapp_click"; params: { location: string } }
   | { name: "phone_click"; params: { location: string } }
   | { name: "email_click"; params: { location: string } }
-  | { name: "promo_applied"; params: { free_months: number; commitment_months: number } }
+  | { name: "promo_applied"; params: { free_months: number; commitment_months: number } | { kind: "promo"; discount_type: string; duration: string } }
   | { name: "affiliate_apply"; params: Record<string, never> };
 
 export type LeadFormType = "contact" | "personal" | "corporate" | "partner" | "calculator";
