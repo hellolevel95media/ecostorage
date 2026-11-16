@@ -2,12 +2,13 @@
 
 Tracked in git so both PCs share it. Read it first, once per session; update only when the owner asks.
 Public repo: no secrets, keys, scraped reviews or reviewer data in any doc. Last full rewrite
-2026-11-10; tidied 2026-11-15 (completed items removed; git history has the originals).
+2026-11-10; tidied 2026-11-15 and 2026-11-16 (completed items removed; git history has the originals;
+`docs/archive/` holds older handoffs, already merged here).
 
-## 0. Where we are (end of session 2026-11-15)
+## 0. Where we are (end of session 2026-11-16, work PC)
 
-**NEXT CHECK-IN: MON 17 NOV 2026. Start with GA4, using `TODO.txt` (repo root, tracked) at step 4.**
-Keep GA4 instructions click-by-click: the owner found GA4's UI confusing. **Never send the owner to
+**GA4 check-in done 16 Nov** (started a day early; the system date was 16 Nov). Next: confirm `email_click`
+(see below), then thumbnails and key rotation. Keep GA4 instructions click-by-click: the owner found GA4's UI confusing. **Never send the owner to
 "Create event"** (it builds a new event and asks for a URL; ours already exist).
 
 - **GA4 event tracking shipped 15 Nov** (commits f5ca662, f19d343, ddbff0f, bf9c892; deploys Ready).
@@ -25,20 +26,43 @@ Keep GA4 instructions click-by-click: the owner found GA4's UI confusing. **Neve
   internal-traffic IP rule created (filter left on Testing); cross-domain list set to `ecostorage.sg`
   (tag quality now "Excellent"; stray `*.vercel.app` hits dismissed). Key events tab holds only GA4's
   placeholders `close_convert_lead`, `qualify_lead` (never fire, leave) and `purchase`.
-- **17 Nov to-do (TODO.txt steps 4 and 8):** Admin > Events > "Recent events" tab, star `generate_lead`,
-  `whatsapp_click`, `phone_click`; confirm `email_click` is listed; switch the Internal Traffic data
-  filter to Active; check the admin Leads panel shows the 15 Nov tests; Claude adds the first real row
-  to `docs/analytics-ledger.md`.
+- **Done 16 Nov:** `generate_lead`, `whatsapp_click`, `phone_click` starred as key events; Internal Traffic
+  data filter set to **Active** (owner's own visits and tests no longer count, so test from a phone on
+  mobile data or ask for a different IP); admin Leads panel checked against a screenshot (1/1/1/0, matches
+  GA4); ledger rows added (commit 9059551).
+- **Shipped 16 Nov (commits c43bf43, efbf26c):** `/partner` redesigned as two separate cards (affiliate vs
+  business partnership); promo-code box + calculator now support Novac stand-alone promo codes
+  (`kind:"promo"`: storage-fee-only discount, Month-to-Month-only when `plans_with_free_months` is false, no
+  stacking with an `eco_ref` affiliate link, EN + ZH texts in `src/lib/promo-text.ts`). Tested only against a
+  mock Novac; **still to do: test with a real staging code** (Jonny creates `TEST...` codes on staging Novac).
+  Promo ignores the S$55/module floor (capped at the storage fee). Thumbnails added to 4 drafts (defects
+  article, 18 Nov, still has none). Vercel CLI linked for this repo (`--global-config .vercel/auth`).
+- **Still open (GA4):** `email_click` fires (seen in Realtime 16 Nov) but is not yet in Admin > Events
+  (standard reports lag 24-48h; there is no "Existing events" tab). Do NOT star it: it was never meant to
+  be a key event. If still absent from the Events list by 18 Nov, check the site's email links and run a
+  `run_report` for it. The GA MCP server works on the work PC (it answered 16 Nov).
 - **Enquiry emails work in production:** Resend notification to hello@ arrived on the 15 Nov test.
 - **Vercel CLI works** via `npx vercel <cmd>` from the repo root (user hello-76246995, linked
   level95/ecostorage, writes `VERCEL_OIDC_TOKEN` to `.env.local`). Production env has all four GA vars,
   RESEND_API_KEY, CRON_SECRET, INQUIRY_NOTIFICATION_*; the two Turnstile keys are NOT in Vercel.
 - **Owner to-do, still open:** (a) rotate `RESEND_API_KEY` and `CRON_SECRET` (printed in chat
   2026-11-10; update both in Vercel and redeploy, or the publish cron returns 401) and the local
-  Turnstile secret; (b) thumbnails for hip-when-nobody-is-home-all-day (17 Nov),
-  hip-defects-damaged-belongings (18), hip-toilet-water-test-opt-out (19), hip-voting-75-percent-how-it-works
-  (20) and corporate-storage-singapore-businesses (20 Dec); (c) confirm which "accounts and settings"
-  in section 5 are done.
+  Turnstile secret. Checked 16 Nov: Novac (`C:\Novac`) uses its own, different Resend key (hash differs)
+  and its own Vercel project, so nothing there has rotated these; this site's pair is NOT done unless the
+  owner did it in the Vercel dashboard (can't tell: Vercel CLI isn't linked on the work PC, link would
+  need `vercel link`). Rotating here doesn't touch Novac. The only reason to do it is that the old values
+  sat in a chat log; the risk is low, so the owner may defer it.
+  (b) thumbnails (site format 1200x800 webp, uploaded via the admin MediaPicker; drafts, so safe to
+  do before the date) for hip-when-nobody-is-home-all-day (17 Nov), hip-defects-damaged-belongings (18),
+  hip-toilet-water-test-opt-out (19), hip-voting-75-percent-how-it-works (20) and
+  corporate-storage-singapore-businesses (20 Dec). 16 Nov: Claude built a contact sheet from
+  `C:\editing` graded proxies. Poor fit for HIP topics (no bathroom or HDB-exterior footage; many frames
+  show faces or sideways phone footage). Best candidates: corporate = open-plan office with boxes
+  (`2025-11-20_b2b...` clip 53730_0048, 10-37s); defects = hands wrapping furniture in plastic
+  (`2025-08-26_hdb-3room...` clip 42917_0057, 0-2s); nobody-home = boxes on trolley in empty HDB room
+  (clip 42307_0055). Footage is EZ Storage branded; confirm brand before using any frame with a logo or
+  shirt. Alternatives: Canva generated images or a plain branded graphic.
+  (c) confirm which "accounts and settings" in section 5 are done.
 - **Articles:** queue healthy; owner parked the non-HIP FAQ + Summary retrofit for now. The first one
   without it publishes 28 Nov (student-belongings-storage-long-break): raise it before ~25 Nov.
 
@@ -243,10 +267,10 @@ confirm real terms). No legal/tenancy advice in rental articles.
 
 ### 7a. Analytics follow-ups (tracking setup itself: see section 0)
 
-- Snapshots live in `docs/analytics-ledger.md` (13 Nov GA4 baseline: 9 users, 14 sessions, 0 key events;
-  Direct 7, Organic Search 3 with the best engagement, AI Assistant 3 at ~2s). Add a row each session.
-- **GA MCP server** still fails (CONNECTION_CLOSED). Work-PC only; needs pipx `analytics-mcp` and the
-  service-account key at the stated path, Analytics Data/Admin API enabled, Viewer on 561860842.
+- Snapshots live in `docs/analytics-ledger.md` (13 Nov baseline: 9 users, 14 sessions; 16 Nov: 11 users,
+  18 sessions, 38 views, 44% engagement, 3 test leads, no real leads yet; AI Assistant ~2s). Add a row each session.
+- **GA MCP server** works on the work PC (verified 16 Nov: `run_report`, `run_realtime_report`,
+  `list_key_events`). Needs pipx `analytics-mcp` and the service-account key at the stated path.
 - **Compound what works:** more HIP-timeline-style articles; push Organic Search via the GSC zero-click
   targets above; find out why AI Assistant visits last ~2s (check `llms.txt` and cited URLs).
 - **UTM tags** on every owner-shared link (exact links at the bottom of `TODO.txt`); rebuild name card
