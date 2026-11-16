@@ -31,6 +31,7 @@ const EN = {
   promoSaving: (amount: string, months: number) => `Promo saving: −$${amount} over ${months} month${months > 1 ? "s" : ""}`,
   totalWithPromo: "Estimated total with promo",
   subjectTo: "(subject to confirmation)",
+  floorLimited: "The saving is limited so storage never drops below S$55 per module a month.",
 };
 
 const ZH: typeof EN = {
@@ -55,6 +56,7 @@ const ZH: typeof EN = {
   promoSaving: (amount, months) => `优惠减免：−$${amount}（共${months}个月）`,
   totalWithPromo: "使用优惠码后的预估总额",
   subjectTo: "（需经确认）",
+  floorLimited: "减免额已设上限，确保存储费用每个模块每月不低于 S$55。",
 };
 
 export type PromoText = typeof EN;

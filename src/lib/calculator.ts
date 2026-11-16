@@ -1,6 +1,6 @@
 export const MODULE_SQFT = 20;
 export const MODULE_BASE_RATE = 60;
-/** Hard floor: no discount may take a 20 sqft module below this per month. */
+/** Hard floor: no discount (promo codes included) may take a 20 sqft module below this per month. */
 export const MODULE_MIN_RATE = 55;
 export const CO2_PER_MODULE_PER_MONTH_KG = 12;
 /** Collection or delivery by 14ft truck, per full truckload (with or without tailgate). Part loads are quoted.
@@ -160,23 +160,15 @@ export const VALET_OPTIONS: ValetOption[] = [
   },
 ];
 
-export function volumeDiscountPerUnit(numUnits: number): number {
-  if (numUnits <= 1) return 0;
-  if (numUnits === 2) return 1.67;
-  if (numUnits <= 4) return 3.33;
-  return 5;
-}
-
 /** Rounds a dollar amount up to the next 10 cents (116.66 -> 116.70). */
 function roundUpTo10Cents(amount: number): number {
   const cents = Math.round(amount * 100);
   return (Math.ceil(cents / 10) * 10) / 100;
 }
 
-/** Monthly storage rent for a number of modules, before valet and offers. */
+/** Monthly storage rent for a number of modules, before valet and offers. One price for every size. */
 export function monthlyStorageRate(numUnits: number): number {
-  const ratePerUnit = Math.max(MODULE_MIN_RATE, MODULE_BASE_RATE - volumeDiscountPerUnit(numUnits));
-  return roundUpTo10Cents(ratePerUnit * numUnits);
+  return roundUpTo10Cents(MODULE_BASE_RATE * numUnits);
 }
 
 /**
@@ -188,6 +180,8 @@ export interface PromoDiscount {
   type: "percent" | "amount";
   value: number;
   max_per_month: number | null;
+  /** Lowest storage price per 20 sqft module per month after the discount; Novac sends 55. Missing means 55. */
+  floor_per_module?: number | null;
   duration: "first_month" | "months" | "contract";
   months: number | null;
   label: string;
@@ -212,15 +206,21 @@ export function promoAppliesToPlan(conditions: PromoConditions, commitment: Comm
 
 const round2 = (n: number) => Math.round(n * 100) / 100;
 
-/** Saving from a promo on the storage fee, over the billed months the quote covers. */
-export function promoSaving(storageMonthly: number, billedMonths: number, discount: PromoDiscount) {
-  const raw = discount.type === "percent" ? (storageMonthly * discount.value) / 100 : discount.value;
-  const capped = Math.min(raw, discount.max_per_month ?? Infinity, storageMonthly);
-  const perMonth = round2(Math.max(0, capped));
+/**
+ * Saving from a promo on the monthly storage fee only (never valet), over the billed
+ * months the quote covers. It never takes storage below the floor price per module
+ * (S$55 x modules): 5 modules = S$300 -> at most S$25 off; 1 module = S$60 -> at most S$5.
+ */
+export function promoSaving(storageMonthly: number, numUnits: number, billedMonths: number, discount: PromoDiscount) {
+  const floor = discount.floor_per_module ?? MODULE_MIN_RATE;
+  const room = Math.max(0, storageMonthly - floor * numUnits);
+  const wanted = discount.type === "percent" ? (storageMonthly * discount.value) / 100 : discount.value;
+  const wantedCapped = Math.min(wanted, discount.max_per_month ?? Infinity);
+  const perMonth = round2(Math.max(0, Math.min(wantedCapped, room)));
   const lasts =
     discount.duration === "first_month" ? 1 : discount.duration === "months" ? Math.max(1, discount.months ?? 1) : billedMonths;
   const months = Math.min(lasts, billedMonths);
-  return { perMonth, months, total: round2(perMonth * months) };
+  return { perMonth, months, total: round2(perMonth * months), floorLimited: wantedCapped > room };
 }
 
 export interface QuoteInput {
@@ -239,7 +239,6 @@ export interface QuoteResult {
   totalCost: number;
   standardTotal: number;
   savings: number;
-  volumeDiscountPct: number;
   co2SavedKg: number;
   treesSaved: number;
   /** Promo saving per discounted month, months it lasts, total, and the total after it. 0 when no promo applies. */
@@ -247,11 +246,12 @@ export interface QuoteResult {
   promoMonths: number;
   promoSavings: number;
   totalAfterPromo: number;
+  /** True when the code would take more off than the S$55-per-module floor allows. */
+  promoFloorLimited: boolean;
 }
 
 export function calculateQuote({ numUnits, commitment, valet, promo }: QuoteInput): QuoteResult {
-  const volumeDiscount = volumeDiscountPerUnit(numUnits);
-  const ratePerUnit = Math.max(MODULE_MIN_RATE, MODULE_BASE_RATE - volumeDiscount);
+  const ratePerUnit = MODULE_BASE_RATE;
   const monthlyTotal = monthlyStorageRate(numUnits);
   const discountedMonthly = Math.max(0, monthlyTotal) + valet.monthlyFee;
   const billedMonths = commitment.billedMonths;
@@ -263,7 +263,10 @@ export function calculateQuote({ numUnits, commitment, valet, promo }: QuoteInpu
   const treesSaved = Math.max(1, Math.round(co2SavedKg / 21));
 
   const promoApplies = promo ? promoAppliesToPlan(promo.conditions, commitment) : false;
-  const saving = promo && promoApplies ? promoSaving(monthlyTotal, billedMonths, promo.discount) : { perMonth: 0, months: 0, total: 0 };
+  const saving =
+    promo && promoApplies
+      ? promoSaving(monthlyTotal, numUnits, billedMonths, promo.discount)
+      : { perMonth: 0, months: 0, total: 0, floorLimited: false };
 
   return {
     ratePerUnit,
@@ -273,13 +276,13 @@ export function calculateQuote({ numUnits, commitment, valet, promo }: QuoteInpu
     totalCost,
     standardTotal,
     savings,
-    volumeDiscountPct: volumeDiscount,
     co2SavedKg,
     treesSaved,
     promoPerMonth: saving.perMonth,
     promoMonths: saving.months,
     promoSavings: saving.total,
     totalAfterPromo: round2(totalCost - saving.total),
+    promoFloorLimited: saving.floorLimited,
   };
 }
 

@@ -34,7 +34,7 @@ Main warehousing runs at 100% ambient temperature (not air-conditioned); only ~1
 ## Capabilities & Constraints
 
 - Admin CMS backend: Supabase-driven `sections`, `services`, and `articles`, editable without code changes (site falls back to static copy in `src/lib/fallback-content.ts` when no DB row exists).
-- Lead capture via Supabase `inquiries` table, including a pricing calculator (20 sqft "module" unit, commitment-period tiers, valet delivery add-ons, volume discounts) that also surfaces environmental metrics (CO2 saved, trees saved) tied to the ambient-warehousing story above.
+- Lead capture via Supabase `inquiries` table, including a pricing calculator (20 sqft "module" unit, commitment-period tiers, valet delivery add-ons, promo codes; one S$60 price per module for every size) that also surfaces environmental metrics (CO2 saved, trees saved) tied to the ambient-warehousing story above.
 - Never disclose specific warehouse locations in any public-facing copy or UI.
 
 ## Brand Commitments

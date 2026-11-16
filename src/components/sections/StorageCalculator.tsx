@@ -623,6 +623,7 @@ function RateDashboard({
                 {t.totalWithPromo}: ${quote.totalAfterPromo.toFixed(2)}{" "}
                 <span className="text-xs font-normal text-foreground/60">{t.subjectTo}</span>
               </p>
+              {quote.promoFloorLimited && <p className="mt-1 text-xs text-foreground/70">{t.floorLimited}</p>}
               {promo.conditions.new_customers_only && <p className="mt-1 text-xs text-foreground/70">{t.newCustomersOnly}</p>}
             </>
           ) : (

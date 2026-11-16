@@ -24,6 +24,8 @@ function sanitizeDiscount(raw: unknown): PromoDiscount | null {
   if (!DURATIONS.includes(d.duration as (typeof DURATIONS)[number])) return null;
   const max = d.max_per_month;
   if (max !== null && max !== undefined && (typeof max !== "number" || !Number.isFinite(max) || max < 0)) return null;
+  const floor = d.floor_per_module;
+  if (floor !== null && floor !== undefined && (typeof floor !== "number" || !Number.isFinite(floor) || floor < 0)) return null;
   const months = d.months;
   if (months !== null && months !== undefined && (!Number.isInteger(months) || (months as number) < 1)) return null;
   if (d.duration === "months" && !Number.isInteger(months)) return null;
@@ -31,6 +33,7 @@ function sanitizeDiscount(raw: unknown): PromoDiscount | null {
     type: d.type,
     value: d.value,
     max_per_month: typeof max === "number" ? max : null,
+    floor_per_module: typeof floor === "number" ? floor : null,
     duration: d.duration as PromoDiscount["duration"],
     months: typeof months === "number" ? months : null,
     label: typeof d.label === "string" ? d.label.slice(0, 120) : "",

@@ -73,39 +73,46 @@ The live calculation is performed by the public `calculator.calculate` procedure
 
 Let:
 
-- `B` = base monthly rate for the selected unit size.
-- `N` = number of units.
-- `V` = volume discount per unit, when applicable.
+- `B` = base monthly rate per 20 sqft module (S$60, the same for every size and quantity).
+- `N` = number of modules.
 - `M` = duration in months.
 - `F` = free months granted by the commitment period.
 - `A` = calculated admin fee.
-- `P` = promo discount.
+- `P` = promo discount per month: a Novac promo code (percent or S$ off the storage fee only, never valet,
+  deposit or admin fee). One promotion per order: a promo code is never combined with an affiliate referral or
+  the referral plan, and an affiliate `?ref=` link beats a typed promo code.
 
-The current procedure applies the volume discount only when the selected unit is 20 sqft:
+There are no volume tiers. One price applies to every size:
 
 ```text
-volumeDiscount = calcVolumeDiscount(N, sqft)
-ratePerUnit    = max(55, B - volumeDiscount)   # S$55/module/month hard floor
+ratePerUnit    = 60                      # S$60 per 20 sqft module per month, whatever N is
 monthlyTotal   = roundUpTo10Cents(ratePerUnit × N)
 billableMonths = M   # the lock-in length; free months F are extra, so occupancy = M + F
 ```
+
+Savings come only from the commitment plans' free months (8+1, 12+2, 18+3) and from promo codes.
 
 The normal admin fee is calculated from the monthly total and duration:
 
 ```text
 adminFee          = calcAdminFee(monthlyTotal, M)
-effectiveAdminFee = 0 when a valid waive-admin-fee promo applies
-                    otherwise adminFee
+effectiveAdminFee = adminFee      # no promo waives the admin fee
 ```
 
-The displayed monthly figure is calculated after any fixed or percentage promo discount:
+The monthly storage fee after a promo is limited by a hard floor of S$55 per module per month, which also binds
+promo codes (Novac sends it as `discount.floor_per_module`; the site falls back to 55 if it is missing):
 
 ```text
-discountedMonthly = max(0, monthlyTotal - P)
+discountedMonthly = max(55 × N, monthlyTotal - P)    # P applies only in the months the code lasts
 totalCost         = discountedMonthly × billableMonths + effectiveAdminFee
 ```
 
-The reference comparison uses the undiscounted base rate across the full commitment duration:
+Examples: 5 modules = S$300, so a promo takes at most S$25 off (S$275). 1 module = S$60, so at most S$5 off.
+The calculator shows the amount actually taken off, a note when the floor limited it, and prices with a promo are
+"subject to confirmation" (the team confirms the code on the quote).
+
+The reference comparison uses the list rate across the full commitment duration, so it now shows only
+free-month savings (and, separately, any promo):
 
 ```text
 standardTotal = B × N × (M + F)   # list price for every month of storage, free ones included
@@ -114,20 +121,7 @@ savings       = max(0, standardTotal - totalCost)
 
 The frontend displays `discountedMonthly` as the estimated monthly rate. It displays the `billableMonths` value as the billed-month count. The lump-sum `totalCost` and the fee detail are not shown in the visible rate dashboard, although they remain available to the submission payload and backend response.
 
-## 6. Volume Discount
-
-The current `getVolumeDiscountPct` helper is named as a percentage helper, but it returns a percentage-like value used as a per-unit rate reduction by the server calculation. It applies only to 20 sqft modules:
-
-| Number of 20 sqft units | Current reduction value |
-|---:|---:|
-| 1 | $0 per unit |
-| 2 | 1.67 per unit |
-| 3–4 | 3.33 per unit |
-| 5 or more | 5 per unit (floor: S$55 per unit per month; no discount goes lower) |
-
-The interface summarizes this as **“Save X% via Storage+”** using the returned value. The label is part of the current product behavior and should be reviewed if the backend value is redefined as a true currency discount rather than a percentage-like reduction.
-
-## 7. Environmental Metrics
+## 6. Environmental Metrics
 
 The procedure estimates carbon savings using a module-specific monthly factor:
 
@@ -145,7 +139,7 @@ treesSaved = max(1, round(co2Saved / 21))
 
 The frontend labels the first result **CO₂ saved** and the second result **Trees saved**. The response property is historically named `co2SavedLiters`, but it is displayed and calculated as kilograms. Any API cleanup should rename the property or preserve a compatibility alias while updating the frontend contract.
 
-## 8. Validation and Submission
+## 7. Validation and Submission
 
 The contact step requires a first name, a valid email address, and a valid mobile number. Email validation rejects incomplete domains such as `name@domain` and `test@com`. Mobile validation requires at least eight digits while allowing common separators and country-code formats.
 
@@ -159,7 +153,7 @@ The current form fields are:
 
 On successful validation, the calculator builds a Fluent Forms payload containing contact values, storage type, selected footprint, module count, duration, monthly price, total price, internal fee and deposit values, valet option, savings, and promo code. The configured `submitWordPressLead` function sends the payload to the centralized WordPress endpoint. A successful response changes the interface to the **Price Locked In!** state and displays a 24-hour follow-up message.
 
-## 9. Responsive Interaction Model
+## 8. Responsive Interaction Model
 
 Desktop uses a two-column layout. The left side contains configuration controls, while the right side combines the rate dashboard and contact form.
 
@@ -171,7 +165,7 @@ Mobile uses a three-step wizard that mounts only the active step:
 
 The mobile step indicator allows returning to completed steps. Forward navigation remains explicit through full-width buttons. The form controls use a minimum 16-pixel font on mobile, visible borders, light backgrounds, and full-width stacking to avoid browser zoom and cramped fields.
 
-## 10. Operational Notes
+## 9. Operational Notes
 
 The visual guide on the homepage contains static starting rates for six practical footprints. The calculator obtains unit sizes and base rates through the backend `getUnitSizes` query. These are separate sources. The guide is therefore a marketing and orientation layer, while the live calculator response is the pricing source used for the submitted quote.
 
