@@ -18,14 +18,14 @@ declare global {
 }
 
 export type AnalyticsEvent =
-  | { name: "generate_lead"; params: { form_type: LeadFormType; has_moving_quote: boolean; has_promo: boolean; num_units?: number; commitment?: string; valet?: string; premium_crate?: boolean } }
+  | { name: "generate_lead"; params: { form_type: LeadFormType; has_moving_quote: boolean; has_promo: boolean; promo_article?: string; num_units?: number; commitment?: string; valet?: string; premium_crate?: boolean } }
   | { name: "form_error"; params: { form_type: LeadFormType | "affiliate" | "promo"; reason: string } }
   | { name: "calculator_start"; params: { trigger: "size_guide" | "units" | "contact" } }
   | { name: "calculator_step"; params: { step: string } }
   | { name: "whatsapp_click"; params: { location: string } }
   | { name: "phone_click"; params: { location: string } }
   | { name: "email_click"; params: { location: string } }
-  | { name: "promo_applied"; params: { free_months: number; commitment_months: number } | { kind: "promo"; discount_type: string; duration: string } }
+  | { name: "promo_applied"; params: ({ free_months: number; commitment_months: number } | { kind: "promo"; discount_type: string; duration: string }) & { source?: "link"; article?: string } }
   | { name: "affiliate_apply"; params: Record<string, never> };
 
 export type LeadFormType = "contact" | "personal" | "corporate" | "partner" | "calculator";

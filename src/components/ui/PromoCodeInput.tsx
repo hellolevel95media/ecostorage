@@ -28,6 +28,44 @@ interface PromoResponse {
   error?: string;
 }
 
+export type PromoLookup =
+  | { kind: "ok"; promo: NonNullable<AppliedPromo> }
+  | { kind: "invalid" }
+  | { kind: "referral_active" }
+  | { kind: "error"; message?: string };
+
+/** Checks a code with /api/promo. Shared by the box's Apply button and the `?promo=` link pre-fill. */
+export async function lookupPromo(code: string): Promise<PromoLookup> {
+  try {
+    const res = await fetch("/api/promo", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code }),
+    });
+    const data = (await res.json()) as PromoResponse;
+    if (!res.ok) return { kind: "error", message: data.error };
+    if (data.valid && data.code && data.kind === "promo" && data.discount && data.conditions) {
+      return { kind: "ok", promo: { kind: "promo", code: data.code, discount: data.discount, conditions: data.conditions } };
+    }
+    if (data.valid && data.code && data.offer) {
+      return { kind: "ok", promo: { kind: "affiliate", code: data.code, offer: data.offer } };
+    }
+    if (data.reason === "referral_active") return { kind: "referral_active" };
+    return { kind: "invalid" };
+  } catch {
+    return { kind: "error" };
+  }
+}
+
+/** Offer terms only; the code itself stays out of analytics. `article` is the resource page that sent the visitor, if any. */
+export function trackPromoApplied(promo: NonNullable<AppliedPromo>, extra?: { source: "link"; article?: string }): void {
+  if (promo.kind === "promo") {
+    trackEvent("promo_applied", { kind: "promo", discount_type: promo.discount.type, duration: promo.discount.duration, ...extra });
+  } else {
+    trackEvent("promo_applied", { free_months: promo.offer.free_months, commitment_months: promo.offer.commitment_months, ...extra });
+  }
+}
+
 /**
  * Promo / referral code field. "Apply" checks the code with the affiliate
  * system (via /api/promo); only a valid code is reported to the parent. The box
@@ -52,32 +90,16 @@ export function PromoCodeInput({
 
   async function apply() {
     setState({ kind: "checking" });
-    try {
-      const res = await fetch("/api/promo", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code: value }),
-      });
-      const data = (await res.json()) as PromoResponse;
-      if (!res.ok) return setState({ kind: "error", message: data.error ?? t.checkFailed });
-      if (data.valid && data.code && data.kind === "promo" && data.discount && data.conditions) {
-        setState({ kind: "idle" });
-        setValue("");
-        // Offer terms only; the code itself stays out of analytics.
-        trackEvent("promo_applied", { kind: "promo", discount_type: data.discount.type, duration: data.discount.duration });
-        onApplied({ kind: "promo", code: data.code, discount: data.discount, conditions: data.conditions });
-      } else if (data.valid && data.code && data.offer) {
-        setState({ kind: "idle" });
-        setValue("");
-        trackEvent("promo_applied", { free_months: data.offer.free_months, commitment_months: data.offer.commitment_months });
-        onApplied({ kind: "affiliate", code: data.code, offer: data.offer });
-      } else if (data.reason === "referral_active") {
-        setState({ kind: "referral_active" });
-      } else {
-        setState({ kind: "invalid" });
-      }
-    } catch {
-      setState({ kind: "error", message: t.checkFailed });
+    const result = await lookupPromo(value);
+    if (result.kind === "ok") {
+      setState({ kind: "idle" });
+      setValue("");
+      trackPromoApplied(result.promo);
+      onApplied(result.promo);
+    } else if (result.kind === "error") {
+      setState({ kind: "error", message: result.message ?? t.checkFailed });
+    } else {
+      setState({ kind: result.kind });
     }
   }
 

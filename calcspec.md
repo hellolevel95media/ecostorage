@@ -99,15 +99,16 @@ adminFee          = calcAdminFee(monthlyTotal, M)
 effectiveAdminFee = adminFee      # no promo waives the admin fee
 ```
 
-The monthly storage fee after a promo is limited by a hard floor of S$55 per module per month, which also binds
-promo codes (Novac sends it as `discount.floor_per_module`; the site falls back to 55 if it is missing):
+Promo codes are not limited by the S$55 per module "best rate" floor (that floor is for staff-negotiated rates in
+Novac only). Novac omits `discount.floor_per_module` or sends null: no floor. If it does send a number, the site
+still respects it (older Novac sent 55):
 
 ```text
-discountedMonthly = max(55 × N, monthlyTotal - P)    # P applies only in the months the code lasts
+discountedMonthly = max(floor × N, monthlyTotal - P)    # floor = 0 unless Novac sends one; P applies only in the months the code lasts
 totalCost         = discountedMonthly × billableMonths + effectiveAdminFee
 ```
 
-Examples: 5 modules = S$300, so a promo takes at most S$25 off (S$275). 1 module = S$60, so at most S$5 off.
+Example: 10% off the first month on 1 module = S$6 off (S$54). With an old floor of 55, it would be at most S$5 off.
 The calculator shows the amount actually taken off, a note when the floor limited it, and prices with a promo are
 "subject to confirmation" (the team confirms the code on the quote).
 

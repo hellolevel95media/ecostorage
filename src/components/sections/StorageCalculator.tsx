@@ -1,8 +1,8 @@
 "use client";
 
-import { useId, useMemo, useState, useSyncExternalStore, type FormEvent, type ReactNode } from "react";
+import { useEffect, useId, useMemo, useState, useSyncExternalStore, type FormEvent, type ReactNode } from "react";
 import { Button } from "@/components/ui/Button";
-import { PromoCodeInput, type AppliedPromo } from "@/components/ui/PromoCodeInput";
+import { PromoCodeInput, lookupPromo, trackPromoApplied, type AppliedPromo } from "@/components/ui/PromoCodeInput";
 import { PromoTicket } from "@/components/ui/PromoTicket";
 import { Turnstile, turnstileEnabled } from "@/components/ui/Turnstile";
 import { MovingQuoteCheckbox } from "@/components/ui/MovingQuoteCheckbox";
@@ -123,6 +123,36 @@ export function StorageCalculator() {
     else if (commitmentId === "referral") setCommitmentId("monthly");
   }
 
+  // `?promo=CODE` (from article links) applies the code on load. The resource page that sent the
+  // visitor (`?src=slug`, else the same-site referrer) is kept so GA4 can tie the lead to the article.
+  const [promoArticle, setPromoArticle] = useState<string | undefined>();
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const code = (params.get("promo") ?? "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 20);
+    if (!code) return;
+    let fromReferrer: string | undefined;
+    try {
+      const ref = new URL(document.referrer);
+      if (ref.origin === window.location.origin && ref.pathname.startsWith("/resources/")) {
+        fromReferrer = ref.pathname.split("/").filter(Boolean).pop();
+      }
+    } catch {
+      // No referrer (direct visit, or the browser hides it): no article.
+    }
+    const article = (params.get("src") ?? fromReferrer ?? "").toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 80) || undefined;
+    let cancelled = false;
+    void lookupPromo(code).then((result) => {
+      if (cancelled || result.kind !== "ok") return;
+      setPromo(result.promo);
+      setPromoArticle(article);
+      if (result.promo.kind === "affiliate") setCommitmentId("referral");
+      trackPromoApplied(result.promo, { source: "link", article });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   // One calculator_start per page view, whatever the visitor touches first.
   const [started, setStarted] = useState(false);
   function markStarted(trigger: "size_guide" | "units" | "contact") {
@@ -208,6 +238,7 @@ export function StorageCalculator() {
         form_type: "calculator",
         has_moving_quote: wantsMoving,
         has_promo: Boolean(promo),
+        ...(promo && promoArticle ? { promo_article: promoArticle } : {}),
         num_units: numUnits,
         commitment: commitment.id,
         valet: valet.id,

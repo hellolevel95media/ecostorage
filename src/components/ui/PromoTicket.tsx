@@ -62,7 +62,7 @@ export interface PromoTicketProps {
   conditions: PromoConditions;
   /** False when the chosen plan isn't covered (a Month-to-Month-only code on a lock-in plan). */
   applicable: boolean;
-  /** Amount actually taken off per discounted month, after the S$55 floor. */
+  /** Amount actually taken off per discounted month, after any floor Novac sends. */
   amount: number;
   totalAfter: number;
   billedMonths: number;

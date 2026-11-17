@@ -177,8 +177,8 @@ Novac). The website (`src/app/api/promo/route.ts`) passes `discount` and `condit
 checking their shape, and refuses a promo code when the visitor has the `eco_ref` cookie (the
 affiliate link wins; one offer per order). The calculator applies the discount to the monthly storage
 fee only (never valet, deposit or admin fee), respects `max_per_month` and the duration, and when
-`plans_with_free_months` is false shows the code on Month-to-Month only. It never takes storage below
-`discount.floor_per_module` (S$55 per module; the site assumes 55 if the field is missing), so 5 modules
-(S$300) lose at most S$25 and 1 module (S$60) at most S$5, and the calculator shows the amount actually
-taken off. Pricing since 2026-11-16: one S$60 per 20 sqft module for every size, no volume tiers. Quotes with a promo are
+`plans_with_free_months` is false shows the code on Month-to-Month only. Promo codes break through the
+S$55 "best rate" floor (staff-negotiated rates only): Novac omits `discount.floor_per_module` or sends null
+and the site applies no floor. If a number is sent it is still respected (older Novac sent 55: 1 module
+loses at most S$5), and the calculator shows the amount actually taken off. Pricing since 2026-11-16: one S$60 per 20 sqft module for every size, no volume tiers. Quotes with a promo are
 "subject to confirmation"; the typed code is still sent as `promo_code` on the enquiry for staff.

@@ -1,7 +1,5 @@
 export const MODULE_SQFT = 20;
 export const MODULE_BASE_RATE = 60;
-/** Hard floor: no discount (promo codes included) may take a 20 sqft module below this per month. */
-export const MODULE_MIN_RATE = 55;
 export const CO2_PER_MODULE_PER_MONTH_KG = 12;
 /** Collection or delivery by 14ft truck, per full truckload (with or without tailgate). Part loads are quoted.
  * Guaranteed (never higher) for Standard and Premium Valet; the current public rate for everyone else. */
@@ -180,7 +178,11 @@ export interface PromoDiscount {
   type: "percent" | "amount";
   value: number;
   max_per_month: number | null;
-  /** Lowest storage price per 20 sqft module per month after the discount; Novac sends 55. Missing means 55. */
+  /**
+   * Lowest storage price per 20 sqft module per month after the discount. Promo codes are meant to break through
+   * the S$55 "best rate" floor (that floor is for staff-negotiated rates only), so Novac omits this or sends null:
+   * no floor. A number is still respected (older Novac sent 55).
+   */
   floor_per_module?: number | null;
   duration: "first_month" | "months" | "contract";
   months: number | null;
@@ -208,11 +210,11 @@ const round2 = (n: number) => Math.round(n * 100) / 100;
 
 /**
  * Saving from a promo on the monthly storage fee only (never valet), over the billed
- * months the quote covers. It never takes storage below the floor price per module
- * (S$55 x modules): 5 modules = S$300 -> at most S$25 off; 1 module = S$60 -> at most S$5.
+ * months the quote covers. No floor unless Novac sends `floor_per_module` (then storage never drops below
+ * that price x modules, e.g. 55: 1 module = S$60 -> at most S$5 off).
  */
 export function promoSaving(storageMonthly: number, numUnits: number, billedMonths: number, discount: PromoDiscount) {
-  const floor = discount.floor_per_module ?? MODULE_MIN_RATE;
+  const floor = discount.floor_per_module ?? 0;
   const room = Math.max(0, storageMonthly - floor * numUnits);
   const wanted = discount.type === "percent" ? (storageMonthly * discount.value) / 100 : discount.value;
   const wantedCapped = Math.min(wanted, discount.max_per_month ?? Infinity);
