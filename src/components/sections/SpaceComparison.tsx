@@ -249,7 +249,7 @@ export function SpaceComparison() {
   const still = Boolean(reduced);
 
   return (
-    <div role="img" aria-label={t.region} className="flex h-[70svh] min-h-[420px] w-full flex-col gap-2 lg:h-auto lg:min-h-0">
+    <div role="img" aria-label={t.region} className="flex h-[56svh] min-h-[336px] w-full flex-col gap-2 lg:h-auto lg:min-h-0">
       <div className="grid min-h-0 flex-1 grid-rows-2 gap-2 lg:grid-cols-2 lg:grid-rows-1 lg:gap-4">
         {/* Lock-and-key */}
         <figure className="m-0 flex min-h-0 flex-col overflow-hidden rounded-xl border border-white/15 lg:aspect-[4/3]" style={{ background: `${PANEL}e0` }}>
