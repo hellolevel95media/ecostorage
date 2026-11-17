@@ -67,7 +67,28 @@ Public repo: no secrets, keys, scraped reviews or reviewer data in any doc. Last
   6. DONE: ZH promo texts reviewed.
   7. Deferred by owner: rotate RESEND_API_KEY and CRON_SECRET.
   8. Thumbnails are all done (17-20 Nov HIP drafts + corporate).
-- **Article promo codes (17 Nov, work PC; code written, NOT yet committed/pushed or deployed):** six topic codes
+- **Home hero animation (17 Nov, pushed):** `src/components/sections/SpaceComparison.tsx` (client component, inline SVG +
+  the `motion` package) sits above the hero headline on the HOME page only (`<HeroBanner showSpaceComparison />`; the
+  prop is opt-in because HeroBanner is shared by personal/corporate/mission/partner). Left, pink "lock-and-key": static
+  boxes and red aisles, a counter that climbs 0 to 200 SQFT WASTED (grows and reddens, fixed-width digits); a figure
+  pushes two boxes up the middle aisle, turns 180 degrees and walks out. Right, green EcoStorage pallets, fixed
+  "0 SQFT WASTED": a forklift snakes round the block to fill the far corner slot, then returns and removes the nearest
+  pallet. Same room and box size both sides; 12 s loop; reduced-motion shows the final frame; English/Chinese text via
+  `<html lang>`. Mobile: panels stack at 70svh over the hero video. Tuning lives in the constants and keyframe arrays
+  at the top of each Scene. Sketch `20SQFT WASTED.png` in the repo root is the owner's reference (not committed).
+  Playwright is not in package.json (install with `npm i --no-save playwright` to test).
+- **Article CTAs DONE 17 Nov (live DB, owner approved):** 31 EN articles (17 published, 14 drafts) got two friendly
+  CTAs: a short "this might help" line mid-article (before the next heading after the most relevant section, or at the
+  paragraph midpoint for headingless articles) and a sincere reminder at the end (mentions the code). Six HIP articles
+  whose Summary already linked `/personal#quote` had that link upgraded to the promo link instead of a second line.
+  Code per topic: HIP10 (all HIP), RENO10, MOVE10 (rentals/moving/packing/downsizing/overseas), BTO10, STUDENT10,
+  BIZ10. NOT given a CTA (no fitting code, owner to decide): long-term-storage guide, how-we-protect, accurate-quote,
+  ambient-vs-aircon, fragile packing, how-much-space, pallet-vs-crate, mould, appliances, valet-vs-self-storage,
+  contract-questions; the 8 `-zh` articles also untouched (English wording). Backup of all bodies before the change:
+  table `articles_body_backup_20261117` (RLS on; drop it once happy). Live check 17 Nov: all six codes validate on
+  production with `floor_per_module: null`; promo links render; IndexNow pinged for the 17 published pages. New
+  articles should end with the matching CTA. Code pushed as db822af. Original notes:
+- **Article promo codes (17 Nov, work PC; site code pushed db822af and deployed):** six topic codes
   created in Novac by the owner: `HIP10`, `RENO10`, `MOVE10`, `BTO10`, `STUDENT10`, `BIZ10` (10% off the first month's
   storage fee only, no max, one use per customer, repeat customers allowed, max 100 claims per code to see how long
   each takes to hit 100; each code's note names its article topic). Site side: `?promo=CODE` on the calculator link

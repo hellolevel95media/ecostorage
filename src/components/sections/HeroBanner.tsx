@@ -2,8 +2,9 @@ import { MediaPlaceholder } from "@/components/ui/MediaPlaceholder";
 import { ButtonLink } from "@/components/ui/Button";
 import { inferMediaKind } from "@/lib/media";
 import type { SectionCopy } from "@/lib/fallback-content";
+import { SpaceComparison } from "@/components/sections/SpaceComparison";
 
-export function HeroBanner({ copy }: { copy: SectionCopy }) {
+export function HeroBanner({ copy, showSpaceComparison = false }: { copy: SectionCopy; showSpaceComparison?: boolean }) {
   const mediaKind = inferMediaKind(copy.media_url);
 
   return (
@@ -30,29 +31,39 @@ export function HeroBanner({ copy }: { copy: SectionCopy }) {
         />
       </div>
 
-      <div className="relative flex w-full flex-1 flex-col justify-end px-4 pt-6 pb-10 sm:px-6 lg:mx-auto lg:max-w-7xl lg:grid lg:grid-cols-[2fr_3fr] lg:items-center lg:gap-10 lg:px-8 lg:pt-10 lg:pb-12">
-        <div className="max-w-2xl">
-          <h1 className="text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
-            {copy.heading}
-          </h1>
-          {copy.subheading && (
-            <p className="mt-5 max-w-xl text-base text-foreground/70 sm:text-lg">
-              {copy.subheading}
-            </p>
-          )}
-          {copy.cta_text && (
-            <div className="mt-8">
-              <ButtonLink href={copy.cta_link ?? "/contact"}>{copy.cta_text}</ButtonLink>
-            </div>
-          )}
+      <div
+        className={`relative flex w-full flex-1 flex-col px-4 pb-10 sm:px-6 lg:mx-auto lg:max-w-7xl lg:px-8 lg:pb-12 ${
+          showSpaceComparison ? "gap-6 pt-4 lg:gap-10 lg:pt-8" : "pt-6 lg:pt-10"
+        }`}
+      >
+        {/* Home page only: same boxes, same floor, lock-and-key vs EcoStorage pallets. */}
+        {showSpaceComparison && <SpaceComparison />}
+        <div className="flex flex-1 flex-col justify-end lg:grid lg:grid-cols-[2fr_3fr] lg:items-center lg:gap-10">
+          <div className="max-w-2xl">
+            <h1 className="text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
+              {copy.heading}
+            </h1>
+            {copy.subheading && (
+              <p className="mt-5 max-w-xl text-base text-foreground/70 sm:text-lg">
+                {copy.subheading}
+              </p>
+            )}
+            {copy.cta_text && (
+              <div className="mt-8">
+                <ButtonLink href={copy.cta_link ?? "/contact"}>
+                  {copy.cta_text}
+                </ButtonLink>
+              </div>
+            )}
+          </div>
+          <MediaPlaceholder
+            ratio="video"
+            kind={mediaKind}
+            label="Hero video banner"
+            src={copy.media_url}
+            className="hidden shadow-card lg:flex"
+          />
         </div>
-        <MediaPlaceholder
-          ratio="video"
-          kind={mediaKind}
-          label="Hero video banner"
-          src={copy.media_url}
-          className="hidden shadow-card lg:flex"
-        />
       </div>
     </section>
   );

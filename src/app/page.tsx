@@ -23,7 +23,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <HeroBanner copy={hero} />
+      <HeroBanner copy={hero} showSpaceComparison />
       <TrustStats copy={trust} />
       <StorageCalculator />
       <MovingBanner copy={moving} />
