@@ -101,6 +101,12 @@ export type Inquiry = {
   address: string | null;
   message: string | null;
   metadata: Record<string, unknown>;
+  utm_source: string | null;
+  utm_medium: string | null;
+  utm_campaign: string | null;
+  utm_content: string | null;
+  landing_path: string | null;
+  referrer_host: string | null;
   created_at: string;
 }
 

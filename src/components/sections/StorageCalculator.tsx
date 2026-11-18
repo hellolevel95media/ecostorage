@@ -10,6 +10,7 @@ import { PremiumCrateOption } from "@/components/ui/PremiumCrateOption";
 import { showToast } from "@/lib/toast";
 import { NETWORK_ERROR_MESSAGE, submitErrorMessage } from "@/lib/form-errors";
 import { trackEvent } from "@/lib/analytics";
+import { attributionParams, readAttribution } from "@/lib/attribution";
 import {
   SIZE_GUIDE,
   formatDollars,
@@ -224,6 +225,7 @@ export function StorageCalculator() {
       calculator: { numUnits, commitment: commitment.id, valet: valet.id, movingQuote: wantsMoving, premiumCrate: wantsCrate },
       promo_code: promo?.code ?? null,
       turnstile_token: captchaToken,
+      attribution: readAttribution(),
     };
 
     try {
@@ -243,6 +245,7 @@ export function StorageCalculator() {
         commitment: commitment.id,
         valet: valet.id,
         premium_crate: wantsCrate,
+        ...attributionParams(payload.attribution),
       });
       showToast("Thanks — we've got your request!");
     } catch (err) {

@@ -18,7 +18,7 @@ declare global {
 }
 
 export type AnalyticsEvent =
-  | { name: "generate_lead"; params: { form_type: LeadFormType; has_moving_quote: boolean; has_promo: boolean; promo_article?: string; num_units?: number; commitment?: string; valet?: string; premium_crate?: boolean } }
+  | { name: "generate_lead"; params: { form_type: LeadFormType; has_moving_quote: boolean; has_promo: boolean; promo_article?: string; num_units?: number; commitment?: string; valet?: string; premium_crate?: boolean; utm_source?: string; utm_medium?: string; utm_campaign?: string; utm_content?: string } }
   | { name: "form_error"; params: { form_type: LeadFormType | "affiliate" | "promo"; reason: string } }
   | { name: "calculator_start"; params: { trigger: "size_guide" | "units" | "contact" } }
   | { name: "calculator_step"; params: { step: string } }

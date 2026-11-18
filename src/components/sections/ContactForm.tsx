@@ -9,6 +9,7 @@ import { MovingQuoteCheckbox } from "@/components/ui/MovingQuoteCheckbox";
 import { NETWORK_ERROR_MESSAGE, submitErrorMessage } from "@/lib/form-errors";
 import { showToast } from "@/lib/toast";
 import { trackEvent } from "@/lib/analytics";
+import { attributionParams, readAttribution } from "@/lib/attribution";
 
 interface ContactFormProps {
   type: InquiryType;
@@ -87,6 +88,7 @@ export function ContactForm({
       metadata: showMoving && form.get("moving_quote") ? { ...metadata, movingQuote: true } : metadata,
       promo_code: showPromo ? (promo?.code ?? null) : null,
       turnstile_token: captchaToken,
+      attribution: readAttribution(),
     };
 
     try {
@@ -108,6 +110,7 @@ export function ContactForm({
         form_type: type,
         has_moving_quote: Boolean(payload.metadata && "movingQuote" in payload.metadata),
         has_promo: Boolean(payload.promo_code),
+        ...attributionParams(payload.attribution),
       });
       showToast("Thanks — we've got your message!");
       formEl.reset();

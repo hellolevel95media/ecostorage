@@ -8,6 +8,7 @@ import { normalizeReferralCode } from "@/lib/affiliate/client";
 import { parseReferral, REFERRAL_COOKIE } from "@/lib/affiliate/referral-cookie";
 import { relayInquiry, type AffiliateMeta, type RelayMeta } from "@/lib/affiliate/relay";
 import { COMMITMENT_OPTIONS, VALET_OPTIONS, PREMIUM_CRATE, calculateQuote, referralCommitment, MODULE_SQFT } from "@/lib/calculator";
+import { sanitizeAttribution } from "@/lib/attribution";
 import type { InquiryType, PartnerKind } from "@/types/database";
 
 const VALID_TYPES: InquiryType[] = ["contact", "personal", "corporate", "partner"];
@@ -98,7 +99,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 
-  const { type, name, email, phone, company_name, address, message, website, metadata, calculator, promo_code, turnstile_token } =
+  const { type, name, email, phone, company_name, address, message, website, metadata, calculator, promo_code, turnstile_token, attribution } =
     body as Record<string, unknown>;
 
   // Honeypot: real users never fill this hidden field. Bots that do get a
@@ -153,12 +154,15 @@ export async function POST(request: Request) {
     message: field(message, MAX_FIELD.message),
     metadata: meta,
   };
+  // First-touch UTM tags (null when none or analytics declined); allow-listed and length-capped.
+  const attr = sanitizeAttribution(attribution);
+  const row = { ...inquiry, ...(attr ?? {}) };
 
   let saved: { id: string; created_at: string };
   try {
     const { data, error } = await createAdminClient()
       .from("inquiries")
-      .insert(inquiry)
+      .insert(row)
       .select("id, created_at")
       .single();
     if (error || !data) throw error;
