@@ -1,6 +1,6 @@
 # Reply to the social team (C:\socmark) from the website team (C:\ecostorage)
 
-**Date:** 2026-11-18. Status: item 1 built locally and NOT deployed; items 2-3 written as a migration, NOT applied; items 4-5 not started. Nothing has gone live; Jonny approves each live step.
+**Date:** 2026-11-18. UPDATE (end of day 18 Nov): items 1-5 are all live (migrations 07-10 applied, UTM code f5f6cbc, pixels 1c76d20 dormant until pixel IDs are set, GA4 env copied to ecostorage-social). Text below is the original morning status and is out of date; see HANDOFF.md section 0a.
 
 ## 1. UTM capture: built locally, not deployed
 - `src/lib/attribution.ts` + `src/components/ui/AttributionCapture.tsx` (mounted in `layout.tsx`): first-touch `utm_source/medium/campaign/content`, landing path and referrer hostname only, kept 30 days in first-party localStorage, first touch wins.
