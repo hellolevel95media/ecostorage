@@ -45,8 +45,8 @@ export function CookieConsent() {
   return (
     <div className="fixed inset-x-4 bottom-24 z-50 mx-auto max-w-xl rounded-2xl border border-border bg-card p-4 shadow-card lg:bottom-6">
       <p className="text-sm text-foreground/80">
-        We use essential cookies to run this site and anonymous analytics to see which pages help
-        visitors. You can change this any time in{" "}
+        We use essential cookies to run this site, analytics to see which pages help visitors, and
+        Meta and TikTok pixels to measure our social media. You can change this any time in{" "}
         <Link href="/cookies" className="font-medium text-brand-ink hover:underline">
           cookie settings
         </Link>

@@ -28,10 +28,17 @@ export type AnalyticsEvent =
   | { name: "promo_applied"; params: ({ free_months: number; commitment_months: number } | { kind: "promo"; discount_type: string; duration: string }) & { source?: "link"; article?: string } }
   | { name: "affiliate_apply"; params: Record<string, never> };
 
+import { trackPixel } from "@/lib/pixels";
+
 export type LeadFormType = "contact" | "personal" | "corporate" | "partner" | "calculator";
 
 export function trackEvent<E extends AnalyticsEvent>(name: E["name"], params: E["params"]): void {
-  if (typeof window === "undefined" || typeof window.gtag !== "function") return;
+  if (typeof window === "undefined") return;
+  // Marketing pixels (Meta, TikTok): a confirmed enquiry and a WhatsApp click.
+  // generate_lead is only fired after the server confirms the enquiry saved.
+  if (name === "generate_lead") trackPixel("lead");
+  else if (name === "whatsapp_click") trackPixel("contact");
+  if (typeof window.gtag !== "function") return;
   try {
     window.gtag("event", name, params);
   } catch {

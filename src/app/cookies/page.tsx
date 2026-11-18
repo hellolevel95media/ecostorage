@@ -4,7 +4,7 @@ import { buildMetadata } from "@/lib/site";
 export const metadata = buildMetadata({
   title: "Cookie Policy",
   description:
-    "How we use essential and anonymous analytics cookies on this website, and how you can opt out of analytics.",
+    "How we use essential cookies, analytics and marketing pixels on this website, and how you can opt out.",
   path: "/cookies",
 });
 
@@ -14,8 +14,8 @@ export default function CookiesPage() {
       <h1 className="text-3xl font-bold">Cookie Policy</h1>
       <div className="mt-6 space-y-4 text-sm text-foreground/70">
         <p>
-          EcoStorage uses a small number of cookies to run this site. We split them into three
-          categories. Analytics is anonymous, and you choose how much of it runs below.
+          EcoStorage uses a small number of cookies to run this site. We split them into four
+          categories. You choose how much analytics and measurement runs below.
         </p>
         <CookiePreference />
         <div>
@@ -54,6 +54,18 @@ export default function CookiesPage() {
             recognised. <strong>Anonymous analytics</strong> sets no cookies at all; events are
             counted without any identifier, so repeat visits cannot be linked. <strong>Off</strong>{" "}
             stops analytics entirely. Changes take effect immediately on this device.
+          </p>
+        </div>
+        <div>
+          <h2 className="font-semibold text-foreground">Marketing pixels</h2>
+          <p className="mt-1">
+            With full analytics on (the default), we also load the Meta Pixel and the TikTok
+            Pixel. They tell us when a visit from our Instagram, Facebook or TikTok posts leads
+            to an enquiry, so we know which posts are useful. Meta and TikTok may set their own
+            cookies (for example <code>_fbp</code> and <code>_ttp</code>) and can link the visit
+            to your account on their platform under their own privacy policies. We do not send
+            them your name, email, phone number or message. Choosing Anonymous analytics or Off
+            at the top of this page stops both pixels from loading.
           </p>
         </div>
         <p>Contact hello@ecostorage.sg with any cookie or privacy questions.</p>

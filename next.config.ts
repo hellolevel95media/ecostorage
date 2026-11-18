@@ -17,13 +17,13 @@ const csp = [
   "default-src 'self'",
   // challenges.cloudflare.com: Turnstile bot check on the enquiry forms.
   // googletagmanager / google-analytics: GA4, loaded only after cookie consent.
-  "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com https://challenges.cloudflare.com https://www.googletagmanager.com",
+  "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com https://challenges.cloudflare.com https://www.googletagmanager.com https://connect.facebook.net https://analytics.tiktok.com",
   "frame-src https://challenges.cloudflare.com",
   "style-src 'self' 'unsafe-inline'",
-  `img-src 'self' data: blob: ${supabaseHost} https://*.google-analytics.com https://*.googletagmanager.com`,
+  `img-src 'self' data: blob: ${supabaseHost} https://*.google-analytics.com https://*.googletagmanager.com https://www.facebook.com https://*.tiktok.com`,
   `media-src 'self' blob: ${supabaseHost}`,
   "font-src 'self' data:",
-  `connect-src 'self' ${supabaseHost} https://vitals.vercel-insights.com https://va.vercel-scripts.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com${sentryIngestHost ? ` ${sentryIngestHost}` : ""}`,
+  `connect-src 'self' ${supabaseHost} https://vitals.vercel-insights.com https://va.vercel-scripts.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://www.facebook.com https://connect.facebook.net https://*.tiktok.com${sentryIngestHost ? ` ${sentryIngestHost}` : ""}`,
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",
