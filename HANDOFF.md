@@ -5,6 +5,14 @@ Public repo: no secrets, keys, scraped reviews or reviewer data in any doc. Last
 2026-11-10; tidied 2026-11-15 and 2026-11-16 (completed items removed; git history has the originals;
 `docs/archive/` holds older handoffs, already merged here).
 
+## Recent direct tasks
+Rule (owner-approved 2026-11-20): one line per task Jonny gives directly, max 10 lines, tidy every session, nothing older than 2 weeks.
+2026-11-20 | Analytics snapshot, organic growth ideas | done (GA + Search Console zip reviewed)
+2026-11-20 | Search Console CSV analysis, title rewrites for 3 weak pages | waiting on owner approval to apply
+2026-11-20 | First-hand HIP articles (9) from owner's flat photos + long-form answers; byline "Jonny", voice "we", no dates in text, never show unit number 10-211 | done: inserted as drafts 21-29 Nov (one/day 08:50 UTC); 15 non-HIP drafts moved to every 2 days 1-29 Dec; drafts in `content/articles/drafts-hip-firsthand/`; marketing told (`handoffs/to-marketing_2026-11-20_jonny-voice-first-hand-articles.md`)
+2026-11-20 | HIP facts: mum's glasses stepped on by contractor (left lying around); contractor faces OK; blur numbers in checklist photo; this flat's furniture WAS stored with EcoStorage (blurred pallet photos only) | recorded
+2026-11-20 | Google Business Profile help | waiting (later today)
+
 ## 0a. Social team link-up (18 Nov, work PC) - NEW, read first
 
 The social team works in `C:socmark` (sessions `socmark-c1` etc.; Claude sessions on this PC can message each other with SendMessage/ListAgents, or exchange files in `handoffs/`). Their request: `C:socmarkhandoffs	o-website-ecostorage_2026-11-18.md`; our reply: `handoffs/reply-to-socmark_2026-11-18.md` (written before apply, its status lines are stale; this section is current). Owner approved everything below.
