@@ -11,6 +11,9 @@ Rule (owner-approved 2026-11-20): one line per task Jonny gives directly, max 10
 2026-11-20 | Search Console CSV analysis, title rewrites for 3 weak pages | waiting on owner approval to apply
 2026-11-20 | First-hand HIP articles (9) from owner's flat photos + long-form answers; byline "Jonny", voice "we", no dates in text, never show unit number 10-211 | done: inserted as drafts 21-29 Nov (one/day 08:50 UTC); 15 non-HIP drafts moved to every 2 days 1-29 Dec; drafts in `content/articles/drafts-hip-firsthand/`; marketing told (`handoffs/to-marketing_2026-11-20_jonny-voice-first-hand-articles.md`)
 2026-11-20 | HIP facts: mum's glasses stepped on by contractor (left lying around); contractor faces OK; blur numbers in checklist photo; this flat's furniture WAS stored with EcoStorage (blurred pallet photos only) | recorded
+2026-11-20 | Search Console "Page with redirect" / "Discovered - not indexed" | diagnosed: only http://ecostorage.sg/ (intended 308), site healthy; owner to Request Indexing for /services and 2 -zh articles
+2026-11-20 | Connect Search Console so Claude reads it directly | waiting on owner choice: Google Cloud service-account setup list, or search for simpler connector first
+2026-11-21 | Marketing asks: confirm `storing-for-hip-in-waves` live on 26 Nov and send final URL (https://ecostorage.sg/resources/storing-for-hip-in-waves) for post 2 bio link | open; owner has not read the 9 HIP drafts yet (first live 21 Nov 08:50 UTC); check door/gate photos for unit number 10-211
 2026-11-20 | Google Business Profile help | waiting (later today)
 
 ## 0a. Social team link-up (18 Nov, work PC) - NEW, read first
