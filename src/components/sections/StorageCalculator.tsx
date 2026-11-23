@@ -119,6 +119,8 @@ export function StorageCalculator() {
 
   // One promotion per order: the box holds a single code and a new one replaces it.
   function applyPromo(next: AppliedPromo) {
+    // A different (or removed) code no longer came from the article link.
+    if (next?.code !== promo?.code) setPromoArticle(undefined);
     setPromo(next);
     if (next?.kind === "affiliate") setCommitmentId("referral");
     else if (commitmentId === "referral") setCommitmentId("monthly");
@@ -224,6 +226,7 @@ export function StorageCalculator() {
       // Selections only; the server recomputes the quote itself.
       calculator: { numUnits, commitment: commitment.id, valet: valet.id, movingQuote: wantsMoving, premiumCrate: wantsCrate },
       promo_code: promo?.code ?? null,
+      promo_article: promo ? (promoArticle ?? null) : null,
       turnstile_token: captchaToken,
       attribution: readAttribution(),
     };

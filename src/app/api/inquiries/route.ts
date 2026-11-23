@@ -99,7 +99,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 
-  const { type, name, email, phone, company_name, address, message, website, metadata, calculator, promo_code, turnstile_token, attribution } =
+  const { type, name, email, phone, company_name, address, message, website, metadata, calculator, promo_code, promo_article, turnstile_token, attribution } =
     body as Record<string, unknown>;
 
   // Honeypot: real users never fill this hidden field. Bots that do get a
@@ -137,6 +137,12 @@ export async function POST(request: Request) {
       linkClickedAt: ref?.clickedAt.toISOString() ?? null,
     };
     meta.affiliate = affiliate;
+  }
+  // The article whose promo link brought the visitor, so the lead can be
+  // credited from the database too (GA4 only sees visitors who accept cookies).
+  if (promoCode && typeof promo_article === "string") {
+    const slug = promo_article.toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 80);
+    if (slug) meta.promoArticle = slug;
   }
   // Every customer enquiry goes to Novac (the CRM); /partner ones stay here.
   if (type !== "partner") {

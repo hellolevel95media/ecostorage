@@ -133,13 +133,13 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               <ul key={i} className="list-disc space-y-1 pl-5">
                 {block.items.map((item, j) => (
                   <li key={j}>
-                    <InlineText text={item} />
+                    <InlineText text={item} articleSlug={article.slug} />
                   </li>
                 ))}
               </ul>
             ) : (
               <p key={i}>
-                <InlineText text={block.text} />
+                <InlineText text={block.text} articleSlug={article.slug} />
               </p>
             )
           )

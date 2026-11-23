@@ -25,7 +25,7 @@ export type AnalyticsEvent =
   | { name: "whatsapp_click"; params: { location: string } }
   | { name: "phone_click"; params: { location: string } }
   | { name: "email_click"; params: { location: string } }
-  | { name: "promo_applied"; params: ({ free_months: number; commitment_months: number } | { kind: "promo"; discount_type: string; duration: string }) & { source?: "link"; article?: string } }
+  | { name: "promo_applied"; params: ({ free_months: number; commitment_months: number } | { kind: "promo"; discount_type: string; duration: string }) & { source: "link" | "typed"; article?: string } }
   | { name: "affiliate_apply"; params: Record<string, never> };
 
 import { trackPixel } from "@/lib/pixels";

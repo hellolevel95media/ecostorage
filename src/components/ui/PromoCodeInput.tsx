@@ -58,7 +58,7 @@ export async function lookupPromo(code: string): Promise<PromoLookup> {
 }
 
 /** Offer terms only; the code itself stays out of analytics. `article` is the resource page that sent the visitor, if any. */
-export function trackPromoApplied(promo: NonNullable<AppliedPromo>, extra?: { source: "link"; article?: string }): void {
+export function trackPromoApplied(promo: NonNullable<AppliedPromo>, extra: { source: "link" | "typed"; article?: string }): void {
   if (promo.kind === "promo") {
     trackEvent("promo_applied", { kind: "promo", discount_type: promo.discount.type, duration: promo.discount.duration, ...extra });
   } else {
@@ -94,7 +94,7 @@ export function PromoCodeInput({
     if (result.kind === "ok") {
       setState({ kind: "idle" });
       setValue("");
-      trackPromoApplied(result.promo);
+      trackPromoApplied(result.promo, { source: "typed" });
       onApplied(result.promo);
     } else if (result.kind === "error") {
       setState({ kind: "error", message: result.message ?? t.checkFailed });
