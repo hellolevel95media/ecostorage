@@ -7,6 +7,13 @@ Public repo: no secrets, keys, scraped reviews or reviewer data in any doc. Last
 
 ## Recent direct tasks
 Rule (owner-approved 2026-11-20): one line per task Jonny gives directly, max 10 lines, tidy every session, nothing older than 2 weeks.
+2026-11-24 | GA4 17-23 Nov snapshot + Search Console SEO review (zip to 17 Nov): 30 clicks, 2,536 impr, avg pos ~28; no short-head ranking; HIP pages on page 1 | done, reported to Jonny
+2026-11-24 | SEO long-tail question strategy (no new AC topics, leave AC pages live). Marketing reply `C:\socmark\handoffs	o-publishing_2026-11-24_seo-longtail-reply.md`: publishing owns all site writing; one page per question or rewrite existing; 3-5 FAQ per article; fixed mixed anchor list to /personal /corporate; publishing owns keyword-to-page map (marketing adds social column); gap order: renovation rewrite, cost, short-term storage, what you can't store | in progress; our note `handoffs/to-marketing_2026-11-24_seo-longtail-questions.md`
+2026-11-24 | Renovation rewrite of `storage-for-home-renovations-singapore` | DRAFT only at `content/articles/drafts-seo/storage-for-home-renovations-singapore.md` (~780 words, needs 800-1200 + WhatsApp answers); live DB article untouched; awaiting Jonny review; confirm RENO10 still live
+2026-11-24 | RULE: never publish the S$30 admin fee or added costs (included in quotes, told to customers); overrides marketing's pricing rule 2. Also never 'cheapest'/competitor names, S$350 = full 14ft truckload only, warehouse location never published | recorded (memory `no-public-admin-fee`)
+2026-11-24 | HIP10 confirmed live: 10% off storage first month, max 100 claims | marketing told
+2026-11-24 | Affiliate mechanics sent to marketing (no rates/tiers/payout); only public page is /partner, no affiliate FAQ/terms; integration dormant until Vercel env vars set (unverified live) | done
+2026-11-24 | WhatsApp real questions: none stored; gave Jonny a 14-question list to answer | waiting on Jonny
 2026-11-20 | Analytics snapshot, organic growth ideas | done (GA + Search Console zip reviewed)
 2026-11-20 | Search Console CSV analysis, title rewrites for 3 weak pages | waiting on owner approval to apply
 2026-11-20 | First-hand HIP articles (9) from owner's flat photos + long-form answers; byline "Jonny", voice "we", no dates in text, never show unit number 10-211 | done: inserted as drafts 21-29 Nov (one/day 08:50 UTC); 15 non-HIP drafts moved to every 2 days 1-29 Dec; drafts in `content/articles/drafts-hip-firsthand/`; marketing told (`handoffs/to-marketing_2026-11-20_jonny-voice-first-hand-articles.md`)
