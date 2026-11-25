@@ -1,6 +1,6 @@
 ---
 slug: storage-for-home-renovations-singapore
-status: REWRITE DRAFT for Jonny's review (replaces live body, nothing published)
+status: PUBLISHED to the live articles table 2026-11-25 (site body format differs: no bold, no numbered lists, FAQ questions as ### headings)
 title: Where to Store Furniture During a Home Renovation in Singapore
 excerpt: Clearing a flat for renovation? Here is where furniture can go, what to keep at home, how pickup works and what storage costs.
 ---
@@ -15,33 +15,43 @@ You have three realistic choices.
 2. **A relative's or friend's spare room.** Free, but only suits a few pieces and depends on goodwill for several weeks.
 3. **Cover in place.** Fine for light works. For hacking, tiling or flooring, dust gets through plastic sheets, so it is a poor fit for sofas, mattresses and electronics.
 
-If your contractor needs the floors clear, option 1 is the one that holds up.
+When the contractor needs the floors clear, option 1 is the one that holds up.
 
 ## How long will you need storage?
 
-Plan for longer than the contractor's quote. Condo works often stretch because of MCST approvals and lift bookings, landed homes vary the most, and delays happen on HDB projects too. Month-to-month storage lets the arrangement run on until the work is done, with no penalty for a late handover.
+Plan for longer than the contractor's quote. Condo works often stretch because of MCST approvals and lift bookings, landed homes vary the most, and delays happen on HDB projects too.
 
-If you already know the job will run long, a longer commitment can include free months. The calculator shows the options for your dates.
+The minimum is one month. After that, your storage plan simply continues and we bill you automatically, so a late handover never forces a decision. There is no penalty for running over, and ending early adds no extra fee.
 
-## How much does storage cost?
+A longer commitment can include free months when you already know the job will run long. The calculator shows the options for your dates.
 
-Storage is a flat S$60 per 20 sqft module per month, whatever the size of the order. You add modules for what you need. There are no volume tiers, so a bigger order does not change the rate per module.
+## How much does home renovation storage cost?
+
+Storage is a flat S$60 per pallet per month. One pallet is 20 sqft of space, also called a module, and the rate is the same whatever the size of the order. You add what you need. There are no volume tiers, so a bigger order does not change the rate.
+
+A 3-room flat's worth of belongings usually comes to 8 to 10 pallets. At S$60 each, that is about S$480 to S$600 a month. Storage fees run from the day your items are inbounded to one of our storage facilities, so you pay nothing for the days before pickup.
 
 Moving the items in is separate. A full 14ft truckload is S$350 (roughly a 3-room HDB flat including the living room). Part loads and specialist items such as grand pianos are custom quotes. Anything extra, like a long push or stair carry, is always communicated in advance.
 
+Payment is by PayNow or credit card. A deposit confirms your job order, and the first payment is due before your items are picked up.
+
 [Use the calculator to size your order](/personal?promo=RENO10#quote). RENO10 takes 10% off storage for the first month.
 
-## What size do you need?
+## What size of storage do you need?
 
 Start from how much is leaving the flat, not the flat's size.
 
-- **Whole flat cleared:** think in truckloads. A full 14ft truck holds about 4 to 6 pallets' worth depending on what is stored.
-- **Two or three rooms:** count beds, wardrobes, sofa and boxes, then let the calculator turn that into modules.
+- **Whole flat cleared:** think in truckloads. A full 14ft truck covers roughly a 3-room flat, which usually comes to 8 to 10 pallets.
+- **Two or three rooms:** count beds, wardrobes, sofa and boxes, then let the calculator turn that into pallets.
 - **Phased renovation:** room-by-room works need less out at once, which lowers the starting bill.
+
+For an exact count, ask for a no-obligation site survey. We look at what is leaving and give you the number of pallets before you commit.
 
 ## HDB, condo or landed
 
 HDB renovations tend to be predictable in scope but often still need the flat cleared for weeks. Condos add approvals and lift bookings, so check timing for material deliveries and pickup day together. Landed homes vary most in scope and length, which is where open-ended monthly storage helps.
+
+We collect from all three, including condos with lift booking and landed homes.
 
 ## What to store and what to keep at home
 
@@ -51,38 +61,47 @@ Keep: a mattress if you are staying nearby, basic kitchen gear and work clothes.
 
 Items people forget: wall and ceiling fittings outside the renovation scope, blinds, mirrors, and anything in built-in cabinets that are being removed. Walk each room looking up, not only at floor level.
 
+Some things cannot go into storage at all: food, flammables, chemicals, living things (plants and pets included) and anything illegal under Singapore law. Clear the pantry and the cleaning cupboard before the team arrives.
+
+Packing is your choice. Pack the boxes yourself, or ask for our packing service, which we provide on request as an add-on.
+
 ## Protecting items from dust
 
-Dust is the main risk. Wrap and remove soft furnishings and electronics before any hacking or flooring begins. Items in storage are shrink-wrapped on pallets, so they never touch the warehouse floor or mix with another customer's belongings. Sensitive pieces can go in an enclosed wooden crate as a premium upgrade.
+Dust is the main risk. Wrap and remove soft furnishings and electronics before any hacking or flooring begins.
+
+In storage, your items go onto one of our recycled wooden pallets and are shrink-wrapped. That keeps them off the warehouse floor and apart from every other customer's belongings, which prevents cross-contamination. The wrap also holds everything in place, so nothing falls off in transit. Sensitive pieces can go in an enclosed wooden crate as a premium upgrade.
 
 ## How pickup and return work
 
-You book a pickup date, the operations team collects, and your items are stored until you ask for them back. For the return, a few days' notice lets us schedule delivery around your move-in. Time it for the day the contractor finishes cleaning.
+You book a pickup date and the operations team collects. Your items stay in storage until you ask for them back.
+
+You do not need to empty the whole unit at once. Request a partial extraction at any point in your storage period, such as the dining set once the carpentry is done. Depending on your storage plan, partial extraction may be included. For any delivery, allow up to 72 hours' notice.
+
+Want to check on your things? Contact us to request site visit clearance.
+
+Time the final return for the day the contractor finishes cleaning.
 
 ## Frequently asked questions
 
-**Can I store furniture for just one month?**
-Yes. Month-to-month has no commitment, and you can extend it as the renovation runs on.
+**What is the shortest storage period?**
+One month. After that your plan continues month to month, and ending early does not incur additional fees.
 
 **What if my renovation runs late?**
-Keep storing month by month. Nothing resets when the date moves.
-
-**Do I need to visit the storage place?**
-No. We collect from your home and deliver back to it.
+Let your storage plan continue. We bill you automatically, and nothing resets when the date moves.
 
 **Can I get some things back during the renovation?**
-Yes. Tell us a few days ahead and we schedule a delivery of what you need.
+Yes. You can request a partial extraction at any time, and allow up to 72 hours' notice. Depending on your storage plan, partial extraction may be included.
 
-**Is storage worth it for a small renovation?**
-For a single room, covering furniture or using a spare room can be enough. Storage pays off once most of the flat has to be cleared.
+**What can't I put in storage?**
+Food, flammables, chemicals, living things and anything illegal under Singapore law.
 
-[Get an estimate](/personal?promo=RENO10#quote) and we will plan pickup around your contractor's schedule.
+**Do I have to pack everything myself?**
+No. We provide a packing service on request as an add-on.
 
----
+## Summary
 
-Notes for review (delete before publishing):
-- Replaces the live body (about 520 words) with about 780 words; target 800-1200, so add two to three short paragraphs once Jonny supplies WhatsApp answers.
-- Admin fee deliberately not mentioned, per Jonny 24 Nov.
-- Facts checked against PRODUCT.md: S$60 per module, S$350 full 14ft truckload, part loads custom, extras communicated in advance, no delivery turnaround promise, no warehouse location, no "insured", no competitor names.
-- RENO10 was already in the live article; HIP10 not used here. Confirm RENO10 is still live.
-- Search-variant H2s still to add once the real wording is confirmed: "storage during renovation Singapore", "home renovation storage".
+- Pickup-and-delivery storage keeps furniture clear of dust and the contractor, with nothing to drive yourself.
+- Storage is S$60 per pallet (20 sqft) a month with a one-month minimum. A 3-room flat's worth is about 8 to 10 pallets, so roughly S$480 to S$600 a month.
+- Your items sit on their own pallet, shrink-wrapped, apart from other customers' belongings.
+- Take back part of your things at any time, with up to 72 hours' notice.
+- Not sure how much you have? A no-obligation site survey gives the exact number, and [the calculator](/personal?promo=RENO10#quote) gives a quick estimate with RENO10 applied.
