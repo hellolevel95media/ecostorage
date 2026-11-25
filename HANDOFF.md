@@ -180,6 +180,7 @@ Sessions here are website-only; don't edit `C:\Novac`. "Affiliate system" = Nova
   No physical office/walk-ins: keep street address out of signatures and marketing.
 - **Only front-facing number +65 8899 1184** (WhatsApp `wa.me/6588991184`). +65 8899 7017 is the WhatsApp
   Cloud API number only; never publish.
+- **Customer terms (owner-confirmed 25 Nov):** `docs/customer-terms.md` holds minimum period, notice, banned items, payment, pallet = module = 20 sqft. Use it for articles and FAQs; do not ask Jonny again.
 - **Google review link (live):** `COMPANY.googleReviewUrl` in `src/lib/nav.ts` =
   `https://g.page/r/CaLiAkVhgH3ZEAI/review` (footer link tested by owner).
 
